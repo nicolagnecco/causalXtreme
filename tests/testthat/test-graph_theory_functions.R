@@ -1,0 +1,107 @@
+context("test-graph_theory_functions")
+
+# Define some graphs
+g1 <- rbind(c(0, 0, 1, 0),
+            c(1, 0, 0, 0),
+            c(0, 0, 0, 1),
+            c(0, 0, 0, 0))
+
+g2 <- rbind(c(0, 0, 0, 0),
+            c(0, 0, 0, 0),
+            c(0, 0, 0, 1),
+            c(1, 0, 0, 0))
+
+g3 <- rbind(c(0, 1.5, 0, 0),
+            c(0, 0, -1.2, 2),
+            c(0, 0, 0, 0.3),
+            c(0, 0, 0, 0))
+
+g1_anc <- rbind(c(1, 0, 1, 1),
+                c(1, 1, 1, 1),
+                c(0, 0, 1, 1),
+                c(0, 0, 0, 1))
+
+g2_anc <- rbind(c(1, 0, 0, 0),
+                c(0, 1, 0, 0),
+                c(1, 0, 1, 1),
+                c(1, 0, 0, 1))
+
+g3_anc <- rbind(c(1, 1, 1, 1),
+                c(0, 1, 1, 1),
+                c(0, 0, 1, 1),
+                c(0, 0, 0, 1))
+
+g3_path_count <- rbind(c(1, 1, 1, 2),
+                       c(0, 1, 1, 2),
+                       c(0, 0, 1, 1),
+                       c(0, 0, 0, 1))
+
+
+g3_path_weighted <- rbind(c(1, 1.5, -1.5 * 1.2, 1.5 * (-1.2 * 0.3 + 2)),
+                          c(0, 1, -1.2, -1.2 * 0.3 + 2),
+                          c(0, 0, 1, 0.3),
+                          c(0, 0, 0, 1))
+
+# Run tests
+test_that("the computed causal order is correct", {
+  expect_equal(compute_caus_order(g1), c(2, 1, 3, 4))
+  expect_equal(compute_caus_order(g2), c(2, 3, 4, 1))
+})
+
+test_that("the checked causal order is correct", {
+  expect_equal(check_caus_order(c(1, 2, 3, 4), g1), FALSE)
+  expect_equal(check_caus_order(c(2, 1, 3, 4), g1), TRUE)
+  expect_equal(check_caus_order(c(2, 3, 4, 1), g2), TRUE)
+  expect_equal(check_caus_order(c(3, 2, 4, 1), g2), TRUE)
+  expect_equal(check_caus_order(c(3, 4, 2, 1), g2), TRUE)
+  expect_equal(check_caus_order(c(3, 4, 1, 2), g2), TRUE)
+  expect_equal(check_caus_order(c(3, 1, 4, 2), g2), FALSE)
+  expect_equal(check_caus_order(c(1, 4, 2, 3), g2), FALSE)
+  expect_equal(check_caus_order(c(4, 3, 2, 1), g2), FALSE)
+  expect_equal(check_caus_order(c(NA, NA), g1), NA)
+})
+
+test_that("ancestors are correct", {
+  expect_equal(get_ancestors(g1), g1_anc)
+  expect_equal(get_ancestors(g2), g2_anc)
+  expect_equal(get_ancestors(g3), g3_anc)
+})
+
+test_that("descendants are correct", {
+  expect_equal(get_descendants(g1), t(g1_anc))
+  expect_equal(get_descendants(g2), t(g2_anc))
+  expect_equal(get_descendants(g3), t(g3_anc))
+})
+
+test_that("parents are correct", {
+  expect_equal(get_parents(g1), g1)
+  expect_equal(get_parents(g2), g2)
+})
+
+test_that("children are correct", {
+  expect_equal(get_children(g1), t(g1))
+  expect_equal(get_children(g2), t(g2))
+})
+
+test_that("paths are correct", {
+  expect_equal(get_all_paths(g3, type = "count"), g3_path_count)
+  expect_equal(get_all_paths(g3, type = "weighted"), g3_path_weighted)
+  expect_equal(get_all_paths(g3), g3_path_count)
+  expect_error(get_all_paths(g3, type = "foo"))
+})
+
+test_that("ancestral distance is correct", {
+  expect_equal(compute_ancestral_distance(g1, c(2, 1, 3, 4)), 0)
+  expect_equal(compute_ancestral_distance(g1, c(2, 1, 4, 3)), 1 / (4 * 3 / 2))
+  expect_equal(compute_ancestral_distance(g1, c(1, 2, 4, 3)), 2 / (4 * 3 / 2))
+  expect_equal(compute_ancestral_distance(g1, c(1, 4, 2, 3)), 3 / (4 * 3 / 2))
+  expect_equal(compute_ancestral_distance(g1, c(4, 3, 1, 2)), 6 / (4 * 3 / 2))
+  expect_equal(compute_ancestral_distance(g1, c(NA, NA, NA, NA)), NA)
+  expect_equal(compute_ancestral_distance(g2, c(4, 3, 2, 1)), 1 / (4 * 3 / 2))
+  expect_equal(compute_ancestral_distance(g2, c(4, 2, 3, 1)), 1 / (4 * 3 / 2))
+  expect_equal(compute_ancestral_distance(g2, c(3, 4, 2, 1)), 0 / (4 * 3 / 2))
+  expect_equal(compute_ancestral_distance(g3, c(4, 3, 2, 1)), 6 / (4 * 3 / 2))
+  expect_equal(compute_ancestral_distance(g3, c(1, 2, 4, 3)), 1 / (4 * 3 / 2))
+  expect_equal(compute_ancestral_distance(g3, c(2, 1, 4, 3)), 2 / (4 * 3 / 2))
+  expect_equal(compute_ancestral_distance(g3, c(1, 2, 3, 4)), 0 / (4 * 3 / 2))
+})
