@@ -1,6 +1,6 @@
 context("test-graph_theory_functions")
 
-# Define some graphs
+# Define variables
 g1 <- rbind(c(0, 0, 1, 0),
             c(1, 0, 0, 0),
             c(0, 0, 0, 1),
@@ -36,11 +36,27 @@ g3_path_count <- rbind(c(1, 1, 1, 2),
                        c(0, 0, 1, 1),
                        c(0, 0, 0, 1))
 
-
 g3_path_weighted <- rbind(c(1, 1.5, -1.5 * 1.2, 1.5 * (-1.2 * 0.3 + 2)),
                           c(0, 1, -1.2, -1.2 * 0.3 + 2),
                           c(0, 0, 1, 0.3),
                           c(0, 0, 0, 1))
+
+g4 <- rbind(c(0, 0, 1),
+            c(0, 0, 0),
+            c(0, 1, 0))
+
+g5 <- rbind(c(0, 0, 1),
+            c(0, 0, 1),
+            c(0, 0, 0))
+
+g6 <- rbind(c(0, 0, 1),
+            c(1, 0, 1),
+            c(0, 0, 0))
+
+g7 <- rbind(c(0, 1, 0),
+            c(0, 0, 0),
+            c(1, 1, 0))
+
 
 # Run tests
 test_that("the computed causal order is correct", {
@@ -104,4 +120,17 @@ test_that("ancestral distance is correct", {
   expect_equal(compute_ancestral_distance(g3, c(1, 2, 4, 3)), 1 / (4 * 3 / 2))
   expect_equal(compute_ancestral_distance(g3, c(2, 1, 4, 3)), 2 / (4 * 3 / 2))
   expect_equal(compute_ancestral_distance(g3, c(1, 2, 3, 4)), 0 / (4 * 3 / 2))
+})
+
+test_that("structural intervention distance is correct", {
+  expect_equal(compute_str_int_distance(g4, g5), 3 / 6)
+  expect_equal(compute_str_int_distance(g4, g6), 5 / 6)
+  expect_equal(compute_str_int_distance(g4, NA), NA)
+  expect_false(compute_str_int_distance(g5, g6) ==
+                 compute_str_int_distance(g6, g5))
+})
+
+test_that("converting causal order into DAG works", {
+  expect_equal(caus_order_to_adjmat(c(3, 1, 2)), g7)
+  expect_equal(caus_order_to_adjmat(c(2, 1, 3)), g6)
 })

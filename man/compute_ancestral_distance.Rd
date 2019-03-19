@@ -15,7 +15,7 @@ Represents a causal order.}
 \value{
 Numeric (or \code{NA}, if \code{caus_order} is a vector
 of \code{NA}s). The ancestral distance between the DAG \code{g} and
-the causal order \code{caus_order}.
+the causal order \code{caus_order}, between 0 and 1.
 }
 \description{
 Computes the ancestral distance between the DAG \code{g} and

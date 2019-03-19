@@ -26,5 +26,5 @@ if \code{type == "count"},
 \item measures the total weight of the paths from node \eqn{i}
 to node \eqn{j}, if \code{type == "weighted"}.
 }
-\strong{Note:} if \eqn{i = j}, the entry \eqn{(i, j) == 1}.
+\strong{Note}: if \eqn{i = j}, the entry \eqn{(i, j) = 1}.
 }

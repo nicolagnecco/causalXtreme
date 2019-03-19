@@ -13,7 +13,7 @@ Represents a causal order.}
 \item{g}{Numeric matrix. The adjacency matrix of a DAG.}
 }
 \value{
-Boolean (or \code{NA}, if \code{caus_order} is a vector
+Logical (or \code{NA}, if \code{caus_order} is a vector
 of \code{NA}s).
 }
 \description{

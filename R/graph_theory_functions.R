@@ -29,7 +29,7 @@ compute_caus_order <- function(g) {
 #' @param caus_order Numeric vector (or vector of \code{NA}s).
 #' Represents a causal order.
 #' @inheritParams compute_caus_order
-#' @return Boolean (or \code{NA}, if \code{caus_order} is a vector
+#' @return Logical (or \code{NA}, if \code{caus_order} is a vector
 #' of \code{NA}s).
 check_caus_order <- function(caus_order, g) {
   # Check causal order
@@ -138,7 +138,7 @@ get_children <- function(g){
 #' \item measures the total weight of the paths from node \eqn{i}
 #' to node \eqn{j}, if \code{type == "weighted"}.
 #' }
-#' \strong{Note:} if \eqn{i = j}, the entry \eqn{(i, j) == 1}.
+#' \strong{Note}: if \eqn{i = j}, the entry \eqn{(i, j) = 1}.
 #'
 #' @inheritParams compute_caus_order
 #' @param type String. Is one of:
@@ -174,8 +174,7 @@ get_all_paths <- function(g, type = c("count", "weighted")[1]){
 #' @inheritParams check_caus_order
 #' @return Numeric (or \code{NA}, if \code{caus_order} is a vector
 #' of \code{NA}s). The ancestral distance between the DAG \code{g} and
-#' the causal order \code{caus_order}.
-#'
+#' the causal order \code{caus_order}, which lies between 0 and 1.
 compute_ancestral_distance <- function(g, caus_order){
   # Check causal order
   if (all(is.na(caus_order))) {
@@ -187,4 +186,50 @@ compute_ancestral_distance <- function(g, caus_order){
   ancestors <- get_ancestors(g)
   ancestors_ord <- ancestors[caus_order, caus_order]
   return(sum(ancestors_ord[lower.tri(ancestors_ord)]) / max_inversion)
+}
+
+
+#' Compute structural intervention distance
+#'
+#' Compute the structural intervention distance between the DAG \code{g} and
+#' the estimated DAG \code{g_est}. The structural intervention distance is
+#' defined as in the paper from Peters J. and Bühlmann P.,
+#' \url{https://www.mitpressjournals.org/doi/full/10.1162/NECO_a_00708}.
+#' In general, the structural intervention distance is
+#' not symmetric, i.e., \code{compute_str_int_distance(g, g_est) !=}
+#' \code{compute_str_int_distance(g_est, g)}. Also, \code{g_est} can be
+#' a CPDAG.
+#'
+#' @inheritParams compute_caus_order
+#' @param g_est Numeric matrix (or \code{NA}). The adjacency matrix of an
+#' (estimated) DAG or CPDAG.
+#' @return Numeric (or \code{NA}, if \code{g_est} is \code{NA}).
+#' The structural intervention distance between the DAG \code{g} and
+#' the DAG  order \code{caus_order}, which lies between 0 and 1.
+compute_str_int_distance <- function(g, g_est){
+  if (length(g_est) == 1){
+    if (is.na(g_est)){
+      return(NA)
+    }
+  }
+
+  p <- NROW(g)
+  s <- SID::structIntervDist(g, g_est)
+  return(s$sidLowerBound / (p * (p - 1)))
+}
+
+
+#' Convert a causal order into a fully connected DAG
+#'
+#' Convert the given causal order \code{caus_order} into a fully connected
+#' DAG.
+#'
+#' @inheritParams check_caus_order
+#' @return Numeric matrix. The adjacency matrix of the fully connected DAG.
+#'
+caus_order_to_adjmat <- function(caus_order){
+  p <- length(caus_order)
+  adj_mat <- upper.tri(x = matrix(0, nrow = p, ncol = p)) * 1
+  inv_caus_order <- order(caus_order)
+  return(adj_mat[inv_caus_order, inv_caus_order])
 }
