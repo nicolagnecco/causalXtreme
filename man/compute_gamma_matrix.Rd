@@ -10,13 +10,13 @@ compute_gamma_matrix(mat, k = floor(sqrt(n)))
 \item{mat}{Numeric matrix. Matrix with \code{n} rows (observations)
 and \code{p} columns (variables).}
 
-\item{k}{Integer. The number of upper order statistics used to
+\item{k}{Integer. The number of upper-order statistics used to
 compute the gamma coefficient. Set by default to \code{k = floor(sqrt(n))}.}
 }
 \value{
 Numeric matrix. The entry \eqn{(i, j)} contains the
 gamma coefficient between the \eqn{i}-th and the \eqn{j}-th
-column of \code{mat}. If \eqn{(i = j)}, the entry \eqn{(i, j)} = \code{NA}.
+column of \code{mat}. If \eqn{i = j}, the entry \eqn{(i, j)} = \code{NA}.
 }
 \description{
 Computes the gamma coefficient matrix given a dataset \code{mat},

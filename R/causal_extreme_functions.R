@@ -7,8 +7,8 @@
 #' @param v1,v2 Numeric vectors. Two vectors with \code{n} observations.
 #' @param k Integer. The number of upper-order statistics used to
 #' compute the gamma coefficient. Set by default to \code{k = floor(sqrt(n))}.
-#' @return Numeric. The gamma causal coefficient between \code{v1} and
-#' \code{v2}, which lies between 0.5 and 1.
+#' @return Numeric --- between 0.5 and 1. The gamma causal coefficient between \code{v1} and
+#' \code{v2}.
 compute_gamma <- function(v1, v2, k = floor(sqrt(n))){
   n <- NROW(v1)   # number of observations
   r1 <- rank(v1, ties.method = "first") # ranks of v1
@@ -48,4 +48,65 @@ compute_gamma_matrix <- function(mat, k = floor(sqrt(n))){
 
   # return data
   return(gamma_mat)
+}
+
+
+#' Pairwise theoretical gamma coefficient
+#'
+#' Computes the theoretical gamma coefficient between node \code{i}
+#' and node \code{j}, given the DAG \code{g}, the tail-index \code{alpha}
+#' and the scales of the noise variables \code{noise_w}.
+#'
+#' @param g Numeric matrix. The weighted adjacency matrix of a DAG.
+#' All the entries must be non-negative.
+#' @param i,j Integer. The indices of the nodes to consider to compute
+#' the theoretical gamma coefficient.
+#' @param alpha Numeric. The tail-index of the noise distribution
+#' @param noise_w Numeric vector. A \eqn{p}-dimensional vector containing
+#' the scaling coefficients of the noise variables. Note that \eqn{p} is the
+#' number of variables (nodes) in the DAG. By default, all entries are
+#' set equal to one.
+#' @return Numeric --- between 0.5 and 1. The theoretical gamma coefficient between node \code{i}
+#' and \code{j} in the DAG \code{g}.
+compute_gamma_theo <- function(g, i, j, alpha, noise_w){
+
+  if (min(g, na.rm = T) < 0){
+    stop("The weighted adjacency matrix must have non-negative weights.")
+  }
+
+  p <- NROW(g)
+  noise_w <- matrix(noise_w, ncol = 1)
+  noise_w_alpha <- noise_w ^ alpha
+
+  ancestor <- get_ancestors(g)
+  an_node1 <- ancestor[, i]
+  an_node2 <- ancestor[, j]
+  nan_node2 <- abs(an_node2 - 1)
+
+  v_num <- an_node1 * nan_node2 * noise_w_alpha
+  v_denom <- an_node1 * noise_w_alpha
+  e <- numeric(p)
+  e[i] <- 1
+
+  path_matrix <- solve(diag(p) - t(g))
+  p_ij <- (e %*% path_matrix ^ alpha %*% v_num) /
+    (e %*% path_matrix ^ alpha %*% v_denom)
+  gamma <- drop(1 - 0.5 * p_ij)
+
+  return(gamma)
+}
+
+
+#' Theoretical gamma coefficient of a DAG
+#'
+#' Computes the theoretical gamma coefficient matrix given the DAG \code{g},
+#' the tail-index \code{alpha} and the scales of the noise variables
+#' \code{noise_w}.
+#'
+#' @inheritParams compute_gamma_theo
+#' @return Numeric matrix. The entry \eqn{(i, j)} contains the theoretical
+#' gamma coefficient between the \eqn{i}-th and the \eqn{j}-th node
+#' of \code{g}. If \eqn{i = j}, the entry \eqn{(i, j)} = \code{NA}.
+compute_gamma_theo_matrix <- function(g, alpha, noise_w){
+ # !!! to continue
 }

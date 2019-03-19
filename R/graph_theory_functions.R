@@ -172,9 +172,9 @@ get_all_paths <- function(g, type = c("count", "weighted")[1]){
 #' \code{caus_order}.
 #'
 #' @inheritParams check_caus_order
-#' @return Numeric (or \code{NA}, if \code{caus_order} is a vector
-#' of \code{NA}s). The ancestral distance between the DAG \code{g} and
-#' the causal order \code{caus_order}, which lies between 0 and 1.
+#' @return Numeric --- between 0 and 1 --- or \code{NA}, if \code{caus_order} is a vector
+#' of \code{NA}s. The ancestral distance between the DAG \code{g} and
+#' the causal order \code{caus_order}.
 compute_ancestral_distance <- function(g, caus_order){
   # Check causal order
   if (all(is.na(caus_order))) {
@@ -203,9 +203,9 @@ compute_ancestral_distance <- function(g, caus_order){
 #' @inheritParams compute_caus_order
 #' @param g_est Numeric matrix (or \code{NA}). The adjacency matrix of an
 #' (estimated) DAG or CPDAG.
-#' @return Numeric (or \code{NA}, if \code{g_est} is \code{NA}).
-#' The structural intervention distance between the DAG \code{g} and
-#' the DAG  order \code{caus_order}, which lies between 0 and 1.
+#' @return  Numeric --- between 0 and 1 --- or \code{NA},
+#' if \code{g_est} is \code{NA}. The structural intervention distance between
+#' the DAG \code{g} and the DAG  order \code{caus_order}.
 compute_str_int_distance <- function(g, g_est){
   if (length(g_est) == 1){
     if (is.na(g_est)){

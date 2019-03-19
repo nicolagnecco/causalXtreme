@@ -13,9 +13,9 @@ compute_str_int_distance(g, g_est)
 (estimated) DAG or CPDAG.}
 }
 \value{
-Numeric (or \code{NA}, if \code{g_est} is \code{NA}).
-The structural intervention distance between the DAG \code{g} and
-the DAG  order \code{caus_order}, between 0 and 1.
+Numeric --- between 0 and 1 --- or \code{NA},
+if \code{g_est} is \code{NA}. The structural intervention distance between
+the DAG \code{g} and the DAG  order \code{caus_order}.
 }
 \description{
 Compute the structural intervention distance between the DAG \code{g} and

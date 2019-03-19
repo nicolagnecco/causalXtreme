@@ -9,12 +9,12 @@ compute_gamma(v1, v2, k = floor(sqrt(n)))
 \arguments{
 \item{v1, v2}{Numeric vectors. Two vectors with \code{n} observations.}
 
-\item{k}{Integer. The number of upper order statistics used to
+\item{k}{Integer. The number of upper-order statistics used to
 compute the gamma coefficient. Set by default to \code{k = floor(sqrt(n))}.}
 }
 \value{
-Numeric. The gamma causal coefficient between \code{v1} and
-\code{v2}, between 0.5 and 1.
+Numeric --- between 0.5 and 1. The gamma causal coefficient between \code{v1} and
+\code{v2}.
 }
 \description{
 Computes the causal gamma coefficient between \code{v1} and \code{v2},
