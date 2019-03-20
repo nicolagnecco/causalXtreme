@@ -1,11 +1,11 @@
 #' Greedy permutation search
 #'
-#' Runs greedy permutation search algorithm given the matrix \code{delta}.
-#' Copyright (c) 2013 Jonas Peters \email{peters@@stat.math.ethz.ch}.
+#' Runs greedy permutation search given the matrix \code{delta}.
+#' Copyright (c) 2013 Jonas Peters \email{peters@@math.ku.dk}.
 #' All rights reserved.
 #'
 #' @param delta Numeric matrix --- between -1 and 1. The \code{delta}
-#' matrix defined as \code{gamma - t(gamma)}, where \code{gamma}
+#' matrix is defined as \code{gamma - t(gamma)}, where \code{gamma}
 #' is the gamma coefficient matrix. The number of rows (and columns)
 #' of \code{delta} must be greater than 3.
 #' @param silent Logical. Should the function communicate during the
@@ -120,4 +120,261 @@ greedy_perm_search <- function(delta, silent = FALSE){
   score <- score + current_score[new_max]
 
   return(list(order = current_order, score = score))
+}
+
+
+#' Fast permutation search
+#'
+#' Runs fast permutation search given the matrix \code{delta}.
+#' Copyright (c) 2013 Jonas Peters \email{peters@@math.ku.dk}.
+#' All rights reserved.
+#'
+#' @inheritParams greedy_perm_search
+#' @param delta Numeric matrix --- between -1 and 1. The \code{delta}
+#' matrix is defined as \code{gamma - t(gamma)}, where \code{gamma}
+#' is the gamma coefficient matrix.
+#' @param mode String. Is one of:
+#' \itemize{
+#' \item \code{"sum"} (default). At each step of the algorithm, choose
+#' the node \eqn{i}, if the \emph{sum} of the entries of the \eqn{i}-th
+#' row in \code{delta} is maximum across all the remaining nodes.
+#' \item \code{"maxmin"}. At each step of the algorithm, choose the node
+#' \eqn{i}, if the the \eqn{i}-th row of \code{delta} is the one which has
+#' the maximum minimum (\emph{maxmin}) entry across all the remaining nodes.
+#' }
+#' @inherit greedy_perm_search return
+fast_perm_search <- function(delta, mode = "sum", silent = FALSE){
+
+  A <- delta
+  d <- dim(A)[2]
+  var_names <- 1:d
+  if (!silent){
+    show("###############")
+    show("current score")
+    show(var_names)
+    show(A)
+  }
+  if (mode == "sum"){
+    summ <- apply(A, 1, sum, na.rm = TRUE)
+    avail <- 1:d
+    current_order <- numeric(0)
+    for (k in 1:d){
+      add <-  avail[which.max(summ[avail])]
+      current_order <- c(current_order, add)
+      summ <- summ + A[add, ]
+      avail <- (1:d)[ -current_order]
+    }
+    score <- sum(A[current_order, current_order][upper.tri(A)])
+  } else if (mode == "maxmin"){
+    Aorig <- A
+    diag(A) <- NA
+    ## initialize with the first pair
+    current_order <- add <- which.max(apply(A, 1, min, na.rm = TRUE))
+    for (k in 2:d){
+      A[, add] <- NA
+      avail <- (1:d)[-current_order]
+
+      add <- if (k < d){
+        avail[which.max(apply(A, 1, min, na.rm = TRUE)[avail])]
+      } else {
+        avail
+      }
+      current_order <- c(current_order, add)
+    }
+
+    ##  score
+    Aorig <- Aorig[ current_order, current_order]
+    score <- sum(Aorig[upper.tri(Aorig)])
+
+  } else {
+    stop("Wrong mode. Please enter one of the following:
+              'sum', 'maxmin'.")
+  }
+
+  return(list(order = current_order, score = score))
+}
+
+
+#' Full permutation search
+#'
+#' Runs full permutation search given the matrix \code{delta}.
+#' Copyright (c) 2013 Jonas Peters \email{peters@@math.ku.dk}.
+#' All rights reserved.
+#'
+#' @inheritParams greedy_perm_search
+#' @param delta Numeric matrix --- between -1 and 1. The \code{delta}
+#' matrix is defined as \code{gamma - t(gamma)}, where \code{gamma}
+#' is the gamma coefficient matrix. If the number of rows (and columns)
+#' of \code{delta} is greater than 10, the function returns an error.
+#' @inherit greedy_perm_search return
+full_perm_search <- function(delta, silent = FALSE){
+
+  A <- delta
+  d <- dim(A)[2]
+
+  if (d > 10){
+    stop("The number of rows (and columns) of delta cannot be greater
+         than 10.")
+  }
+
+  all_perms <- gtools::permutations(d, d)
+  scores <- rep(NA, dim(all_perms)[1])
+  for (i in 1:length(scores)){
+    Atmp <- A[all_perms[i, ], all_perms[i, ]]
+    scores[i] <- sum(Atmp[upper.tri(Atmp)])
+  }
+  ind_max <- which.max(scores)
+
+  return(list(order = all_perms[ind_max, ], score = scores[ind_max]))
+}
+
+
+#' Random permutation search
+#'
+#' Runs random permutation search given the matrix \code{delta}.
+#' Copyright (c) 2013 Jonas Peters \email{peters@@math.ku.dk}.
+#' All rights reserved.
+#'
+#' @param delta Numeric matrix --- between -1 and 1. The \code{delta}
+#' matrix is defined as \code{gamma - t(gamma)}, where \code{gamma}
+#' is the gamma coefficient matrix.
+#' @inherit greedy_perm_search return
+random_perm_search <- function(delta){
+
+  A <- delta
+  p <- NROW(A) # number of variables
+  order <-  sample(p, p, replace = FALSE)
+  A <- A[order, order]
+  score <- sum(A[upper.tri(A)])
+
+  return(list(order = order, score = score))
+}
+
+
+#' Minimax permutation search
+#'
+#' Runs minimax permutation search given the matrix \code{gamma}.
+#'
+#' @param gamma Numeric matrix --- between 0 and 1. The \code{gamma}
+#' coefficient matrix.
+#' @return  Numeric vector. The causal order estimated from \code{gamma}.
+minimax_search <- function(gamma){
+
+  # set up variables
+  d <- dim(gamma)[2]
+  diag(gamma) <- NA
+
+  ## run minimax
+  current_order <- add <- which.min(apply(gamma, 2, max, na.rm = TRUE))
+  for (k in 2:d){
+    gamma[add, ] <- NA
+    avail <- (1:d)[-current_order]
+
+    add <- if (k < d){
+      avail[which.min(apply(gamma, 2, max, na.rm = TRUE)[avail])]
+    } else {
+      avail
+    }
+    current_order <- c(current_order, add)
+  }
+
+  order <- current_order
+
+  return(order)
+}
+
+
+#' Oracle permutation search
+#'
+#' Runs oracle permutation search given the true DAG \code{g}.
+#'
+#' @param g Numeric matrix. The weighted adjacency matrix of a DAG.
+#' @return Numeric vector. The causal order estimated from \code{g}.
+oracle_search <- function(g){
+
+  g <- (g != 0) * 1
+  order <- compute_caus_order(g)
+  return(order)
+
+}
+
+
+#' Lingam search
+#'
+#' Runs Lingam given a dataset \code{mat}.
+#'
+#' @inheritParams compute_gamma_matrix
+#' @return List. A list made of:
+#' \itemize{
+#' \item \code{adj_mat} Numeric matrix (or \code{NA} in case of error).
+#' The estimated adjacency matrix of a DAG,
+#' \item \code{order} Numeric vector (or \code{NA} in case of error).
+#' The causal order obtained from \code{adj_mat}.
+#' }
+lingam_search <- function(mat){
+
+  out <- tryCatch({
+      lingam_output <- pcalg::lingam(X = mat)
+      Bpruned <- lingam_output$Bpruned
+      est_adj_mat <- (t(Bpruned) != 0) * 1
+      order <- compute_caus_order(g = est_adj_mat)
+      ll <- list(adj_mat = est_adj_mat, order = order)
+
+      return(ll)
+    },
+    error = function(e){
+      ll <- list(adj_mat = NA, order = NA)
+
+      return(ll)
+    })
+
+  return(out)
+}
+
+
+#' PC search
+#'
+#' Runs PC algorithm given a dataset \code{mat}.
+#'
+#' The function \code{pcalg:pc()} is called with the following
+#' arguments:
+#' \itemize{
+#' \item \code{suffStat = list(C = cor(mat), n = NROW(mat))},
+#' \item \code{indepTest = gaussCItest},
+#' \item \code{alpha = 0.05},
+#' \item \code{u2pd = "retry"} --- this makes sure that the produced CPDAG
+#' is extendible to a DAG,
+#' \item \code{skel.method = "stable"}.
+#' }
+#'
+#' @inheritParams compute_gamma_matrix
+#' @return List. A list made of:
+#' \itemize{
+#' \item \code{adj_mat} Numeric matrix (or \code{NA} in case of error).
+#' The estimated adjacency matrix of a CPDAG,
+#' \item \code{order} Numeric vector (or \code{NA} in case of error).
+#' The causal order obtained by removing cycles from \code{adj_mat}.
+#' }
+pc_search <- function(mat){
+
+  n <- NROW(mat)
+  p <- NCOL(mat)
+
+  out <- tryCatch({
+    suff_stat <- list(C = cor(mat), n = n)
+    pc.fit <- pcalg::pc(suffStat = suff_stat, indepTest = pcalg::gaussCItest,
+                 p = p, alpha = 5e-2, u2pd = "retry", skel.method = "stable")
+    cpdag <- as(pc.fit@graph, "matrix")
+    dag <- cpdag * (t(cpdag) == 0)
+    order <- compute_caus_order(dag)
+    ll <- list(adj_mat = cpdag, order = order)
+
+    return(ll)
+    },
+    error = function(e){
+    ll <- list(adj_mat = NA, order = NA)
+    return(ll)
+  })
+
+  return(out)
 }

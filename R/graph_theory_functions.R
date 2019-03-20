@@ -1,7 +1,7 @@
 #' Causal order of a DAG
 #'
 #' Produces one causal order of the DAG \code{g}.
-#' Copyright (c) 2013 Jonas Peters \email{peters@@stat.math.ethz.ch}.
+#' Copyright (c) 2013 Jonas Peters \email{peters@@math.ku.dk}.
 #' All rights reserved.
 #'
 #' @param g Numeric matrix. The adjacency matrix of a DAG.

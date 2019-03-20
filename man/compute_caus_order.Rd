@@ -14,6 +14,6 @@ Numeric vector. The causal order of the DAG \code{g}.
 }
 \description{
 Produces one causal order of the DAG \code{g}.
-Copyright (c) 2013 Jonas Peters \email{peters@stat.math.ethz.ch}.
+Copyright (c) 2013 Jonas Peters \email{peters@math.ku.dk}.
 All rights reserved.
 }
