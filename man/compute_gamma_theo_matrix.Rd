@@ -20,7 +20,8 @@ set equal to one.}
 \value{
 Numeric matrix. The entry \eqn{(i, j)} contains the theoretical
 gamma coefficient between the \eqn{i}-th and the \eqn{j}-th node
-of \code{g}. If \eqn{i = j}, the entry \eqn{(i, j)} = \code{NA}.
+of \code{g}. If \eqn{i = j}, the value of the entry \eqn{(i, j)} is set
+to \code{NA}.
 }
 \description{
 Computes the theoretical gamma coefficient matrix given the DAG \code{g},

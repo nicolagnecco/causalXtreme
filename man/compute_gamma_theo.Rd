@@ -21,8 +21,8 @@ number of variables (nodes) in the DAG. By default, all entries are
 set equal to one.}
 }
 \value{
-Numeric --- between 0.5 and 1. The theoretical gamma coefficient between node \code{i}
-and \code{j} in the DAG \code{g}.
+Numeric --- between 0.5 and 1. The theoretical gamma coefficient
+between node \code{i} and \code{j} in the DAG \code{g}.
 }
 \description{
 Computes the theoretical gamma coefficient between node \code{i}

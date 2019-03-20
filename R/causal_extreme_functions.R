@@ -7,7 +7,7 @@
 #' @param v1,v2 Numeric vectors. Two vectors with \code{n} observations.
 #' @param k Integer. The number of upper-order statistics used to
 #' compute the gamma coefficient. Set by default to \code{k = floor(sqrt(n))}.
-#' @return Numeric --- between 0.5 and 1. The gamma causal coefficient between \code{v1} and
+#' @return Numeric --- between 0 and 1. The gamma causal coefficient between \code{v1} and
 #' \code{v2}.
 compute_gamma <- function(v1, v2, k = floor(sqrt(n))){
   n <- NROW(v1)   # number of observations
@@ -28,7 +28,8 @@ compute_gamma <- function(v1, v2, k = floor(sqrt(n))){
 #' @inheritParams compute_gamma
 #' @return Numeric matrix. The entry \eqn{(i, j)} contains the
 #' gamma coefficient between the \eqn{i}-th and the \eqn{j}-th
-#' column of \code{mat}. If \eqn{i = j}, the entry \eqn{(i, j)} = \code{NA}.
+#' column of \code{mat}. If \eqn{i = j}, the value of the entry \eqn{(i, j)}
+#' is set to \code{NA}.
 compute_gamma_matrix <- function(mat, k = floor(sqrt(n))){
   n   <- NROW(mat) # number of observations
   p   <- NCOL(mat) # number of variables
@@ -66,8 +67,8 @@ compute_gamma_matrix <- function(mat, k = floor(sqrt(n))){
 #' the scaling coefficients of the noise variables. Note that \eqn{p} is the
 #' number of variables (nodes) in the DAG. By default, all entries are
 #' set equal to one.
-#' @return Numeric --- between 0.5 and 1. The theoretical gamma coefficient between node \code{i}
-#' and \code{j} in the DAG \code{g}.
+#' @return Numeric --- between 0.5 and 1. The theoretical gamma coefficient
+#' between node \code{i} and \code{j} in the DAG \code{g}.
 compute_gamma_theo <- function(g, i, j, alpha, noise_w){
 
   if (min(g, na.rm = T) < 0){
@@ -106,7 +107,29 @@ compute_gamma_theo <- function(g, i, j, alpha, noise_w){
 #' @inheritParams compute_gamma_theo
 #' @return Numeric matrix. The entry \eqn{(i, j)} contains the theoretical
 #' gamma coefficient between the \eqn{i}-th and the \eqn{j}-th node
-#' of \code{g}. If \eqn{i = j}, the entry \eqn{(i, j)} = \code{NA}.
+#' of \code{g}. If \eqn{i = j}, the value of the entry \eqn{(i, j)} is set
+#' to \code{NA}.
 compute_gamma_theo_matrix <- function(g, alpha, noise_w){
- # !!! to continue
+
+  if (min(g, na.rm = T) < 0){
+    stop("The weighted adjacency matrix must have non-negative weights.")
+  }
+
+  p   <- NCOL(g) # number of variables
+
+  # compute theoretical gamma for all combinations of indices
+  gamma_mat <- sapply(1:p,
+                      function(j){
+                        sapply(1:p,
+                               function(i){
+                                 if (i == j){
+                                   NA
+                                 } else {
+                                   compute_gamma_theo(g, i, j, alpha, noise_w)
+                                 }
+                               })
+                      })
+
+  # return data
+  return(gamma_mat)
 }

@@ -124,9 +124,22 @@ test_that("theoretical gamma works", {
 })
 
 test_that("theoretical gamma matrix works", {
-  # !!! to continue
-  # change in the comments
-  # the entry (i, j) = NA
-  # to
-  # the value of the entry (i, j) is set to NA.
+  expect_equal(compute_gamma_theo_matrix(A, alpha, noise_w),
+               rbind(c(NA,
+                       compute_gamma_theo(A, 1, 2, alpha, noise_w),
+                       compute_gamma_theo(A, 1, 3, alpha, noise_w),
+                       compute_gamma_theo(A, 1, 4, alpha, noise_w)),
+                     c(compute_gamma_theo(A, 2, 1, alpha, noise_w),
+                       NA,
+                       compute_gamma_theo(A, 2, 3, alpha, noise_w),
+                       compute_gamma_theo(A, 2, 4, alpha, noise_w)),
+                     c(compute_gamma_theo(A, 3, 1, alpha, noise_w),
+                       compute_gamma_theo(A, 3, 2, alpha, noise_w),
+                       NA,
+                       compute_gamma_theo(A, 3, 4, alpha, noise_w)),
+                     c(compute_gamma_theo(A, 4, 1, alpha, noise_w),
+                       compute_gamma_theo(A, 4, 2, alpha, noise_w),
+                       compute_gamma_theo(A, 4, 3, alpha, noise_w),
+                       NA)))
+  expect_error(compute_gamma_theo_matrix(-A, alpha, noise_w))
 })

@@ -16,7 +16,8 @@ compute the gamma coefficient. Set by default to \code{k = floor(sqrt(n))}.}
 \value{
 Numeric matrix. The entry \eqn{(i, j)} contains the
 gamma coefficient between the \eqn{i}-th and the \eqn{j}-th
-column of \code{mat}. If \eqn{i = j}, the entry \eqn{(i, j)} = \code{NA}.
+column of \code{mat}. If \eqn{i = j}, the value of the entry \eqn{(i, j)}
+is set to \code{NA}.
 }
 \description{
 Computes the gamma coefficient matrix given a dataset \code{mat},

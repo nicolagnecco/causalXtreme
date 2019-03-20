@@ -13,7 +13,7 @@ compute_gamma(v1, v2, k = floor(sqrt(n)))
 compute the gamma coefficient. Set by default to \code{k = floor(sqrt(n))}.}
 }
 \value{
-Numeric --- between 0.5 and 1. The gamma causal coefficient between \code{v1} and
+Numeric --- between 0 and 1. The gamma causal coefficient between \code{v1} and
 \code{v2}.
 }
 \description{
