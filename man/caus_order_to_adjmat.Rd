@@ -7,7 +7,7 @@
 caus_order_to_adjmat(caus_order)
 }
 \arguments{
-\item{caus_order}{Numeric vector (or vector of \code{NA}s).
+\item{caus_order}{Numeric vector.
 Represents a causal order.}
 }
 \value{

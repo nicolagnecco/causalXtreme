@@ -7,9 +7,6 @@
 compute_gamma_theo_matrix(g, alpha, noise_w)
 }
 \arguments{
-\item{g}{Numeric matrix. The weighted adjacency matrix of a DAG.
-All the entries must be non-negative.}
-
 \item{alpha}{Numeric. The tail-index of the noise distribution}
 
 \item{noise_w}{Numeric vector. A \eqn{p}-dimensional vector containing

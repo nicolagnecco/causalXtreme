@@ -4,10 +4,10 @@
 \alias{get_all_paths}
 \title{Get all the directed paths of a DAG}
 \usage{
-get_all_paths(g, type = c("count", "weighted")[1])
+get_all_paths(wg, type = c("count", "weighted")[1])
 }
 \arguments{
-\item{g}{Numeric matrix. The adjacency matrix of a DAG.}
+\item{wg}{Numeric matrix. The (possibly weighted) adjacency matrix of a DAG.}
 
 \item{type}{String. Is one of:
 \itemize{

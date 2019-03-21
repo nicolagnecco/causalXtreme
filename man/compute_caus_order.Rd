@@ -13,7 +13,8 @@ compute_caus_order(g)
 Numeric vector. The causal order of the DAG \code{g}.
 }
 \description{
-Produces one causal order of the DAG \code{g}.
+Produces one causal order of the DAG, represented as a non-weighted
+adjacency matrix \code{g}.
 Copyright (c) 2013 Jonas Peters \email{peters@math.ku.dk}.
 All rights reserved.
 }

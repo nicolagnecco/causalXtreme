@@ -18,8 +18,9 @@ execution?}
 \value{
 List. A list made of:
 \itemize{
-\item \code{order} Numeric vector. The causal order estimated from \code{delta},
-\item \code{score} Numeric. The score associated to \code{order}.
+\item \code{order} Numeric vector. The causal order estimated
+from \code{delta},
+\item \code{score} Numeric. The maximized score associated to \code{order}.
 It is defined as the sum of the upper triangular entries of \code{delta},
 after its rows and columns are sorted according to \code{order}.
 }

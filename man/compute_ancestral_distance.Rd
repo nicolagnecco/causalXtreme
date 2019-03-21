@@ -9,13 +9,12 @@ compute_ancestral_distance(g, caus_order)
 \arguments{
 \item{g}{Numeric matrix. The adjacency matrix of a DAG.}
 
-\item{caus_order}{Numeric vector (or vector of \code{NA}s).
+\item{caus_order}{Numeric vector.
 Represents a causal order.}
 }
 \value{
-Numeric --- between 0 and 1 --- or \code{NA}, if \code{caus_order} is a vector
-of \code{NA}s. The ancestral distance between the DAG \code{g} and
-the causal order \code{caus_order}.
+Numeric --- between 0 and 1. The ancestral distance between the
+DAG \code{g} and the causal order \code{caus_order}.
 }
 \description{
 Computes the ancestral distance between the DAG \code{g} and

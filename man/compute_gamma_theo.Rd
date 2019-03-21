@@ -4,10 +4,10 @@
 \alias{compute_gamma_theo}
 \title{Pairwise theoretical gamma coefficient}
 \usage{
-compute_gamma_theo(g, i, j, alpha, noise_w)
+compute_gamma_theo(wg, i, j, alpha, noise_w)
 }
 \arguments{
-\item{g}{Numeric matrix. The weighted adjacency matrix of a DAG.
+\item{wg}{Numeric matrix. The weighted adjacency matrix of a DAG.
 All the entries must be non-negative.}
 
 \item{i, j}{Integer. The indices of the nodes to consider to compute
@@ -22,10 +22,11 @@ set equal to one.}
 }
 \value{
 Numeric --- between 0.5 and 1. The theoretical gamma coefficient
-between node \code{i} and \code{j} in the DAG \code{g}.
+between node \code{i} and \code{j} in the DAG \code{wg}.
 }
 \description{
 Computes the theoretical gamma coefficient between node \code{i}
-and node \code{j}, given the DAG \code{g}, the tail-index \code{alpha}
-and the scales of the noise variables \code{noise_w}.
+and node \code{j}, given the weighted adjacency matrix \code{wg},
+the tail-index \code{alpha} and the scales of the
+noise variables \code{noise_w}.
 }

@@ -12,8 +12,9 @@
 #' execution?
 #' @return List. A list made of:
 #' \itemize{
-#' \item \code{order} Numeric vector. The causal order estimated from \code{delta},
-#' \item \code{score} Numeric. The score associated to \code{order}.
+#' \item \code{order} Numeric vector. The causal order estimated
+#' from \code{delta},
+#' \item \code{score} Numeric. The maximized score associated to \code{order}.
 #' It is defined as the sum of the upper triangular entries of \code{delta},
 #' after its rows and columns are sorted according to \code{order}.
 #' }
@@ -235,19 +236,15 @@ full_perm_search <- function(delta, silent = FALSE){
 #' Copyright (c) 2013 Jonas Peters \email{peters@@math.ku.dk}.
 #' All rights reserved.
 #'
-#' @param delta Numeric matrix --- between -1 and 1. The \code{delta}
-#' matrix is defined as \code{gamma - t(gamma)}, where \code{gamma}
-#' is the gamma coefficient matrix.
-#' @inherit greedy_perm_search return
-random_perm_search <- function(delta){
+#' @inheritParams compute_caus_order
+#' @return Numeric vector. The causal order estimated from \code{g}.
+random_perm_search <- function(g){
 
-  A <- delta
+  A <- g
   p <- NROW(A) # number of variables
   order <-  sample(p, p, replace = FALSE)
-  A <- A[order, order]
-  score <- sum(A[upper.tri(A)])
 
-  return(list(order = order, score = score))
+  return(order)
 }
 
 
@@ -304,28 +301,19 @@ oracle_search <- function(g){
 #' Runs Lingam given a dataset \code{mat}.
 #'
 #' @inheritParams compute_gamma_matrix
-#' @return List. A list made of:
-#' \itemize{
-#' \item \code{adj_mat} Numeric matrix (or \code{NA} in case of error).
-#' The estimated adjacency matrix of a DAG,
-#' \item \code{order} Numeric vector (or \code{NA} in case of error).
-#' The causal order obtained from \code{adj_mat}.
-#' }
+#' @return Numeric matrix (or \code{NA} in case of error).
+#' The estimated adjacency matrix of a DAG.
 lingam_search <- function(mat){
 
   out <- tryCatch({
       lingam_output <- pcalg::lingam(X = mat)
       Bpruned <- lingam_output$Bpruned
-      est_adj_mat <- (t(Bpruned) != 0) * 1
-      order <- compute_caus_order(g = est_adj_mat)
-      ll <- list(adj_mat = est_adj_mat, order = order)
-
-      return(ll)
+      dag <- (t(Bpruned) != 0) * 1
+      return(dag)
     },
     error = function(e){
-      ll <- list(adj_mat = NA, order = NA)
-
-      return(ll)
+      dag <- NA
+      return(dag)
     })
 
   return(out)
@@ -348,13 +336,8 @@ lingam_search <- function(mat){
 #' }
 #'
 #' @inheritParams compute_gamma_matrix
-#' @return List. A list made of:
-#' \itemize{
-#' \item \code{adj_mat} Numeric matrix (or \code{NA} in case of error).
-#' The estimated adjacency matrix of a CPDAG,
-#' \item \code{order} Numeric vector (or \code{NA} in case of error).
-#' The causal order obtained by removing cycles from \code{adj_mat}.
-#' }
+#' @return Numeric matrix (or \code{NA} in case of error).
+#' The estimated adjacency matrix of a CPDAG.
 pc_search <- function(mat){
 
   n <- NROW(mat)
@@ -365,15 +348,11 @@ pc_search <- function(mat){
     pc.fit <- pcalg::pc(suffStat = suff_stat, indepTest = pcalg::gaussCItest,
                  p = p, alpha = 5e-2, u2pd = "retry", skel.method = "stable")
     cpdag <- as(pc.fit@graph, "matrix")
-    dag <- cpdag * (t(cpdag) == 0)
-    order <- compute_caus_order(dag)
-    ll <- list(adj_mat = cpdag, order = order)
-
-    return(ll)
+    return(cpdag)
     },
     error = function(e){
-    ll <- list(adj_mat = NA, order = NA)
-    return(ll)
+    cpdag <- NA
+    return(cpdag)
   })
 
   return(out)

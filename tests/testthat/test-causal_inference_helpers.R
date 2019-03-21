@@ -60,14 +60,10 @@ test_that("full search works", {
 
 test_that("random search works", {
   set.seed(1)
-  order <- sample(1:NROW(delta))
-  delta_temp <- delta[order, order]
-  score <- sum(delta_temp[upper.tri(delta_temp)])
+  order <- sample(1:NROW(g))
   set.seed(1)
 
-  expect_equal(random_perm_search(delta),
-               list(order = order,
-                    score = score))
+  expect_equal(random_perm_search(g), order)
 })
 
 test_that("minimax search works", {
@@ -81,14 +77,11 @@ test_that("oracle search works", {
 test_that("lingam search works", {
   set.seed(1)
   out <- pcalg::lingam(dat1)
-  adj_mat <- t((out$Bpruned != 0) * 1)
-  order <- compute_caus_order(adj_mat)
+  dag <- t( (out$Bpruned != 0) * 1)
   set.seed(1)
 
-  expect_equal(lingam_search(dat1),
-               list(adj_mat = adj_mat, order = order))
-  expect_equal(lingam_search(dat2),
-               list(adj_mat = NA, order = NA))
+  expect_equal(lingam_search(dat1), dag)
+  expect_equal(lingam_search(dat2), NA)
 })
 
 test_that("pc search works", {
@@ -98,13 +91,9 @@ test_that("pc search works", {
                    alpha = 0.05,
                    u2pd = "retry",
                    skel.method = "stable")
-  adj_mat <- as(out@graph, "matrix")
-  dag <- adj_mat * (t(adj_mat) == 0)
-  order <- compute_caus_order(dag)
+  cpdag <- as(out@graph, "matrix")
 
-  expect_equal(pc_search(dat1),
-               list(adj_mat = adj_mat, order = order))
+  expect_equal(pc_search(dat1), cpdag)
 
-  expect_equal(pc_search(dat3),
-               list(adj_mat = NA, order = NA))
+  expect_equal(pc_search(dat3), NA)
   })

@@ -7,8 +7,8 @@
 compute_gamma_matrix(mat, k = floor(sqrt(n)))
 }
 \arguments{
-\item{mat}{Numeric matrix. Matrix with \code{n} rows (observations)
-and \code{p} columns (variables).}
+\item{mat}{Numeric matrix. Observation matrix with \code{n}
+rows (observations) and \code{p} columns (variables).}
 
 \item{k}{Integer. The number of upper-order statistics used to
 compute the gamma coefficient. Set by default to \code{k = floor(sqrt(n))}.}

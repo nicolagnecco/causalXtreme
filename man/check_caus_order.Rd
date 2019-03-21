@@ -7,14 +7,13 @@
 check_caus_order(caus_order, g)
 }
 \arguments{
-\item{caus_order}{Numeric vector (or vector of \code{NA}s).
+\item{caus_order}{Numeric vector.
 Represents a causal order.}
 
 \item{g}{Numeric matrix. The adjacency matrix of a DAG.}
 }
 \value{
-Logical (or \code{NA}, if \code{caus_order} is a vector
-of \code{NA}s).
+Logical.
 }
 \description{
 Produces \code{TRUE} if \code{caus_order} is a causal order of the DAG

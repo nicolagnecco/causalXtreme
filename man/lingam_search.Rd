@@ -7,17 +7,12 @@
 lingam_search(mat)
 }
 \arguments{
-\item{mat}{Numeric matrix. Matrix with \code{n} rows (observations)
-and \code{p} columns (variables).}
+\item{mat}{Numeric matrix. Observation matrix with \code{n}
+rows (observations) and \code{p} columns (variables).}
 }
 \value{
-List. A list made of:
-\itemize{
-\item \code{adj_mat} Numeric matrix (or \code{NA} in case of error).
-The estimated adjacency matrix of a DAG,
-\item \code{order} Numeric vector (or \code{NA} in case of error).
-The causal order obtained from \code{adj_mat}.
-}
+Numeric matrix (or \code{NA} in case of error).
+The estimated adjacency matrix of a DAG.
 }
 \description{
 Runs Lingam given a dataset \code{mat}.

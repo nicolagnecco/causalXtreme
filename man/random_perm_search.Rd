@@ -4,21 +4,13 @@
 \alias{random_perm_search}
 \title{Random permutation search}
 \usage{
-random_perm_search(delta)
+random_perm_search(g)
 }
 \arguments{
-\item{delta}{Numeric matrix --- between -1 and 1. The \code{delta}
-matrix is defined as \code{gamma - t(gamma)}, where \code{gamma}
-is the gamma coefficient matrix.}
+\item{g}{Numeric matrix. The adjacency matrix of a DAG.}
 }
 \value{
-List. A list made of:
-\itemize{
-\item \code{order} Numeric vector. The causal order estimated from \code{delta},
-\item \code{score} Numeric. The score associated to \code{order}.
-It is defined as the sum of the upper triangular entries of \code{delta},
-after its rows and columns are sorted according to \code{order}.
-}
+Numeric vector. The causal order estimated from \code{g}.
 }
 \description{
 Runs random permutation search given the matrix \code{delta}.
