@@ -16,4 +16,5 @@ Suggests:
 Imports: 
     SID,
     gtools,
-    pcalg
+    pcalg,
+    Matrix

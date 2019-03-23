@@ -7,7 +7,7 @@
 greedy_perm_search(delta, silent = FALSE)
 }
 \arguments{
-\item{delta}{Numeric matrix --- between -1 and 1. The \code{delta}
+\item{delta}{Numeric matrix --- entries between -1 and 1. The \code{delta}
 matrix is defined as \code{gamma - t(gamma)}, where \code{gamma}
 is the gamma coefficient matrix. The number of rows (and columns)
 of \code{delta} must be greater than 3.}

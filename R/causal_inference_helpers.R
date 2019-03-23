@@ -4,7 +4,7 @@
 #' Copyright (c) 2013 Jonas Peters \email{peters@@math.ku.dk}.
 #' All rights reserved.
 #'
-#' @param delta Numeric matrix --- between -1 and 1. The \code{delta}
+#' @param delta Numeric matrix --- entries between -1 and 1. The \code{delta}
 #' matrix is defined as \code{gamma - t(gamma)}, where \code{gamma}
 #' is the gamma coefficient matrix. The number of rows (and columns)
 #' of \code{delta} must be greater than 3.
@@ -131,7 +131,7 @@ greedy_perm_search <- function(delta, silent = FALSE){
 #' All rights reserved.
 #'
 #' @inheritParams greedy_perm_search
-#' @param delta Numeric matrix --- between -1 and 1. The \code{delta}
+#' @param delta Numeric matrix --- entries between -1 and 1. The \code{delta}
 #' matrix is defined as \code{gamma - t(gamma)}, where \code{gamma}
 #' is the gamma coefficient matrix.
 #' @param mode String. Is one of:
@@ -203,7 +203,7 @@ fast_perm_search <- function(delta, mode = "sum", silent = FALSE){
 #' All rights reserved.
 #'
 #' @inheritParams greedy_perm_search
-#' @param delta Numeric matrix --- between -1 and 1. The \code{delta}
+#' @param delta Numeric matrix --- entries between -1 and 1. The \code{delta}
 #' matrix is defined as \code{gamma - t(gamma)}, where \code{gamma}
 #' is the gamma coefficient matrix. If the number of rows (and columns)
 #' of \code{delta} is greater than 10, the function returns an error.
@@ -252,8 +252,8 @@ random_perm_search <- function(g){
 #'
 #' Runs minimax permutation search given the matrix \code{gamma}.
 #'
-#' @param gamma Numeric matrix --- between 0 and 1. The \code{gamma}
-#' coefficient matrix.
+#' @param gamma Numeric matrix --- entries between 0 and 1.
+#' The \code{gamma} coefficient matrix.
 #' @return  Numeric vector. The causal order estimated from \code{gamma}.
 minimax_search <- function(gamma){
 

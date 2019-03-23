@@ -7,8 +7,8 @@
 minimax_search(gamma)
 }
 \arguments{
-\item{gamma}{Numeric matrix --- between 0 and 1. The \code{gamma}
-coefficient matrix.}
+\item{gamma}{Numeric matrix --- entries between 0 and 1.
+The \code{gamma} coefficient matrix.}
 }
 \value{
 Numeric vector. The causal order estimated from \code{gamma}.
