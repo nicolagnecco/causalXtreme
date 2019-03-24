@@ -1,3 +1,19 @@
+#' Randomly pick elements
+#' Select each element of \code{vec} with probability \code{prob} and
+#' produce a vector with the selected elements.
+#'
+#' @param vec Numeric vector. Vector containing the elements to select.
+#' @param prob Numeric --- between 0 and 1. The probability of selecting
+#' each element of \code{vec}.
+#'
+#' @return Numeric vector. A vector with the selected elements
+#'
+pick_elements <- function(vec, prob){
+  r <- rbinom(n = length(vec), size = 1, prob = prob)
+  vec[r == 1]
+}
+
+
 #' Simulate random DAG
 #'
 #' Simulates a directed acyclic graph (DAG) and returns its adjacency matrix.
@@ -65,36 +81,90 @@ random_dag <- function(p, prob_connect,
 #' All rights reserved.
 #'
 #' @inheritParams compute_caus_order
-#' @param lB Numeric. The lower bound for the uniform distribution.
-#' @param uB Numeric. The upper bound for the uniform distribution.
-#' It must be stricly greater than \code{lB}.
+#' @param lb Numeric. The lower bound for the uniform distribution.
+#' @param ub Numeric. The upper bound for the uniform distribution.
+#' It must be stricly greater than \code{lb}.
 #' @param two_intervals Logical. Should the coefficient be sampled
 #' from two symmetric uniform distributions?
-#' If \code{two_intervals == TRUE}, \code{lB} and \code{uB} must be
+#' If \code{two_intervals == TRUE}, \code{lb} and \code{ub} must be
 #' positive.
 #' @return Numeric matrix. The weighted adjacency matrix of the
 #' DAG \code{g}.
-random_b <- function(g, lB = 0.1, uB = 0.9, two_intervals = FALSE){
+random_b <- function(g, lb = 0.1, ub = 0.9, two_intervals = FALSE){
 
-  if (!(uB > lB)) {
-    stop("The upper bound uB must be stricly greater than the lower bound lB")
+  # check if g is a (non-weighted) adjacency matrix
+  if (!all(g %in% c(0, 1))){
+    stop("The entries of g must be either 0 or 1.")
+  }
+
+  # check if the lower and upper bound are well specified
+  if (!(ub > lb)) {
+    stop("The upper bound ub must be stricly greater than the lower bound lb")
   }
 
   if (two_intervals == TRUE){
-    if (!(lB > 0 & uB > 0)){
-      stop(paste("If two_intervals == TRUE, lB and uB must be positive."))
+    if (!(lb > 0 & ub > 0)){
+      stop(paste("If two_intervals == TRUE, lb and ub must be positive."))
     }
   }
 
   numCoeff <- sum(g)
-  B <- t(g)
   if (numCoeff == 1) {
     coeffs <- sample(c(-1, 1), size = numCoeff,
-                     TRUE) ^ (two_intervals) * runif(1, lB, uB)
+                     TRUE) ^ (two_intervals) * runif(1, lb, ub)
   } else {
     coeffs <- diag(sample(c(-1, 1), size = numCoeff,
-                          TRUE) ^ (two_intervals)) %*% runif(numCoeff, lB, uB)
+                          TRUE) ^ (two_intervals)) %*% runif(numCoeff, lb, ub)
   }
-  B[B == 1] <- coeffs
-  return(B)
+  g[g == 1] <- coeffs
+  return(g)
 }
+
+
+addRandomConfounders <- function(N, probConfouder, conf_w, alpha){
+  ## numeric_matrix numeric numeric df -> numeric_matrix
+  ## produces a noise matrix where each pair of variables (i, j) in N
+  ## is confounded with probability probConfounder;
+  ## conf_w is the signal proportion of the confounder versus the noise;
+  ## alpha is the tail index of the distribution
+  ## ASSUME:
+  ## 1. conf_w is between 0 and 1
+
+  # Check inputs
+  if(conf_w > 1 | conf_w < 0){stop("The signal weight must be between 0 and 1.")}
+
+  # Get variables
+  n <- NROW(N)
+  p <- NCOL(N)
+
+  # Consider all possible pairs of nodes in G
+  M <- which(upper.tri(diag(p)), arr.ind=TRUE)
+  nPossibleConf  <- NROW(M)
+
+  # Choose the confounders randomly
+  numberConf  <- rbinom(n=1, size=nPossibleConf, prob=probConfounder)
+  Confounders <- sample(x = 1:nPossibleConf, size = numberConf, replace = FALSE)
+  Confounders <- M[Confounders, ]
+
+  if(numberConf == 0){
+    return(N)
+  }
+
+  # Sample the confounder weights
+  S <- matrix(0, nrow = numberConf, ncol = p) # preallocate matrix with confounder-variable pairs
+  confvar_pairs <- cbind(rep(1:numberConf, each=2), c(t(Confounders))) # confounder-variable pairs
+  S[confvar_pairs] <- 1 # populate matrix with confounder-variable pairs
+  S <- abs(randomB(t(S), lB = lB, uB = uB)) # sample random weights of confounders
+
+  # Rescale confounder weights
+  S <- scale_adjmat(S, conf_w, alpha)
+  noise_w <- 1 - conf_w
+  N <- scale_noise(N, S, noise_w, alpha)
+
+  # Generate confounders
+  C <- simulateNoise(n, numberConf, distr, alpha)
+
+  # Return confounded noise
+  return(N + C %*% S)
+}
+
