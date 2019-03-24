@@ -2,23 +2,6 @@ context("test-simulation_helpers")
 
 # Define variables
 u <- sample(1e6, 1)
-n_iter <- 2
-
-g1 <- rbind(c(0, 0, 1, 0),
-            c(1, 0, 0, 0),
-            c(0, 0, 0, 1),
-            c(0, 0, 0, 0))
-
-g2 <- rbind(c(0, 1.5, 0, 0),
-            c(0, 0, -1.2, 2),
-            c(0, 0, 0, 0.3),
-            c(0, 0, 0, 0))
-
-g3 <- rbind(c(0, 1, 0),
-            c(0, 0, 0),
-            c(0, 0, 0))
-
-lb_vec <- runif(10)
 
 # Run tests
 test_that("pick elements works", {
@@ -52,172 +35,154 @@ test_that("pick elements works", {
 
 })
 
+test_that("inverse mirror uniform works", {
+  lb <- runif(1)
+  ub <- lb + runif(1)
+  expect_equal(inverse_mirror_uniform(prob = 0, min = lb, max = ub), -ub)
+  expect_equal(inverse_mirror_uniform(prob = 1, min = lb, max = ub), ub)
+  expect_equal(inverse_mirror_uniform(prob = 1 / 2, min = lb, max = ub), lb)
+  expect_equal(inverse_mirror_uniform(prob = 1 / 4, min = lb, max = ub),
+               2 * 1 / 4 * (ub - lb) - ub)
+  expect_equal(inverse_mirror_uniform(prob = 3 / 4, min = lb, max = ub),
+              (2 * 3 / 4 - 1) * (ub - lb) + lb)
 
-
-
-test_that("random dag works", {
-  # prob_connect = 1, caus_order = given
-  for (i in 1:n_iter){
-    for (p in 3:7){
-      caus_order <- sample(p, p, replace = FALSE)
-      dag <- caus_order_to_adjmat(caus_order)
-      dag_sparse <- Matrix::Matrix(nrow = p, ncol = p, 0, sparse = TRUE)
-      dag_sparse[dag == 1] <- 1
-
-      expect_equal(random_dag(p, 1, caus_order),
-                   dag)
-      expect_equal(random_dag(p, 1, caus_order, sparse = TRUE),
-                   dag_sparse)
-    }
-  }
-
-  # prob_connect = 1, caus_order = not given
-  for (i in 1:n_iter){
-    for (p in 3:7){
-      u <- sample(1e4, 1)
-      set.seed(u)
-      caus_order <- sample(p, p, replace = FALSE)[p:1]
-      dag <- caus_order_to_adjmat(caus_order)
-      dag_sparse <- Matrix::Matrix(nrow = p, ncol = p, 0, sparse = TRUE)
-      dag_sparse[dag == 1] <- 1
-
-      set.seed(u)
-      expect_equal(random_dag(p, 1), dag)
-      set.seed(u)
-      expect_equal(random_dag(p, 1, sparse = TRUE),
-                   dag_sparse)
-    }
-  }
-
-  # prob_connect = 0, caus_order = given
-  for (i in 1:n_iter){
-    for (p in 3:7){
-      caus_order <- sample(p, p, replace = FALSE)
-      dag <- matrix(0, ncol = p, nrow = p)
-      dag_sparse <- Matrix::Matrix(nrow = p, ncol = p, 0, sparse = TRUE)
-
-      expect_equal(random_dag(p, 0, caus_order),
-                   dag)
-      expect_equal(random_dag(p, 0, caus_order, sparse = TRUE),
-                   dag_sparse)
-    }
-  }
-
-  # prob_connect = 0, caus_order = not given
-  for (i in 1:n_iter){
-    for (p in 3:7){
-      dag <- matrix(0, ncol = p, nrow = p)
-      dag_sparse <- Matrix::Matrix(nrow = p, ncol = p, 0, sparse = TRUE)
-
-      expect_equal(random_dag(p, 0), dag)
-      expect_equal(random_dag(p, 0, sparse = TRUE),
-                   dag_sparse)
-    }
-  }
-
-  # 0 < prob_connect < 1, caus_order = given
-  for (i in 1:n_iter){
-    for (p in 3:7){
-      caus_order <- sample(p, p, replace = FALSE)
-      dag <- caus_order_to_adjmat(caus_order)
-      dag_sparse <- Matrix::Matrix(nrow = p, ncol = p, 0, sparse = TRUE)
-      dag_sparse[dag == 1] <- 1
-
-      expect_true(all(dag - random_dag(p, runif(1), caus_order) >= 0))
-      expect_true(all(dag_sparse -
-                        random_dag(p, runif(1),
-                                   caus_order, sparse = TRUE) >= 0))
-    }
-  }
-
-  # 0 < prob_connect < 1, caus_order = not given
-  for (i in 1:n_iter){
-    for (p in 3:7){
-      u <- sample(1e4, 1)
-      set.seed(u)
-      caus_order <- sample(p, p, replace = FALSE)[p:1]
-      dag <- caus_order_to_adjmat(caus_order)
-      dag_sparse <- Matrix::Matrix(nrow = p, ncol = p, 0, sparse = TRUE)
-      dag_sparse[dag == 1] <- 1
-
-      proba <- runif(1)
-      set.seed(u)
-      expect_true(all(dag - random_dag(p, proba) >= 0))
-      proba <- runif(1)
-      set.seed(u)
-      expect_true(all(dag_sparse -
-                        random_dag(p, proba, caus_order, sparse = TRUE) >= 0))
-    }
-  }
-
-  # errors
-  for (p in 1:2){
-    expect_error(random_dag(p, 0.3))
-    expect_error(random_dag(p, 0.4, caus_order = 1:4))
-    expect_error(random_dag(p, 0.4, caus_order = 1:4, sparse = TRUE))
-    expect_error(random_dag(p, 0.4, sparse = TRUE))
-  }
-
-  for (p in 3:5){
-    expect_error(random_dag(p, 0.4, caus_order = 1:7))
-    expect_error(random_dag(p, 0.4, caus_order = 1:7, sparse = TRUE))
-  }
+  expect_error(inverse_mirror_uniform(prob = runif(1), min = ub, max = lb))
+  expect_error(inverse_mirror_uniform(prob = runif(1), min = -ub, max = lb))
+  expect_error(inverse_mirror_uniform(prob = runif(1), min = ub, max = -lb))
+  expect_error(inverse_mirror_uniform(prob = runif(1), min = -ub, max = -lb))
 
 })
 
-test_that("random weighted dag works", {
-
-  # when num_coeff > 1
-  for (lb in lb_vec){
-    for (two_intervals in c(T, F)){
-
-      ub <- lb + runif(1)
-
-      set.seed(1)
-      num_coeff <- sum(g1)
-      g <- matrix(0, nrow = NROW(g1), ncol = NCOL(g1))
-      rand_coeff <- sample(c(-1, 1), num_coeff, replace = TRUE) ^
-        (two_intervals) * runif(num_coeff, min = lb, max = ub)
-      g[g1 != 0] <- rand_coeff
-
-      set.seed(1)
-      expect_equal(random_b(g1, lb, ub, two_intervals), g)
-    }
-  }
-
-  # when num_coeff == 1
-  for (lb in lb_vec){
-    for (two_intervals in c(T, F)){
-
-      ub <- lb + runif(1)
-
-      set.seed(1)
-      num_coeff <- sum(g3)
-      g <- matrix(0, nrow = NROW(g3), ncol = NCOL(g3))
-      rand_coeff <- sample(c(-1, 1), num_coeff, replace = TRUE) ^
-        (two_intervals) * runif(num_coeff, min = lb, max = ub)
-      g[g3 != 0] <- rand_coeff
-
-      set.seed(1)
-      expect_equal(random_b(g3, lb, ub, two_intervals), g)
-    }
-  }
-
-  # error when g is not adjacency matrix
+test_that("sample uniform works", {
+  n <- 7
   lb <- runif(1)
   ub <- lb + runif(1)
-  expect_error(random_b(g2, lb, ub, FALSE))
-  expect_error(random_b(g2, lb, ub, TRUE))
 
-  # error when lb > ub
+  # mirror == FALSE
+  set.seed(u)
+  r <- runif(n, min = lb, max = ub)
+  set.seed(u)
+  expect_equal(sample_uniform(n = n, min = lb, max = ub), r)
+
+  set.seed(u)
+  r <- runif(n, min = -ub, max = -lb)
+  set.seed(u)
+  expect_equal(sample_uniform(n = n, min = -ub, max = -lb), r)
+
+  expect_error(sample_uniform(n = n, min = ub, max = lb))
+
+  # mirror == TRUE
+  set.seed(u)
+  r <- sapply(runif(n), inverse_mirror_uniform, min = lb, max = ub)
+  set.seed(u)
+  expect_equal(sample_uniform(n = n, min = lb, max = ub, mirror = TRUE), r)
+
+  expect_error(sample_uniform(n = n, min = -ub, max = -lb, mirror = TRUE))
+  expect_error(sample_uniform(n = n, min = -ub, max =  lb, mirror = TRUE))
+  expect_error(sample_uniform(n = n, min =  ub, max = -lb, mirror = TRUE))
+  expect_error(sample_uniform(n = n, min = ub, max = lb, mirror = TRUE))
+
+})
+
+test_that("random dag works", {
+  # caus_order has length 0
+  expect_error(random_dag(p = 0, prob = 0, caus_order = numeric(0)))
+  expect_error(random_dag(p = 0, prob = 1, caus_order = numeric(0)))
+  expect_error(random_dag(p = 0, prob = 0.4, caus_order = numeric(0)))
+
+  # caus_order has length 1
+  caus_order <- c(1)
+
+  expect_equal(random_dag(p = 1, prob = 0, caus_order = caus_order),
+               matrix(0))
+  expect_equal(random_dag(p = 1, prob = 1, caus_order = caus_order),
+               matrix(0))
+  expect_equal(random_dag(p = 1, prob = 0.5, caus_order = caus_order),
+               matrix(0))
+
+  # caus_order has length > 1
+  p <- 4
+  caus_order <- sample(p)
+
+  dag_empty <- matrix(0, nrow = length(caus_order), ncol = length(caus_order))
+  expect_equal(random_dag(p = p, prob = 0, caus_order = caus_order),
+               dag_empty)
+
+  dag_full <-  caus_order_to_adjmat(caus_order)
+  expect_equal(random_dag(p = p, prob = 1, caus_order = caus_order),
+               dag_full)
+
+  proba <- runif(1)
+  dag <- matrix(0, nrow = length(caus_order), ncol = length(caus_order))
+
+  set.seed(u)
+  elms <- pick_elements(caus_order[2:p], proba)
+  dag[caus_order[1], elms] <- 1
+  elms <- pick_elements(caus_order[3:p], proba)
+  dag[caus_order[2], elms] <- 1
+  elms <- pick_elements(caus_order[4:p], proba)
+  dag[caus_order[3], elms] <- 1
+
+  set.seed(u)
+  expect_equal(random_dag(p = p, prob = proba, caus_order = caus_order),
+               dag)
+
+
+  # mismatch between length of caus_order and p
+  expect_error(random_dag(p = 1, prob = 0, caus_order = sample(p)))
+  expect_error(random_dag(p = 1, prob = 1, caus_order = sample(p)))
+  expect_error(random_dag(p = 1, prob = 0.4, caus_order = sample(p)))
+
+
+
+})
+
+test_that("random coefficients works", {
   lb <- runif(1)
-  ub <- max(lb - runif(1), 0)
-  expect_error(random_b(g1, lb, ub, FALSE))
-  expect_error(random_b(g1, lb, ub, TRUE))
+  ub <- lb + runif(1)
 
-  # error when two_intervals == TRUE and lb < 0 and ub < 0
-  expect_error(random_b(g1, -0.3, -0.1, TRUE))
-  expect_error(random_b(g1, -0.3,  0.1, TRUE))
-  expect_error(random_b(g1,  0.3, -0.1, TRUE))
+
+  # DAG has one variable
+  expect_equal(random_coeff(matrix(0), lb = lb, ub = ub,
+                            two_intervals = FALSE), matrix(0))
+  expect_equal(random_coeff(matrix(0), lb = lb, ub = ub,
+                            two_intervals = TRUE), matrix(0))
+
+  # DAG has > 1 variable
+  p <- 7
+  g <- random_dag(p = p, prob = runif(1))
+
+  num_coeff <- sum(g)
+
+  # two_intervals == TRUE
+  g_coeff <- matrix(0, nrow = p, ncol = p)
+  set.seed(u)
+  g_coeff[g == 1] <- sample_uniform(n = num_coeff, min = lb, max = ub,
+                                           mirror = TRUE)
+  set.seed(u)
+  expect_equal(random_coeff(g, lb = lb, ub = ub, two_intervals = TRUE),
+               g_coeff)
+
+  # two_intervals == FALSE
+  g_coeff <- matrix(0, nrow = p, ncol = p)
+  set.seed(u)
+  g_coeff[g == 1] <- sample_uniform(n = num_coeff, min = lb, max = ub,
+                                    mirror = FALSE)
+  set.seed(u)
+  expect_equal(random_coeff(g, lb = lb, ub = ub, two_intervals = FALSE),
+               g_coeff)
+
+  # not adjacency matrix
+  expect_error(random_coeff(g * 0.1, lb = lb, ub = ub, two_intervals = FALSE))
+  expect_error(random_coeff(g * 0.1, lb = lb, ub = ub, two_intervals = TRUE))
+
+  # lb > ub
+  expect_error(random_coeff(g , lb = ub, ub = lb, two_intervals = FALSE))
+  expect_error(random_coeff(g, lb = ub, ub = lb, two_intervals = TRUE))
+
+  # if two_intervals == TRUE, lb > 0 and ub > 0
+  expect_error(random_coeff(g, lb = -ub, ub =  lb, two_intervals = TRUE))
+  expect_error(random_coeff(g, lb =  ub, ub = -lb, two_intervals = TRUE))
+  expect_error(random_coeff(g, lb = -ub, ub = -lb, two_intervals = TRUE))
 
 })

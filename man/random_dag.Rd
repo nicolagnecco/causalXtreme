@@ -4,20 +4,16 @@
 \alias{random_dag}
 \title{Simulate random DAG}
 \usage{
-random_dag(p, prob_connect, caus_order = sample(p, p, replace = FALSE),
-  sparse = FALSE)
+random_dag(p, prob, caus_order = sample(p, p, replace = FALSE))
 }
 \arguments{
-\item{p}{Integer --- greater than 2. Number of nodes.}
+\item{p}{Integer --- greater than 0. Number of nodes.}
 
-\item{prob_connect}{Numeric --- between 0 and 1. The probability that an edge
+\item{prob}{Numeric --- between 0 and 1. The probability that an edge
 \eqn{i {\rightarrow} j} is added to the DAG.}
 
 \item{caus_order}{Numeric vector. The causal order of the DAG.
 If the argument is not provided it is generated randomly.}
-
-\item{sparse}{Logical. Should the adjacency matrix be sparse
-(as a data structure)?}
 }
 \value{
 Numeric matrix. The adjacency matrix of the simulated DAG.

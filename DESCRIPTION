@@ -17,4 +17,5 @@ Imports:
     SID,
     gtools,
     pcalg,
-    Matrix
+    Matrix,
+    purrr
