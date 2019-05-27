@@ -4,9 +4,12 @@
 \alias{compute_gamma_theo_matrix}
 \title{Theoretical gamma coefficient of a DAG}
 \usage{
-compute_gamma_theo_matrix(g, alpha, noise_w)
+compute_gamma_theo_matrix(wg, alpha, noise_w)
 }
 \arguments{
+\item{wg}{Numeric matrix. The weighted adjacency matrix of a DAG.
+All the entries must be non-negative.}
+
 \item{alpha}{Numeric. The tail-index of the noise distribution}
 
 \item{noise_w}{Numeric vector. A \eqn{p}-dimensional vector containing
@@ -17,11 +20,13 @@ set equal to one.}
 \value{
 Numeric matrix. The entry \eqn{(i, j)} contains the theoretical
 gamma coefficient between the \eqn{i}-th and the \eqn{j}-th node
-of \code{g}. If \eqn{i = j}, the value of the entry \eqn{(i, j)} is set
+of the weighted adjacency matrix \code{wg}.
+If \eqn{i = j}, the value of the entry \eqn{(i, j)} is set
 to \code{NA}.
 }
 \description{
-Computes the theoretical gamma coefficient matrix given the DAG \code{g},
+Computes the theoretical gamma coefficient matrix given the weighted
+adjacency matrix \code{wg} of an underlying DAG,
 the tail-index \code{alpha} and the scales of the noise variables
 \code{noise_w}.
 }

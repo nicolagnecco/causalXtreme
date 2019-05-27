@@ -4,13 +4,16 @@
 \alias{causal_metrics}
 \title{Causal evaluation metrics}
 \usage{
-causal_metrics(g, est_g, order)
+causal_metrics(g, est_g, caus_order)
 }
 \arguments{
 \item{g}{Numeric matrix. The adjacency matrix of a DAG.}
 
 \item{est_g}{Numeric matrix. The (estimated) adjacency matrix of a
 DAG or CPDAG.}
+
+\item{caus_order}{Numeric vector.
+Represents a causal order.}
 }
 \description{
 Evaluate the output of some causal inference model,

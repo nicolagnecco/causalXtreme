@@ -106,22 +106,24 @@ compute_gamma_theo <- function(wg, i, j, alpha, noise_w){
 
 #' Theoretical gamma coefficient of a DAG
 #'
-#' Computes the theoretical gamma coefficient matrix given the DAG \code{g},
+#' Computes the theoretical gamma coefficient matrix given the weighted
+#' adjacency matrix \code{wg} of an underlying DAG,
 #' the tail-index \code{alpha} and the scales of the noise variables
 #' \code{noise_w}.
 #'
 #' @inheritParams compute_gamma_theo
 #' @return Numeric matrix. The entry \eqn{(i, j)} contains the theoretical
 #' gamma coefficient between the \eqn{i}-th and the \eqn{j}-th node
-#' of \code{g}. If \eqn{i = j}, the value of the entry \eqn{(i, j)} is set
+#' of the weighted adjacency matrix \code{wg}.
+#' If \eqn{i = j}, the value of the entry \eqn{(i, j)} is set
 #' to \code{NA}.
-compute_gamma_theo_matrix <- function(g, alpha, noise_w){
+compute_gamma_theo_matrix <- function(wg, alpha, noise_w){
 
-  if (min(g, na.rm = T) < 0){
+  if (min(wg, na.rm = T) < 0){
     stop("The weighted adjacency matrix must have non-negative weights.")
   }
 
-  p   <- NCOL(g) # number of variables
+  p   <- NCOL(wg) # number of variables
 
   # compute theoretical gamma for all combinations of indices
   gamma_mat <- sapply(1:p,
@@ -131,7 +133,7 @@ compute_gamma_theo_matrix <- function(g, alpha, noise_w){
                                  if (i == j){
                                    NA
                                  } else {
-                                   compute_gamma_theo(g, i, j, alpha, noise_w)
+                                   compute_gamma_theo(wg, i, j, alpha, noise_w)
                                  }
                                })
                       })

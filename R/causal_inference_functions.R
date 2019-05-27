@@ -154,6 +154,7 @@ causal_discovery <- function(method = c("fast", "full", "greedy",
 #'
 #' @inheritParams compute_str_int_distance
 #' @inheritParams compute_caus_order
+#' @inheritParams check_caus_order
 #'
 #' @references List. The list is made of:
 #' \itemize{
@@ -166,12 +167,12 @@ causal_discovery <- function(method = c("fast", "full", "greedy",
 #' and the estimated order \code{order}.
 #' See also \code{\link{compute_ancestral_distance}}.
 #' }
-causal_metrics <- function(g, est_g, order){
+causal_metrics <- function(g, est_g, caus_order){
 
   # set up list
   out <- list(str_int_dist = NA, ancestral_dist = NA)
 
-  # compute structural intervention distance (if order is not NA)
+  # compute structural intervention distance (if caus_order is not NA)
   if (!any(is.na(est_g))){
     out$str_int_dist <- compute_str_int_distance(g, est_g)
   } else {
@@ -179,8 +180,8 @@ causal_metrics <- function(g, est_g, order){
   }
 
   # compute ancestral distance (if est_g is not NA)
-  if (!any(is.na(order))){
-    out$ancestral_dist <- compute_ancestral_distance(g, order)
+  if (!any(is.na(caus_order))){
+    out$ancestral_dist <- compute_ancestral_distance(g, caus_order)
   }else {
     out$ancestral_dist <- NA
   }
