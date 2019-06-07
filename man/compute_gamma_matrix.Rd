@@ -4,22 +4,25 @@
 \alias{compute_gamma_matrix}
 \title{Causal gamma matrix}
 \usage{
-compute_gamma_matrix(mat, k = floor(sqrt(n)))
+compute_gamma_matrix(dat, k = floor(2 * n^0.4), both_tails = TRUE)
 }
 \arguments{
-\item{mat}{Numeric matrix. Observation matrix with \code{n}
+\item{dat}{Numeric matrix. Observation matrix with \code{n}
 rows (observations) and \code{p} columns (variables).}
 
-\item{k}{Integer. The number of upper-order statistics used to
-compute the gamma coefficient. Set by default to \code{k = floor(sqrt(n))}.}
+\item{k}{Integer. The number of extreme observations used to
+compute the gamma coefficient. Set by default to \code{k = floor(2 * n^0.4)}.}
+
+\item{both_tails}{Boolean. Do you consider both tails when computing gamma?
+Set by default to \code{TRUE}.}
 }
 \value{
 Numeric matrix. The entry \eqn{(i, j)} contains the
 gamma coefficient between the \eqn{i}-th and the \eqn{j}-th
-column of \code{mat}. If \eqn{i = j}, the value of the entry \eqn{(i, j)}
+column of \code{dat}. If \eqn{i = j}, the value of the entry \eqn{(i, j)}
 is set to \code{NA}.
 }
 \description{
-Computes the gamma coefficient matrix given a dataset \code{mat},
+Computes the gamma coefficient matrix given a dataset \code{dat},
 and a threshold \code{k}.
 }

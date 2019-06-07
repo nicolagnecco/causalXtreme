@@ -6,10 +6,6 @@
 \usage{
 pc_search(mat)
 }
-\arguments{
-\item{mat}{Numeric matrix. Observation matrix with \code{n}
-rows (observations) and \code{p} columns (variables).}
-}
 \value{
 Numeric matrix (or \code{NA} in case of error).
 The estimated adjacency matrix of a CPDAG.

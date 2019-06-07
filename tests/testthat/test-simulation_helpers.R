@@ -177,7 +177,7 @@ test_that("random coefficients works", {
   expect_error(random_coeff(g * 0.1, lb = lb, ub = ub, two_intervals = TRUE))
 
   # lb > ub
-  expect_error(random_coeff(g , lb = ub, ub = lb, two_intervals = FALSE))
+  expect_error(random_coeff(g, lb = ub, ub = lb, two_intervals = FALSE))
   expect_error(random_coeff(g, lb = ub, ub = lb, two_intervals = TRUE))
 
   # if two_intervals == TRUE, lb > 0 and ub > 0

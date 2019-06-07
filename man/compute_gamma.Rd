@@ -4,16 +4,23 @@
 \alias{compute_gamma}
 \title{Causal gamma coefficient}
 \usage{
-compute_gamma(v1, v2, k = floor(sqrt(n)))
+compute_gamma(v1, v2, k = floor(2 * n^0.4), to_rank = TRUE,
+  both_tails = TRUE)
 }
 \arguments{
 \item{v1, v2}{Numeric vectors. Two vectors with \code{n} observations.}
 
-\item{k}{Integer. The number of upper-order statistics used to
-compute the gamma coefficient. Set by default to \code{k = floor(sqrt(n))}.}
+\item{k}{Integer. The number of extreme observations used to
+compute the gamma coefficient. Set by default to \code{k = floor(2 * n^0.4)}.}
+
+\item{to_rank}{Boolean. Are the vectors \code{v1} and \code{v2} already sorted?
+Set by default to \code{TRUE}.}
+
+\item{both_tails}{Boolean. Do you consider both tails when computing gamma?
+Set by default to \code{TRUE}.}
 }
 \value{
-Numeric --- between 0 and 1. The gamma causal coefficient between \code{v1} and
+Numeric --- between 0.5 and 1. The gamma causal coefficient between \code{v1} and
 \code{v2}.
 }
 \description{

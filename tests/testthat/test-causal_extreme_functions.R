@@ -2,8 +2,10 @@ context("test-causal_extreme_functions")
 
 # Define variables
 v1     <- c(0, 2, 6, 1, 9, 8, 7, 5, 3, 4)
+r1 <- rank(v1, ties.method = "first")
 v1_rep <- c(0, 2, 2, 1, 2, 8, 7, 5, 3, 4)
 v2     <- c(5, 6, 4, 2, 0, 8, 9, 1, 7, 3)
+r2 <- rank(v2, ties.method = "first")
 v2_rep <- c(5, 6, 4, 2, 0, 8, 8, 8, 7, 3)
 mat <- cbind(v1, v1_rep, v2)
 
@@ -17,16 +19,26 @@ noise_w <- c(1, 0.5 ^ (1 / alpha),
 
 # Run tests
 test_that("gamma coefficient works", {
-  expect_equal(compute_gamma(v2, v1), (4 + 9 + 8) / 11 * 1 / 3)
-  expect_equal(compute_gamma(v2, v1, k = 2), (8 + 9) / 11 * 1 / 2)
-  expect_equal(compute_gamma(v1, v2), (10 + 9 + 1) / 11 * 1 / 3)
-  expect_equal(compute_gamma(v2_rep, v1), (9 + 8 + 6) / 11 * 1 / 3)
-  expect_equal(compute_gamma(v2_rep, v1, k = 4),
-               (9 + 8 + 6 + 4) / 11 * 1 / 4)
-  expect_equal(compute_gamma(v1_rep, v2_rep),
-               (8 + 9 + 10) / 11 * 1 / 3)
-  expect_equal(compute_gamma(v2_rep, v1_rep, k = 4),
-               (6 + 8 + 9 + 10) / 11 * 1 / 4)
+  expect_equal(compute_gamma(v2, v1, k = 3, both_tails = FALSE),
+               (4 + 9 + 8) / 10 * 1 / 3)
+  expect_equal(compute_gamma(v2, v1, k = 2, both_tails = FALSE),
+               (8 + 9) / 10 * 1 / 2)
+  expect_equal(compute_gamma(v1, v2, k = 3, both_tails = FALSE),
+               (10 + 9 + 1) / 10 * 1 / 3)
+  expect_equal(compute_gamma(v2_rep, v1, k = 3, both_tails = FALSE),
+               (9 + 8 + 6) / 10 * 1 / 3)
+  expect_equal(compute_gamma(v2_rep, v1, k = 4, both_tails = FALSE),
+               (9 + 8 + 6 + 4) / 10 * 1 / 4)
+  expect_equal(compute_gamma(v1_rep, v2_rep, k = 3, both_tails = FALSE),
+               (8 + 9 + 10) / 10 * 1 / 3)
+  expect_equal(compute_gamma(v2_rep, v1_rep, k = 4, both_tails = FALSE),
+               (6 + 8 + 9 + 10) / 10 * 1 / 4)
+  expect_equal(compute_gamma(r2, r1, k = 2, to_rank = FALSE,
+                             both_tails = FALSE),
+               (8 + 9) / 10 * 1 / 2)
+  expect_equal(compute_gamma(r1, r2, to_rank = FALSE, k = 3,
+                             both_tails = FALSE),
+               (10 + 9 + 1) / 10 * 1 / 3)
 })
 
 test_that("gamma matrix works", {
