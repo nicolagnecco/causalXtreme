@@ -1,28 +1,27 @@
 #' Causal order of a DAG
 #'
-#' Produces one causal order of the DAG, represented as a non-weighted
-#' adjacency matrix \code{g}.
+#' Produces one causal order of the given DAG \code{dag}.
 #' Copyright (c) 2013 Jonas Peters \email{peters@@math.ku.dk}.
 #' All rights reserved.
 #'
-#' @param g Numeric matrix. The adjacency matrix of a DAG.
-#' @return Numeric vector. The causal order of the DAG \code{g}.
-compute_caus_order <- function(g) {
+#' @param dag Square binary matrix. A matrix representing a DAG.
+#' @return Numeric vector. The causal order of the DAG \code{dag}.
+compute_caus_order <- function(dag) {
 
-  # check if g is a (non-weighted) adjacency matrix
-  if (!all(g %in% c(0, 1))){
-    stop("The entries of g must be either 0 or 1.")
+  # check if dag is a DAG (i.e., a binary matrix)
+  if (!all(dag %in% c(0, 1))){
+    stop("The entries of dag must be either 0 or 1.")
   }
 
-  p <- dim(g)[2]
+  p <- dim(dag)[2]
   remaining <- 1:p
   caus_order <- rep(NA, p)
 
   for (i in 1:(p - 1)) {
-    root <- min(which(colSums(g) == 0))
+    root <- min(which(colSums(dag) == 0))
     caus_order[i] <- remaining[root]
     remaining <- remaining[-root]
-    g <- g[-root, -root]
+    dag <- dag[-root, -root]
   }
   caus_order[p] <- remaining[1]
   return(caus_order)
@@ -32,17 +31,17 @@ compute_caus_order <- function(g) {
 #' Check the causal order against a DAG
 #'
 #' Produces \code{TRUE} if \code{caus_order} is a causal order of the DAG
-#' \code{g}, \code{FALSE} otherwise.
+#' \code{dag}, \code{FALSE} otherwise.
 #'
 #' @param caus_order Numeric vector.
 #' Represents a causal order.
 #' @inheritParams compute_caus_order
-#' @return Logical.
-check_caus_order <- function(caus_order, g) {
+#' @return Boolean.
+check_caus_order <- function(caus_order, dag) {
 
-  # check if g is a (non-weighted) adjacency matrix
-  if (!all(g %in% c(0, 1))){
-    stop("The entries of g must be either 0 or 1.")
+  # check if dag is a DAG (i.e., a binary matrix)
+  if (!all(dag %in% c(0, 1))){
+    stop("The entries of dag must be either 0 or 1.")
   }
 
   # check if caus_order has some NA
@@ -50,17 +49,17 @@ check_caus_order <- function(caus_order, g) {
     stop("The causal order caus_order cannot contain NA.")
   }
 
-  p <- NROW(g)
+  p <- NROW(dag)
 
   for (i in 1:p) {
     current_node <- caus_order[i]
-    indegree <- sum(g[, current_node])
+    indegree <- sum(dag[, current_node])
 
     if (indegree > 0) {
       return(FALSE)
     }
 
-    g[current_node, ] <- 0
+    dag[current_node, ] <- 0
   }
 
   return(TRUE)
@@ -70,46 +69,52 @@ check_caus_order <- function(caus_order, g) {
 #' Get the ancestors of a DAG
 #'
 #' Produces a matrix where the entry \eqn{(i, j) = 1}
-#' if \eqn{i} is an ancestor of \eqn{j} in the DAG \code{g},
+#' if \eqn{i} is an ancestor of \eqn{j} in the DAG \code{dag},
 #' and \eqn{0} otherwise.
 #'
 #' @inheritParams compute_caus_order
-#' @return Numeric matrix. The ancestral matrix of the DAG \code{g}.
-get_ancestors <- function(g){
+#' @return Square binary matrix. The ancestral matrix of the DAG \code{dag}.
+get_ancestors <- function(dag){
 
-  # check if g is a (non-weighted) adjacency matrix
-  if (!all(g %in% c(0, 1))){
-    stop("The entries of g must be either 0 or 1.")
+  # check if dag is a DAG (i.e., a binary matrix)
+  if (!all(dag %in% c(0, 1))){
+    stop("The entries of dag must be either 0 or 1.")
   }
 
-  p <- NROW(g)
+  p <- NROW(dag)
 
-  # return ancestors
-  ancestors <- solve(diag(p) - g)
-  (ancestors != 0) * 1
+  # compute ancestors
+  ident_mat <- diag(1, p)
+  ancestors <- ident_mat + dag
+
+  for (i in 1:p){
+    ancestors <- ident_mat + dag %*% ancestors
+  }
+
+  return((ancestors != 0) * 1)
 }
 
 
 #' Get the descendants of a DAG
 #'
 #' Produces a matrix where the entry \eqn{(i, j) = 1}
-#' if \eqn{i} is a descendant of \eqn{j} in the DAG \code{g},
+#' if \eqn{i} is a descendant of \eqn{j} in the DAG \code{dag},
 #' and \eqn{0} otherwise.
 #'
 #' @inheritParams compute_caus_order
-#' @return Numeric matrix. The descendant matrix of
-#' the DAG \code{g}.
-get_descendants <- function(g){
+#' @return Square binary matrix. The descendant matrix of
+#' the DAG \code{dag}.
+get_descendants <- function(dag){
 
-  # check if g is a (non-weighted) adjacency matrix
-  if (!all(g %in% c(0, 1))){
-    stop("The entries of g must be either 0 or 1.")
+  # check if dag is a DAG (i.e., a binary matrix)
+  if (!all(dag %in% c(0, 1))){
+    stop("The entries of dag must be either 0 or 1.")
   }
 
-  p <- NROW(g)
+  p <- NROW(dag)
 
   # return descendants
-  descendants <- t(solve(diag(p) - g))
+  descendants <- t(get_ancestors(dag))
   (descendants != 0) * 1
 }
 
@@ -117,80 +122,71 @@ get_descendants <- function(g){
 #' Get the parents of a DAG
 #'
 #' Produces a matrix where the entry \eqn{(i, j) = 1} if \eqn{i} is a parent
-#' of \eqn{j} in the DAG \code{g}, and \eqn{0} otherwise.
+#' of \eqn{j} in the DAG \code{dag}, and \eqn{0} otherwise.
 #'
 #' @inheritParams compute_caus_order
-#' @return Numeric matrix. The parental (adjacency) matrix of
-#' the DAG \code{g}.
-get_parents <- function(g){
+#' @return Square binary matrix. The parental matrix of
+#' the DAG \code{dag}, i.e., the DAG itself.
+get_parents <- function(dag){
 
-  # check if g is a (non-weighted) adjacency matrix
-  if (!all(g %in% c(0, 1))){
-    stop("The entries of g must be either 0 or 1.")
+  # check if dag is a DAG (i.e., a binary matrix)
+  if (!all(dag %in% c(0, 1))){
+    stop("The entries of dag must be either 0 or 1.")
   }
 
   # return parents
-  g
+  dag
 }
 
 
 #' Get the children of a DAG
 #'
 #' Produces a matrix where the entry \eqn{(i, j) = 1} if \eqn{i} is a child
-#' of \eqn{j} in the DAG \code{g}, and \eqn{0} otherwise.
+#' of \eqn{j} in the DAG \code{dag}, and \eqn{0} otherwise.
 #'
 #' @inheritParams compute_caus_order
-#' @return Numeric matrix. The children matrix of
-#' the DAG \code{g}.
-get_children <- function(g){
+#' @return Square binary matrix. The children matrix of
+#' the DAG \code{dag}.
+get_children <- function(dag){
 
-  # check if g is a (non-weighted) adjacency matrix
-  if (!all(g %in% c(0, 1))){
-    stop("The entries of g must be either 0 or 1.")
+  # check if dag is a DAG (i.e., a binary matrix)
+  if (!all(dag %in% c(0, 1))){
+    stop("The entries of dag must be either 0 or 1.")
   }
 
   # return children
-  t(g)
+  t(dag)
 }
 
 
 #' Get all the directed paths of a DAG
 #'
-#' Given the DAG \code{g}, produces a matrix where the entry \eqn{(i, j)}
-#' \itemize{
-#' \item counts the number of directed paths from node \eqn{i} to node \eqn{j},
-#' if \code{type == "count"},
-#' \item measures the total weight of the paths from node \eqn{i}
-#' to node \eqn{j}, if \code{type == "weighted"}.
-#' }
+#' Given the adjacency matrix \code{adj_mat}, produces a matrix
+#' where the entry \eqn{(i, j)} measures the total weight of the paths
+#' from node \eqn{i} to node \eqn{j}.
 #' \strong{Note}: if \eqn{i = j}, the entry \eqn{(i, j) = 1}.
 #'
-#' @param wg Numeric matrix. The (possibly weighted) adjacency matrix of a DAG.
-#' @param type String. Is one of:
-#' \itemize{
-#' \item \code{"count"} (default),
-#' \item \code{"weighted"}.
-#' }
-#' @return Numeric matrix. The path matrix of the DAG \code{g}.
-get_all_paths <- function(wg, type = c("count", "weighted")[1]){
-  switch(type,
-         "count" = {
-           wg <- (wg != 0) * 1
-         },
-         "weighted" = {
-           wg <- wg
-         },
-         stop("Wrong type. Please enter one of the following:
-              'count', 'weighted'."))
+#' @param adj_mat Square numeric matrix. The adjacency matrix of a DAG.
+#' @return Square numeric matrix. The path matrix associated to \code{adj_mat}.
+get_all_paths <- function(adj_mat){
 
-  p <- NROW(wg)
-  solve(diag(p) - wg)
+  p <- NROW(adj_mat)
+
+  # compute paths
+  ident_mat <- diag(1, p)
+  paths <- ident_mat + adj_mat
+
+  for (i in 1:p){
+    paths <- ident_mat + adj_mat %*% paths
+  }
+
+  return(paths)
 }
 
 
 #' Compute ancestral distance
 #'
-#' Computes the ancestral distance between the DAG \code{g} and
+#' Computes the ancestral distance between the DAG \code{dag} and
 #' the causal order \code{caus_order}. The ancestral distance is defined
 #' as the number of pairs \eqn{(i, j)} where \eqn{i} is an ancestor
 #' of \eqn{j} and \eqn{i} is placed after \eqn{j} in the causal order
@@ -198,12 +194,12 @@ get_all_paths <- function(wg, type = c("count", "weighted")[1]){
 #'
 #' @inheritParams check_caus_order
 #' @return Numeric --- between 0 and 1. The ancestral distance between the
-#' DAG \code{g} and the causal order \code{caus_order}.
-compute_ancestral_distance <- function(g, caus_order){
+#' DAG \code{dag} and the causal order \code{caus_order}.
+compute_ancestral_distance <- function(dag, caus_order){
 
-  # check if g is a (non-weighted) adjacency matrix
-  if (!all(g %in% c(0, 1))){
-    stop("The entries of g must be either 0 or 1.")
+  # check if dag is a DAG (i.e., a binary matrix)
+  if (!all(dag %in% c(0, 1))){
+    stop("The entries of dag must be either 0 or 1.")
   }
 
   # check if caus_order contains some NA
@@ -211,9 +207,9 @@ compute_ancestral_distance <- function(g, caus_order){
     stop("The causal order caus_order cannot contain NA.")
   }
 
-  p <- NROW(g)
+  p <- NROW(dag)
   max_inversion <- p * (p - 1) / 2
-  ancestors <- get_ancestors(g)
+  ancestors <- get_ancestors(dag)
   ancestors_ord <- ancestors[caus_order, caus_order]
   return(sum(ancestors_ord[lower.tri(ancestors_ord)]) / max_inversion)
 }
@@ -221,35 +217,66 @@ compute_ancestral_distance <- function(g, caus_order){
 
 #' Compute structural intervention distance
 #'
-#' Compute the structural intervention distance between the DAG \code{g} and
-#' the estimated DAG \code{est_g}. The structural intervention distance is
-#' defined as in the paper from Peters J. and Bühlmann P.,
+#' Compute the structural intervention distance between the DAG \code{dag}
+#' and the estimated DAG (or CPDAG) \code{est_g}.
+#' The structural intervention distance is defined as in the paper from
+#' Peters J., and Bühlmann P.,
 #' \url{https://www.mitpressjournals.org/doi/full/10.1162/NECO_a_00708}.
 #' In general, the structural intervention distance is
-#' not symmetric, i.e., \code{compute_str_int_distance(g, est_g) !=}
-#' \code{compute_str_int_distance(est_g, g)}. Also, \code{est_g} can be
-#' a CPDAG.
+#' not symmetric, i.e., \code{compute_str_int_distance(dag, est_g) !=}
+#' \code{compute_str_int_distance(est_g, dag)}.
 #'
 #' @inheritParams compute_caus_order
-#' @param est_g Numeric matrix. The (estimated) adjacency matrix of a
-#' DAG or CPDAG.
+#' @param est_g Square binary matrix. The estimated DAG or CPDAG.
 #' @return  Numeric --- between 0 and 1. The structural intervention
-#' distance between the DAG \code{g} and the DAG \code{est_g}.
-compute_str_int_distance <- function(g, est_g){
+#' distance between the DAG \code{dag} and the DAG (or CPDAG) \code{est_g}.
+compute_str_int_distance <- function(dag, est_g){
 
-  # check if g is a (non-weighted) adjacency matrix
-  if (!all(g %in% c(0, 1))){
-    stop("The entries of g must be either 0 or 1.")
+  # check if dag is a DAG (i.e., a binary matrix)
+  if (!all(dag %in% c(0, 1))){
+    stop("The entries of dag must be either 0 or 1.")
   }
 
-  # check if est_g is a (non-weighted) adjacency matrix
+  # check if est_g is a DAG or CPDAG (i.e., a binary matrix)
+  if (!all(est_g %in% c(0, 1))){
+    stop("The entries of est_g must be either 0 or 1.")
+  }
+
+  p <- NROW(dag)
+  s <- SID::structIntervDist(dag, est_g)
+  return(s$sidLowerBound / (p * (p - 1)))
+}
+
+
+#' Compute structural Hamming distance
+#'
+#' Compute the structural Hamming distance between the true DAG (or CPDAG)
+#' \code{g} and the estimated DAG (or CPDAG) \code{est_g}.
+#' The structural Hamming distance is defined as in the paper from
+#' Tsamardinos I., Brown L.E., and Aliferis C.F.,
+#' \url{https://link.springer.com/article/10.1007/s10994-006-6889-7}.
+#'
+#' @inheritParams compute_caus_order
+#' @inheritParams compute_str_int_distance
+#' @return Numeric --- between 0 and 1. The structural Hamming
+#' distance between a true DAG (or CPDAG) \code{g} and the
+#' estimated DAG (or CPDAG) \code{est_g}.
+compute_str_ham_distance <- function(g, est_g){
+
+  # check if g is a DAG or CPDAG (i.e., a binary matrix)
+  if (!all(g %in% c(0, 1))){
+    stop("The entries of dag must be either 0 or 1.")
+  }
+
+  # check if est_g is a DAG or CPDAG (i.e., a binary matrix)
   if (!all(est_g %in% c(0, 1))){
     stop("The entries of est_g must be either 0 or 1.")
   }
 
   p <- NROW(g)
-  s <- SID::structIntervDist(g, est_g)
-  return(s$sidLowerBound / (p * (p - 1)))
+  g <- (g != 0) * 1
+  s <- SID::hammingDist(g, est_g)
+  return(s/(p * (p - 1)/2))
 }
 
 

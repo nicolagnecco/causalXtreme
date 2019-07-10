@@ -106,9 +106,9 @@ test_that("children are correct", {
 })
 
 test_that("paths are correct", {
-  expect_equal(get_all_paths(g3, type = "count"), g3_path_count)
-  expect_equal(get_all_paths(g3, type = "weighted"), g3_path_weighted)
-  expect_equal(get_all_paths(g3), g3_path_count)
+  expect_equal(get_all_paths((g3 != 0) * 1), g3_path_count)
+  expect_equal(get_all_paths(g3), g3_path_weighted)
+  expect_equal(get_all_paths((g3 != 0) * 1), g3_path_count)
   expect_error(get_all_paths(g3, type = "foo"))
 })
 
@@ -135,6 +135,16 @@ test_that("structural intervention distance is correct", {
   expect_error(compute_str_int_distance(g4, NA))
   expect_error(compute_str_int_distance(g3, g5))
   expect_error(compute_str_int_distance(g4, g3))
+})
+
+test_that("structural Hamming distance is correct", {
+  expect_equal(compute_str_ham_distance(g4, g5), 2 / 6)
+  expect_equal(compute_str_ham_distance(g4, g6), 2 / 6)
+  # expect_false(compute_str_int_distance(g5, g6) ==
+  #                compute_str_int_distance(g6, g5))
+  # expect_error(compute_str_int_distance(g4, NA))
+  # expect_error(compute_str_int_distance(g3, g5))
+  # expect_error(compute_str_int_distance(g4, g3))
 })
 
 test_that("converting causal order into DAG works", {
