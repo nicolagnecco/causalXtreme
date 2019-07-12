@@ -147,9 +147,9 @@ test_that("children are correct", {
 })
 
 test_that("paths are correct", {
-  expect_equal(get_all_paths((adj_mat3 != 0) * 1), dag3_path_count)
+  expect_equal(get_all_paths( (adj_mat3 != 0) * 1), dag3_path_count)
   expect_equal(get_all_paths(adj_mat3), dag3_path_weighted)
-  expect_equal(get_all_paths((adj_mat3 != 0) * 1), dag3_path_count)
+  expect_equal(get_all_paths( (adj_mat3 != 0) * 1), dag3_path_count)
   expect_error(get_all_paths(adj_mat3, type = "foo"))
 })
 
@@ -161,14 +161,14 @@ test_that("converting causal order into DAG works", {
   expect_error(caus_order_to_dag(NA))
 })
 
-test_that("converting DAG into CPDAG works",{
+test_that("converting DAG into CPDAG works", {
   expect_equal(dag_to_cpdag(dag8), cpdag8)
   expect_equal(dag_to_cpdag(dag9), cpdag9)
   expect_equal(dag_to_cpdag(dag10), cpdag10)
   expect_error(dag_to_cpdag(adj_mat3))
 })
 
-test_that("converting causal order into CPDAG works",{
+test_that("converting causal order into CPDAG works", {
   p <- sample(1:20, 1)
   dag_temp <- caus_order_to_dag(1:p)
   expect_equal(caus_order_to_cpdag(1:p),  dag_temp + t(dag_temp))
@@ -187,7 +187,8 @@ test_that("ancestral distance is correct", {
   expect_equal(compute_ancestral_distance(dag2, c(4, 3, 2, 1)), 1 / (4 * 3 / 2))
   expect_equal(compute_ancestral_distance(dag2, c(4, 2, 3, 1)), 1 / (4 * 3 / 2))
   expect_equal(compute_ancestral_distance(dag2, c(3, 4, 2, 1)), 0 / (4 * 3 / 2))
-  expect_error(compute_ancestral_distance(adj_mat3, c(4, 3, 2, 1)), 6 / (4 * 3 / 2))
+  expect_error(compute_ancestral_distance(adj_mat3, c(4, 3, 2, 1)),
+               6 / (4 * 3 / 2))
 })
 
 test_that("structural intervention distance is correct", {

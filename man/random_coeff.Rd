@@ -4,10 +4,10 @@
 \alias{random_coeff}
 \title{Sample random coefficients}
 \usage{
-random_coeff(g, lb = 0.1, ub = 0.9, two_intervals = FALSE)
+random_coeff(dag, lb = 0.1, ub = 0.9, two_intervals = TRUE)
 }
 \arguments{
-\item{g}{Numeric matrix. The adjacency matrix of a DAG.}
+\item{dag}{Square binary matrix. A matrix representing a DAG.}
 
 \item{lb}{Numeric. The lower bound of the coefficient that can be
 sampled.}
@@ -21,12 +21,12 @@ If \code{two_intervals == TRUE}, \code{lb} and \code{ub} must be
 positive.}
 }
 \value{
-Numeric matrix. The weighted adjacency matrix of the
-DAG \code{g}.
+Square numeric matrix. The adjacency matrix of the underlying
+DAG \code{dag}.
 }
 \description{
 Sample random coefficients from uniform distribution
-for the given DAG \code{g}.
+for the given DAG \code{dag}.
 Copyright (c) 2013 Jonas Peters \email{peters@math.ku.dk}.
 All rights reserved.
 }

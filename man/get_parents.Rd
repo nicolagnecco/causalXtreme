@@ -4,16 +4,16 @@
 \alias{get_parents}
 \title{Get the parents of a DAG}
 \usage{
-get_parents(g)
+get_parents(dag)
 }
 \arguments{
-\item{g}{Numeric matrix. The adjacency matrix of a DAG.}
+\item{dag}{Square binary matrix. A matrix representing a DAG.}
 }
 \value{
-Numeric matrix. The parental (adjacency) matrix of
-the DAG \code{g}.
+Square binary matrix. The parental matrix of
+the DAG \code{dag}, i.e., the DAG itself.
 }
 \description{
 Produces a matrix where the entry \eqn{(i, j) = 1} if \eqn{i} is a parent
-of \eqn{j} in the DAG \code{g}, and \eqn{0} otherwise.
+of \eqn{j} in the DAG \code{dag}, and \eqn{0} otherwise.
 }

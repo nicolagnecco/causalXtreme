@@ -4,16 +4,16 @@
 \alias{get_children}
 \title{Get the children of a DAG}
 \usage{
-get_children(g)
+get_children(dag)
 }
 \arguments{
-\item{g}{Numeric matrix. The adjacency matrix of a DAG.}
+\item{dag}{Square binary matrix. A matrix representing a DAG.}
 }
 \value{
-Numeric matrix. The children matrix of
-the DAG \code{g}.
+Square binary matrix. The children matrix of
+the DAG \code{dag}.
 }
 \description{
 Produces a matrix where the entry \eqn{(i, j) = 1} if \eqn{i} is a child
-of \eqn{j} in the DAG \code{g}, and \eqn{0} otherwise.
+of \eqn{j} in the DAG \code{dag}, and \eqn{0} otherwise.
 }

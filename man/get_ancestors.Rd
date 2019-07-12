@@ -4,16 +4,16 @@
 \alias{get_ancestors}
 \title{Get the ancestors of a DAG}
 \usage{
-get_ancestors(g)
+get_ancestors(dag)
 }
 \arguments{
-\item{g}{Numeric matrix. The adjacency matrix of a DAG.}
+\item{dag}{Square binary matrix. A matrix representing a DAG.}
 }
 \value{
-Numeric matrix. The ancestral matrix of the DAG \code{g}.
+Square binary matrix. The ancestral matrix of the DAG \code{dag}.
 }
 \description{
 Produces a matrix where the entry \eqn{(i, j) = 1}
-if \eqn{i} is an ancestor of \eqn{j} in the DAG \code{g},
+if \eqn{i} is an ancestor of \eqn{j} in the DAG \code{dag},
 and \eqn{0} otherwise.
 }

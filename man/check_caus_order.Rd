@@ -4,18 +4,18 @@
 \alias{check_caus_order}
 \title{Check the causal order against a DAG}
 \usage{
-check_caus_order(caus_order, g)
+check_caus_order(caus_order, dag)
 }
 \arguments{
 \item{caus_order}{Numeric vector.
 Represents a causal order.}
 
-\item{g}{Numeric matrix. The adjacency matrix of a DAG.}
+\item{dag}{Square binary matrix. A matrix representing a DAG.}
 }
 \value{
-Logical.
+Boolean.
 }
 \description{
 Produces \code{TRUE} if \code{caus_order} is a causal order of the DAG
-\code{g}, \code{FALSE} otherwise.
+\code{dag}, \code{FALSE} otherwise.
 }

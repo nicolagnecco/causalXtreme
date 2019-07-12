@@ -29,7 +29,7 @@ compute_gamma <- function(v1, v2, k = floor(2 * n ^ 0.4), to_rank = TRUE,
   # compute causal tail coefficient
   if (both_tails){
     k <- (k %/% 2) * 2
-    1 / (k * n) * sum(2 * abs(r2[r1 > n - k / 2 | r1 <= k / 2] - (n + 1)/2))
+    1 / (k * n) * sum(2 * abs(r2[r1 > n - k / 2 | r1 <= k / 2] - (n + 1) / 2))
   } else{
     1 / (k * n) * sum(r2[r1 > n - k])
   }
@@ -41,14 +41,14 @@ compute_gamma <- function(v1, v2, k = floor(2 * n ^ 0.4), to_rank = TRUE,
 #' Computes the gamma coefficient matrix given a dataset \code{dat},
 #' and a threshold \code{k}.
 #'
-#' @param dat Numeric matrix. Observation matrix with \code{n}
+#' @param dat Numeric matrix. Dataset matrix with \code{n}
 #' rows (observations) and \code{p} columns (variables).
 #' @inheritParams compute_gamma
 #' @return Numeric matrix. The entry \eqn{(i, j)} contains the
 #' gamma coefficient between the \eqn{i}-th and the \eqn{j}-th
 #' column of \code{dat}. If \eqn{i = j}, the value of the entry \eqn{(i, j)}
 #' is set to \code{NA}.
-compute_gamma_matrix <- function(dat, k = floor(2 * n^0.4), both_tails = TRUE){
+compute_gamma_matrix <- function(dat, k = floor(2 * n ^ 0.4), both_tails = TRUE){
   n   <- NROW(dat) # number of observations
   p   <- NCOL(dat) # number of variables
 
@@ -65,7 +65,8 @@ compute_gamma_matrix <- function(dat, k = floor(2 * n^0.4), both_tails = TRUE){
                                  } else {
                                    compute_gamma(ranked_dat[, i],
                                                  ranked_dat[, j], k,
-                                                 to_rank = FALSE, both_tails = both_tails)
+                                                 to_rank = FALSE,
+                                                 both_tails = both_tails)
                                  }
                                })
                       })
@@ -158,7 +159,8 @@ compute_gamma_theo_matrix <- function(adj_mat, alpha, noise_w){
                                  if (i == j){
                                    NA
                                  } else {
-                                   compute_gamma_theo(adj_mat, i, j, alpha, noise_w)
+                                   compute_gamma_theo(adj_mat, i, j,
+                                                      alpha, noise_w)
                                  }
                                })
                       })

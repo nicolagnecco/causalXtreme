@@ -23,3 +23,25 @@ compute_gamma_matrix(dat, both_tails = FALSE)
 compute_gamma_matrix(dat, both_tails = TRUE)
 pairs(dat)
 
+# Rescale betas so that SNR = (1 - w)/w
+p <- 3
+g <- rbind(c(0, 1, 1), c(0, 0, 1), c(0, 0, 0))
+A <- random_coeff(g, two_intervals = FALSE)
+B <- t(A)
+path <- solve(diag(p) - B)
+has_parent <- apply(g, 2, sum) != 0
+w <- .4
+diag(path)[has_parent] <- sqrt(w)
+
+path_temp <- path^2
+diag(path_temp) <- 0
+s <- apply(path_temp, 1, sum)
+s[s != 0] <-  sqrt(1 / (s[s != 0]) * (1 - w))
+s[s == 0] <- 1
+mm <- matrix(rep(s, p), ncol = p)
+diag(mm) <- 1
+out <- path * mm
+apply(out^2, 1, sum)
+A_mod <- t(diag(p) - solve(out))
+A
+A_mod

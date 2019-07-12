@@ -6,9 +6,6 @@
 \usage{
 random_perm_search(g)
 }
-\arguments{
-\item{g}{Numeric matrix. The adjacency matrix of a DAG.}
-}
 \value{
 Numeric vector. The causal order estimated from \code{g}.
 }

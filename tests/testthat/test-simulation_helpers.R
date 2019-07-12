@@ -50,6 +50,14 @@ test_that("inverse mirror uniform works", {
   expect_error(inverse_mirror_uniform(prob = runif(1), min = -ub, max = lb))
   expect_error(inverse_mirror_uniform(prob = runif(1), min = ub, max = -lb))
   expect_error(inverse_mirror_uniform(prob = runif(1), min = -ub, max = -lb))
+  expect_error(inverse_mirror_uniform(prob = 1.2, min = lb, max = ub))
+
+})
+
+test_that("add random confounders works", {
+  dag <- random_dag(5, 1)
+  add_random_confounders(dag, 1)
+  expect_
 
 })
 

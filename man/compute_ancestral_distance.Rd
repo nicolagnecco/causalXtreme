@@ -4,20 +4,20 @@
 \alias{compute_ancestral_distance}
 \title{Compute ancestral distance}
 \usage{
-compute_ancestral_distance(g, caus_order)
+compute_ancestral_distance(dag, caus_order)
 }
 \arguments{
-\item{g}{Numeric matrix. The adjacency matrix of a DAG.}
+\item{dag}{Square binary matrix. A matrix representing a DAG.}
 
 \item{caus_order}{Numeric vector.
 Represents a causal order.}
 }
 \value{
 Numeric --- between 0 and 1. The ancestral distance between the
-DAG \code{g} and the causal order \code{caus_order}.
+DAG \code{dag} and the causal order \code{caus_order}.
 }
 \description{
-Computes the ancestral distance between the DAG \code{g} and
+Computes the ancestral distance between the DAG \code{dag} and
 the causal order \code{caus_order}. The ancestral distance is defined
 as the number of pairs \eqn{(i, j)} where \eqn{i} is an ancestor
 of \eqn{j} and \eqn{i} is placed after \eqn{j} in the causal order

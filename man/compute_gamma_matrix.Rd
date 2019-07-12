@@ -7,7 +7,7 @@
 compute_gamma_matrix(dat, k = floor(2 * n^0.4), both_tails = TRUE)
 }
 \arguments{
-\item{dat}{Numeric matrix. Observation matrix with \code{n}
+\item{dat}{Numeric matrix. Dataset matrix with \code{n}
 rows (observations) and \code{p} columns (variables).}
 
 \item{k}{Integer. The number of extreme observations used to

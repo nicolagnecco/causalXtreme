@@ -4,10 +4,10 @@
 \alias{compute_gamma_theo}
 \title{Pairwise theoretical gamma coefficient}
 \usage{
-compute_gamma_theo(adj_mat, i, j, alpha, noise_w)
+compute_gamma_theo(adj_mat, i, j, alpha, noise_w = rep(1, p))
 }
 \arguments{
-\item{adj_mat}{Numeric matrix. The weighted adjacency matrix of a DAG.
+\item{adj_mat}{Numeric matrix. The adjacency matrix of a DAG.
 All the entries must be non-negative.}
 
 \item{i, j}{Integer. The indices of the nodes to consider to compute
@@ -16,7 +16,7 @@ the theoretical gamma coefficient.}
 \item{alpha}{Numeric. The tail-index of the noise distribution}
 
 \item{noise_w}{Numeric vector. A \eqn{p}-dimensional vector containing
-the scaling coefficients of the noise variables. Note that \eqn{p} is the
+the scale coefficients of the noise variables. Note that \eqn{p} is the
 number of variables (nodes) in the DAG. By default, all entries are
 set equal to one.}
 }
@@ -26,7 +26,7 @@ between node \code{i} and \code{j} in the DAG \code{adj_mat}.
 }
 \description{
 Computes the theoretical gamma coefficient between node \code{i}
-and node \code{j}, given the weighted adjacency matrix \code{adj_mat},
-the tail-index \code{alpha} and the scales of the
+and node \code{j}, given the adjacency matrix \code{adj_mat},
+the tail-index \code{alpha} and the scale of the
 noise variables \code{noise_w}.
 }

@@ -7,13 +7,13 @@
 compute_gamma_theo_matrix(adj_mat, alpha, noise_w)
 }
 \arguments{
-\item{adj_mat}{Numeric matrix. The weighted adjacency matrix of a DAG.
+\item{adj_mat}{Numeric matrix. The adjacency matrix of a DAG.
 All the entries must be non-negative.}
 
 \item{alpha}{Numeric. The tail-index of the noise distribution}
 
 \item{noise_w}{Numeric vector. A \eqn{p}-dimensional vector containing
-the scaling coefficients of the noise variables. Note that \eqn{p} is the
+the scale coefficients of the noise variables. Note that \eqn{p} is the
 number of variables (nodes) in the DAG. By default, all entries are
 set equal to one.}
 }

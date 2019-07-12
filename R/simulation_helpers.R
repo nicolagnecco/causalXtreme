@@ -14,7 +14,6 @@ pick_elements <- function(vec, prob){
 }
 
 
-
 #' Inverse mirror uniform
 #'
 #' Produces the quantile of a mirrored uniform distribution
@@ -59,7 +58,6 @@ inverse_mirror_uniform <- function(prob, min, max){
 }
 
 
-
 #' Sample from uniform family
 #'
 #' Sample n elements from a uniform distribution with lower and upper
@@ -99,7 +97,6 @@ sample_uniform <- function(n, min, max, mirror = FALSE){
 }
 
 
-
 #' Simulate random DAG
 #'
 #' Simulates a directed acyclic graph (DAG) and returns its adjacency matrix.
@@ -107,13 +104,14 @@ sample_uniform <- function(n, min, max, mirror = FALSE){
 #' All rights reserved.
 #'
 #' @param p Integer --- greater than 0. Number of nodes.
-#' @param prob Numeric --- between 0 and 1. The probability that an edge
+#' @param prob_connect Numeric --- between 0 and 1. The probability that an edge
 #' \eqn{i {\rightarrow} j} is added to the DAG.
 #' @param caus_order Numeric vector. The causal order of the DAG.
 #' If the argument is not provided it is generated randomly.
 #'
-#' @return Numeric matrix. The adjacency matrix of the simulated DAG.
-random_dag <- function(p, prob, caus_order = sample(p, p, replace = FALSE)){
+#' @return Square binary matrix. A matrix representing the random DAG.
+random_dag <- function(p, prob_connect,
+                       caus_order = sample(p, p, replace = FALSE)){
 
   # check inputs
   if (p < 1){
@@ -132,7 +130,7 @@ random_dag <- function(p, prob, caus_order = sample(p, p, replace = FALSE)){
 
   if (p > 1){
     for (i in 1:(p - 1)){
-      elms <- pick_elements(caus_order[(i + 1):p], prob)
+      elms <- pick_elements(caus_order[(i + 1):p], prob_connect)
       dag[caus_order[i], elms] <- 1
     }
   }
@@ -140,11 +138,10 @@ random_dag <- function(p, prob, caus_order = sample(p, p, replace = FALSE)){
 }
 
 
-
 #' Sample random coefficients
 #'
 #' Sample random coefficients from uniform distribution
-#' for the given DAG \code{g}.
+#' for the given DAG \code{dag}.
 #' Copyright (c) 2013 Jonas Peters \email{peters@@math.ku.dk}.
 #' All rights reserved.
 #'
@@ -157,17 +154,184 @@ random_dag <- function(p, prob, caus_order = sample(p, p, replace = FALSE)){
 #' from two symmetric uniform distributions?
 #' If \code{two_intervals == TRUE}, \code{lb} and \code{ub} must be
 #' positive.
-#' @return Numeric matrix. The weighted adjacency matrix of the
-#' DAG \code{g}.
-random_coeff <- function(g, lb = 0.1, ub = 0.9, two_intervals = FALSE){
+#' @return Square numeric matrix. The adjacency matrix of the underlying
+#' DAG \code{dag}.
+random_coeff <- function(dag, lb = 0.1, ub = 0.9, two_intervals = TRUE){
 
-  # check if g is a (non-weighted) adjacency matrix
-  if (!all(g %in% c(0, 1))){
-    stop("The entries of g must be either 0 or 1.")
+  # check if dag is a (non-weighted) adjacency matrix
+  if (!all(dag %in% c(0, 1))){
+    stop("The entries of dag must be either 0 or 1.")
   }
 
-  g_coeff <- matrix(0, nrow = NROW(g), ncol = NCOL(g))
-  num_coeff <- sum(g)
-  g_coeff[g == 1] <- sample_uniform(num_coeff, lb, ub, two_intervals)
-  g_coeff
+  adj_mat <- matrix(0, nrow = NROW(dag), ncol = NCOL(dag))
+  num_coeff <- sum(dag)
+  adj_mat[dag == 1] <- sample_uniform(num_coeff, lb, ub, two_intervals)
+  adj_mat
+}
+
+
+#' Add confounders to a DAG
+#'
+#' Add confounders (i.e., hidden variables) at random to the DAG \code{dag}.
+#' Each confounder is a source node and acts only on two observed variables.
+#' The probability that a pair of observed variables is confounded is set by
+#' \code{prob_confound}.
+#'
+#' @inheritParams compute_caus_order
+#' @param prob_confound Numeric --- between 0 and 1. The probability that
+#' a pair of observed nodes is confounded.
+#' @return List. The list is made of:
+#' \itemize{
+#' \item \code{dag_confounders} --- Square binary matrix. Represents the full
+#' DAG made of observed and hidden variables.
+#' \item \code{pos_confounders} --- Integer vector. Represents the position
+#' of confounders (rows and columns) in dag_confounders.
+#' }
+#'
+add_random_confounders <- function(dag, prob_confound){
+
+  # check if dag is a (non-weighted) adjacency matrix
+  if (!all(dag %in% c(0, 1))){
+    stop("The entries of dag must be either 0 or 1.")
+  }
+
+  # Consider all possible pairs of nodes in the DAG
+  p <- NROW(dag)
+  node_pairs <- which(upper.tri(dag), arr.ind = TRUE)
+  max_n_confounders  <- NROW(node_pairs)
+
+  # Choose the confounders randomly
+  n_confounders  <- rbinom(n = 1, size = max_n_confounders,
+                           prob = prob_confound)
+  confounders <- sample(x = 1:max_n_confounders, size = n_confounders,
+                        replace = FALSE)
+
+  # Exit function if there are no confounders
+  if (n_confounders == 0){
+    return(list (dag_confounders = dag,
+                 pos_confounders = integer(0)))
+  }
+
+  # Add confounders to the DAG
+  dag_confounders <- dag
+
+  for (i in 1:n_confounders){
+    confounded.pair <- node_pairs[confounders[i], ]
+    col_to_append <- rep(0, NROW(dag_confounders))
+    row_to_append <- rep(0, NROW(dag_confounders) + 1)
+    row_to_append[confounded.pair] <- 1
+    dag_confounders <- cbind(dag_confounders, col_to_append)
+    dag_confounders <- rbind(dag_confounders, row_to_append)
+  }
+
+  dag_confounders <- unname(dag_confounders)
+  pos_confounders <-  (p + 1):NROW(dag_confounders)
+
+  # Return data
+  return(list (dag_confounders = dag_confounders,
+               pos_confounders = pos_confounders))
+}
+
+
+#' Simulate noise observations
+#'
+#' Sample \code{n} observations for \code{p} independent noise variables
+#' from the distribution \code{distr}. The distribution is one of:
+#' \itemize{
+#' \item \code{student_t}, in this case the user has to specify the
+#' \code{tail_index}, i.e., the degrees of freedom,
+#' \item \code{gaussian},
+#' \item \code {log_normal}.
+#' }
+#' @param n Positive integer. The number of observations.
+#' @param p Positive integer. The number of variables.
+#' @param distr Character. The distribution of the noise.
+#' @param tail_index Positive numeric. The tail index, i.e., degrees
+#' of freedom, of the noise.
+#' @return Numeric matrix. Dataset matrix with \code{n}
+#' rows (observations) and \code{p} columns (variables).
+simulate_noise <- function(n, p, distr = c("student_t", "gaussian",
+                                          "log_normal")[1], tail_index){
+  switch(distr,
+         "student_t" = {
+
+           noise <- array(rt(n * p, df = tail_index), dim = c(n, p))
+
+         },
+         "gaussian" = {
+
+           noise <- array(rnorm(n * p), dim = c(n, p))
+         },
+         "log_normal" = {
+
+           noise <- array(rlnorm(n * p), dim = c(n, p))
+
+         },
+         stop("Wrong distribution. Enter one of 'student_t',
+              'gaussian', 'log_normal'."))
+
+  return(noise)
+}
+
+#' Generate data from non-linear Structural Equation Model
+#'
+#' Generate data from non-linear Structural Causal Model as shown in the
+#' paper "Causality in heavy-tailed models".
+#'
+#' @inheritParams get_all_paths
+#' @param noise Numeric matrix. Dataset matrix with \code{n}
+#' rows (observations) and \code{p} columns (variables).
+#' @return Numeric matrix. Dataset matrix with \code{n}
+#' rows (observations) and \code{p} columns (variables).
+nonlinear_scm <- function(adj_mat, noise){
+
+  n <- NROW(noise)
+  p <- NROW(adj_mat)
+  dag <- (adj_mat != 0) * 1
+  nodes <- compute_caus_order(dag)
+
+  dataset <- matrix(0, nrow = n, ncol = p)
+  dataset_transf <- matrix(0, nrow = n, ncol = p)
+
+  for (i in nodes){
+    betas <- adj_mat[, i]
+    eps <- noise[, i]
+    dataset[, i] <- dataset_transf %*% betas + eps
+    dataset_transf[, i] <- broken_hockeystick(dataset[, i])
+  }
+
+  return(dataset)
+}
+
+
+#' Apply shifted-hockeystick function
+#'
+#' Apply shifted-hockeystick function to a numeric vector \code{v}.
+#' The shifted-hockeystick function sets to zero all entries of
+#' \code{v} greater or equal to the \code{q_low}-quantile and
+#' strictly less than the \code{q_high}-quantile.
+#'
+#' @param v Numeric vector.
+#' @param q_low Numeric, between 0 and 1.
+#' @param q_high Numeric, between 0 and 1.
+#' @return Numeric vector.
+broken_hockeystick <- function(v, q_low = 0.01, q_high = 0.99){
+  n <- length(v)
+  r <- rank(v, ties.method = "first")
+  ind <- which(r > floor(n * q_low) & r <= ceiling(n * q_high))
+  v[ind] <- 0
+  return(v)
+}
+
+
+#' Transform to uniform margins
+#'
+#' Transform the numeric vector \code{x} to uniform margin
+#' between 0 and 1.
+#'
+#' @inheritParams broken_hockeystick
+#' @return Numeric vector.
+uniform_margin <- function(v){
+  n <- length(v)
+  rank(v) / n
 }

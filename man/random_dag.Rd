@@ -4,19 +4,19 @@
 \alias{random_dag}
 \title{Simulate random DAG}
 \usage{
-random_dag(p, prob, caus_order = sample(p, p, replace = FALSE))
+random_dag(p, prob_connect, caus_order = sample(p, p, replace = FALSE))
 }
 \arguments{
 \item{p}{Integer --- greater than 0. Number of nodes.}
 
-\item{prob}{Numeric --- between 0 and 1. The probability that an edge
+\item{prob_connect}{Numeric --- between 0 and 1. The probability that an edge
 \eqn{i {\rightarrow} j} is added to the DAG.}
 
 \item{caus_order}{Numeric vector. The causal order of the DAG.
 If the argument is not provided it is generated randomly.}
 }
 \value{
-Numeric matrix. The adjacency matrix of the simulated DAG.
+Square binary matrix. A matrix representing the random DAG.
 }
 \description{
 Simulates a directed acyclic graph (DAG) and returns its adjacency matrix.

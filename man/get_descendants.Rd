@@ -4,17 +4,17 @@
 \alias{get_descendants}
 \title{Get the descendants of a DAG}
 \usage{
-get_descendants(g)
+get_descendants(dag)
 }
 \arguments{
-\item{g}{Numeric matrix. The adjacency matrix of a DAG.}
+\item{dag}{Square binary matrix. A matrix representing a DAG.}
 }
 \value{
-Numeric matrix. The descendant matrix of
-the DAG \code{g}.
+Square binary matrix. The descendant matrix of
+the DAG \code{dag}.
 }
 \description{
 Produces a matrix where the entry \eqn{(i, j) = 1}
-if \eqn{i} is a descendant of \eqn{j} in the DAG \code{g},
+if \eqn{i} is a descendant of \eqn{j} in the DAG \code{dag},
 and \eqn{0} otherwise.
 }

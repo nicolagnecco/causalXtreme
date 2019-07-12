@@ -4,25 +4,24 @@
 \alias{compute_str_int_distance}
 \title{Compute structural intervention distance}
 \usage{
-compute_str_int_distance(g, est_g)
+compute_str_int_distance(dag, est_g)
 }
 \arguments{
-\item{g}{Numeric matrix. The adjacency matrix of a DAG.}
+\item{dag}{Square binary matrix. A matrix representing a DAG.}
 
-\item{est_g}{Numeric matrix. The (estimated) adjacency matrix of a
-DAG or CPDAG.}
+\item{est_g}{Square binary matrix. The estimated DAG or CPDAG.}
 }
 \value{
 Numeric --- between 0 and 1. The structural intervention
-distance between the DAG \code{g} and the DAG \code{est_g}.
+distance between the DAG \code{dag} and the DAG (or CPDAG) \code{est_g}.
 }
 \description{
-Compute the structural intervention distance between the DAG \code{g} and
-the estimated DAG \code{est_g}. The structural intervention distance is
-defined as in the paper from Peters J. and Bühlmann P.,
+Compute the structural intervention distance between the DAG \code{dag}
+and the estimated DAG (or CPDAG) \code{est_g}.
+The structural intervention distance is defined as in the paper from
+Peters J., and Bühlmann P.,
 \url{https://www.mitpressjournals.org/doi/full/10.1162/NECO_a_00708}.
 In general, the structural intervention distance is
-not symmetric, i.e., \code{compute_str_int_distance(g, est_g) !=}
-\code{compute_str_int_distance(est_g, g)}. Also, \code{est_g} can be
-a CPDAG.
+not symmetric, i.e., \code{compute_str_int_distance(dag, est_g) !=}
+\code{compute_str_int_distance(est_g, dag)}.
 }

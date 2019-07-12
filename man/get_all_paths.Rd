@@ -4,27 +4,17 @@
 \alias{get_all_paths}
 \title{Get all the directed paths of a DAG}
 \usage{
-get_all_paths(wg, type = c("count", "weighted")[1])
+get_all_paths(adj_mat)
 }
 \arguments{
-\item{wg}{Numeric matrix. The (possibly weighted) adjacency matrix of a DAG.}
-
-\item{type}{String. Is one of:
-\itemize{
-\item \code{"count"} (default),
-\item \code{"weighted"}.
-}}
+\item{adj_mat}{Square numeric matrix. The adjacency matrix of a DAG.}
 }
 \value{
-Numeric matrix. The path matrix of the DAG \code{g}.
+Square numeric matrix. The path matrix associated to \code{adj_mat}.
 }
 \description{
-Given the DAG \code{g}, produces a matrix where the entry \eqn{(i, j)}
-\itemize{
-\item counts the number of directed paths from node \eqn{i} to node \eqn{j},
-if \code{type == "count"},
-\item measures the total weight of the paths from node \eqn{i}
-to node \eqn{j}, if \code{type == "weighted"}.
-}
+Given the adjacency matrix \code{adj_mat}, produces a matrix
+where the entry \eqn{(i, j)} measures the total weight of the paths
+from node \eqn{i} to node \eqn{j}.
 \strong{Note}: if \eqn{i = j}, the entry \eqn{(i, j) = 1}.
 }

@@ -91,7 +91,7 @@ get_ancestors <- function(dag){
     ancestors <- ident_mat + dag %*% ancestors
   }
 
-  return((ancestors != 0) * 1)
+  return( (ancestors != 0) * 1)
 }
 
 
@@ -110,8 +110,6 @@ get_descendants <- function(dag){
   if (!all(dag %in% c(0, 1))){
     stop("The entries of dag must be either 0 or 1.")
   }
-
-  p <- NROW(dag)
 
   # return descendants
   descendants <- t(get_ancestors(dag))
@@ -341,6 +339,5 @@ compute_str_ham_distance <- function(cpdag, est_cpdag){
 
   p <- NROW(cpdag)
   s <- SID::hammingDist(cpdag, est_cpdag)
-  return(s/(p * (p - 1)/2))
+  return(s / (p * (p - 1) / 2))
 }
-
