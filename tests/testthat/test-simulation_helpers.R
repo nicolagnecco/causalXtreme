@@ -108,7 +108,7 @@ test_that("random dag works", {
   expect_equal(random_dag(p = p, prob = 0, caus_order = caus_order),
                dag_empty)
 
-  dag_full <-  caus_order_to_adjmat(caus_order)
+  dag_full <-  caus_order_to_dag(caus_order)
   expect_equal(random_dag(p = p, prob = 1, caus_order = caus_order),
                dag_full)
 

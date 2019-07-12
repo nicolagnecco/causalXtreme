@@ -119,7 +119,7 @@ compute_gamma_theo <- function(adj_mat, i, j, alpha, noise_w = rep(1, p)){
   e <- numeric(p)
   e[i] <- 1
 
-  path_matrix <- t(get_all_paths(adj_mat, "weighted"))
+  path_matrix <- t(get_all_paths(adj_mat))
   p_ij <- (e %*% path_matrix ^ alpha %*% v_num) /
     (e %*% path_matrix ^ alpha %*% v_denom)
   gamma <- drop(1 - 0.5 * p_ij)

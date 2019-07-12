@@ -184,6 +184,72 @@ get_all_paths <- function(adj_mat){
 }
 
 
+#' Convert a causal order into a fully connected DAG
+#'
+#' Convert the given causal order \code{caus_order} into a fully connected
+#' DAG.
+#'
+#' @inheritParams check_caus_order
+#' @return Square binary matrix. A fully connected DAG that agrees
+#' with the given order.
+#'
+caus_order_to_dag <- function(caus_order){
+
+  # check if caus_order has some NA
+  if (any(is.na(caus_order))){
+    stop("The causal order caus_order cannot contain NA.")
+  }
+
+  p <- length(caus_order)
+  dag <- upper.tri(x = matrix(0, nrow = p, ncol = p)) * 1
+  inv_caus_order <- order(caus_order)
+  return(dag[inv_caus_order, inv_caus_order])
+}
+
+
+#' Convert a DAG into a CPDAG
+#'
+#' Convert the given DAG \code{dag} into a CPDAG
+#' DAG.
+#'
+#' @inheritParams compute_caus_order
+#' @return Square binary matrix. A CPDAG that agrees
+#' with the given DAG.
+#'
+dag_to_cpdag <- function(dag){
+
+  # check if dag is a DAG (i.e., a binary matrix)
+  if (!all(dag %in% c(0, 1))){
+    stop("The entries of dag must be either 0 or 1.")
+  }
+
+  # return cpdag
+  (pcalg::dag2cpdag(dag)) * 1
+}
+
+
+#' Convert a causal order into a CPDAG
+#'
+#' Convert the given causal order \code{caus_order} into a CPDAG
+#' DAG.
+#'
+#' @inheritParams check_caus_order
+#' @return Square binary matrix. A CPDAG that agrees
+#' with the given DAG.
+#'
+caus_order_to_cpdag <- function(caus_order){
+
+  # check if caus_order has some NA
+  if (any(is.na(caus_order))){
+    stop("The causal order caus_order cannot contain NA.")
+  }
+
+  # return cpdag
+  dag <- caus_order_to_dag(caus_order)
+  (pcalg::dag2cpdag(dag)) * 1
+}
+
+
 #' Compute ancestral distance
 #'
 #' Computes the ancestral distance between the DAG \code{dag} and
@@ -250,8 +316,8 @@ compute_str_int_distance <- function(dag, est_g){
 
 #' Compute structural Hamming distance
 #'
-#' Compute the structural Hamming distance between the true DAG (or CPDAG)
-#' \code{g} and the estimated DAG (or CPDAG) \code{est_g}.
+#' Compute the structural Hamming distance between the true CPDAG
+#' \code{cpdag} and the estimated CPDAG \code{est_cpdag}.
 #' The structural Hamming distance is defined as in the paper from
 #' Tsamardinos I., Brown L.E., and Aliferis C.F.,
 #' \url{https://link.springer.com/article/10.1007/s10994-006-6889-7}.
@@ -259,44 +325,22 @@ compute_str_int_distance <- function(dag, est_g){
 #' @inheritParams compute_caus_order
 #' @inheritParams compute_str_int_distance
 #' @return Numeric --- between 0 and 1. The structural Hamming
-#' distance between a true DAG (or CPDAG) \code{g} and the
-#' estimated DAG (or CPDAG) \code{est_g}.
-compute_str_ham_distance <- function(g, est_g){
+#' distance between a true CPDAG \code{cpdag} and the
+#' estimated CPDAG \code{est_cpdag}.
+compute_str_ham_distance <- function(cpdag, est_cpdag){
 
-  # check if g is a DAG or CPDAG (i.e., a binary matrix)
-  if (!all(g %in% c(0, 1))){
-    stop("The entries of dag must be either 0 or 1.")
+  # check if cpdag is a CPDAG (i.e., a binary matrix)
+  if (!all(cpdag %in% c(0, 1))){
+    stop("The entries of cpdag must be either 0 or 1.")
   }
 
-  # check if est_g is a DAG or CPDAG (i.e., a binary matrix)
-  if (!all(est_g %in% c(0, 1))){
-    stop("The entries of est_g must be either 0 or 1.")
+  # check if est_cpdag is a CPDAG (i.e., a binary matrix)
+  if (!all(est_cpdag %in% c(0, 1))){
+    stop("The entries of est_cpdag must be either 0 or 1.")
   }
 
-  p <- NROW(g)
-  g <- (g != 0) * 1
-  s <- SID::hammingDist(g, est_g)
+  p <- NROW(cpdag)
+  s <- SID::hammingDist(cpdag, est_cpdag)
   return(s/(p * (p - 1)/2))
 }
 
-
-#' Convert a causal order into a fully connected DAG
-#'
-#' Convert the given causal order \code{caus_order} into a fully connected
-#' DAG.
-#'
-#' @inheritParams check_caus_order
-#' @return Numeric matrix. The adjacency matrix of the fully connected DAG.
-#'
-caus_order_to_adjmat <- function(caus_order){
-
-  # check if caus_order has some NA
-  if (any(is.na(caus_order))){
-    stop("The causal order caus_order cannot contain NA.")
-  }
-
-  p <- length(caus_order)
-  adj_mat <- upper.tri(x = matrix(0, nrow = p, ncol = p)) * 1
-  inv_caus_order <- order(caus_order)
-  return(adj_mat[inv_caus_order, inv_caus_order])
-}

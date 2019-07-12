@@ -33,26 +33,26 @@ mat3 <-  matrix("NA", nrow = 3, ncol = 10)
 test_that("causal discovery works", {
 
   order <- fast_perm_search(delta, "sum")$order
-  est_g <- caus_order_to_adjmat(order)
+  est_g <- caus_order_to_dag(order)
   ll <- list(est_g = est_g, order = order)
   expect_equal(causal_discovery("fast", delta = delta), ll)
   expect_equal(causal_discovery("fast", g = g, gamma = gamma, mat = mat,
                                 delta = delta), ll)
 
   order <- full_perm_search(delta)$order
-  est_g <- caus_order_to_adjmat(order)
+  est_g <- caus_order_to_dag(order)
   ll <- list(est_g = est_g, order = order)
   expect_equal(causal_discovery("full", delta = delta), ll)
   expect_equal(causal_discovery("full", gamma = gamma, delta = delta), ll)
 
   order <- greedy_perm_search(delta)$order
-  est_g <- caus_order_to_adjmat(order)
+  est_g <- caus_order_to_dag(order)
   ll <- list(est_g = est_g, order = order)
   expect_equal(causal_discovery("greedy", delta = delta), ll)
   expect_equal(causal_discovery("greedy", delta = delta, g = g), ll)
 
   order <- fast_perm_search(delta, "maxmin")$order
-  est_g <- caus_order_to_adjmat(order)
+  est_g <- caus_order_to_dag(order)
   ll <- list(est_g = est_g, order = order)
   expect_equal(causal_discovery("maxmin", delta = delta), ll)
   expect_equal(causal_discovery("maxmin", mat = mat, g = g, delta = delta), ll)
@@ -84,14 +84,14 @@ test_that("causal discovery works", {
   expect_equal(causal_discovery("pc", delta = delta, mat = mat3), ll)
 
   order <- oracle_search(g)
-  est_g <- caus_order_to_adjmat(order)
+  est_g <- caus_order_to_dag(order)
   ll <- list(est_g = est_g, order = order)
   expect_equal(causal_discovery("oracle", g = g), ll)
   expect_equal(causal_discovery("oracle", delta = delta, g = g), ll)
 
   set.seed(1)
   order <- random_perm_search(g)
-  est_g <- caus_order_to_adjmat(order)
+  est_g <- caus_order_to_dag(order)
   ll <- list(est_g = est_g, order = order)
   set.seed(1)
   expect_equal(causal_discovery("random", g = g), ll)
@@ -99,7 +99,7 @@ test_that("causal discovery works", {
   expect_equal(causal_discovery("random", g = g, mat = mat, gamma = gamma), ll)
 
   order <- minimax_search(gamma)
-  est_g <- caus_order_to_adjmat(order)
+  est_g <- caus_order_to_dag(order)
   ll <- list(est_g = est_g, order = order)
   expect_equal(causal_discovery("minimax", gamma = gamma), ll)
 

@@ -56,24 +56,24 @@ causal_discovery <- function(method = c("fast", "full", "greedy",
            "fast" = {
              out$order <- fast_perm_search(argms$delta, silent = TRUE,
                                            mode = "sum")$order
-             out$est_g <- caus_order_to_adjmat(out$order)
+             out$est_g <- caus_order_to_dag(out$order)
 
            },
            "full" = {
              p <- NROW(argms$delta)
              if (p < 10){
                out$order <- full_perm_search(argms$delta, silent = TRUE)$order
-               out$est_g <- caus_order_to_adjmat(out$order)
+               out$est_g <- caus_order_to_dag(out$order)
              }
            },
            "greedy" = {
              out$order <- greedy_perm_search(argms$delta, silent = TRUE)$order
-             out$est_g <- caus_order_to_adjmat(out$order)
+             out$est_g <- caus_order_to_dag(out$order)
            },
            "maxmin" = {
              out$order <- fast_perm_search(argms$delta, silent = TRUE,
                                            mode = "maxmin")$order
-             out$est_g <- caus_order_to_adjmat(out$order)
+             out$est_g <- caus_order_to_dag(out$order)
 
            })
 
@@ -115,12 +115,12 @@ causal_discovery <- function(method = c("fast", "full", "greedy",
     switch(method,
            "oracle" = {
              out$order <- oracle_search(argms$g)
-             out$est_g <- caus_order_to_adjmat(out$order)
+             out$est_g <- caus_order_to_dag(out$order)
 
            },
            "random" = {
              out$order <- random_perm_search(argms$g)
-             out$est_g <- caus_order_to_adjmat(out$order)
+             out$est_g <- caus_order_to_dag(out$order)
 
            })
 
@@ -134,7 +134,7 @@ causal_discovery <- function(method = c("fast", "full", "greedy",
     switch(method,
            "minimax" = {
              out$order <- minimax_search(argms$gamma)
-             out$est_g <- caus_order_to_adjmat(out$order)
+             out$est_g <- caus_order_to_dag(out$order)
 
            })
 
