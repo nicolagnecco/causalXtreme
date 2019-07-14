@@ -84,3 +84,21 @@ X <- simulate_data(n, p, prob_connect = 1.5 / (p - 1), distr = "student_t", tail
 g <- graph_from_adjacency_matrix(X$dag)
 V(g)$color <- "white"
 tkplot(g, layout = layout_in_circle(g))
+
+# Compute theoretical Psi coefficient
+library(lattice)
+p <- 5
+u <- sample(1:1e6, 1)
+set.seed(u)
+adj_mat <- random_coeff(random_dag(p, .3))
+adj_mat
+true_psi <- psi_matrix(adj_mat, tail_index = 3.5)
+
+set.seed(u)
+sim <- simulate_data(1e5, p, .3, tail_index = 3.5)
+est_psi <- causal_tail_matrix(sim$dataset)
+
+path_mat <- get_all_paths(adj_mat)
+
+levelplot(abs(est_psi - true_psi),
+          col.regions = heat.colors(100)[length(heat.colors(100)):1])

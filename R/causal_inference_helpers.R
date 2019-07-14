@@ -300,7 +300,7 @@ oracle_search <- function(g){
 #'
 #' Runs Lingam given a dataset \code{mat}.
 #'
-#' @inheritParams compute_gamma_matrix
+#' @inheritParams causal_tail_matrix
 #' @return Numeric matrix (or \code{NA} in case of error).
 #' The estimated adjacency matrix of a DAG.
 lingam_search <- function(mat){
@@ -335,7 +335,7 @@ lingam_search <- function(mat){
 #' \item \code{skel.method = "stable"}.
 #' }
 #'
-#' @inheritParams compute_gamma_matrix
+#' @inheritParams causal_tail_matrix
 #' @return Numeric matrix (or \code{NA} in case of error).
 #' The estimated adjacency matrix of a CPDAG.
 pc_search <- function(mat){

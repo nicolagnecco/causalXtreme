@@ -1,6 +1,6 @@
 # To do !!!
 
-# CPDAG -> DAG
+## CPDAG -> DAG
 # possible to extend
 test1 <- pcalg::pdag2dag(truecpdag)
 test2 <- pcalg::pdag2dag(cpdag1)
@@ -16,7 +16,8 @@ if (test3$success){
   as(test3$graph, "matrix")
 }
 
-# PC algorithm
+
+## PC algorithm
 
 # NORMAL PC
 # pc.fit <- pc(suffStat = suffStat, indepTest = gaussCItest, p = p, alpha = 5e-3,
@@ -29,3 +30,10 @@ if (test3$success){
 # setOptions$indepTest <- pcalg::gaussCItest
 # rankpc.fit <- pc(suffStat = suffStat, indepTest = gaussCItest, p = p, alpha = 5e-3,
 #              u2pd = "retry", skel.method = "stable")
+
+
+## Add references to "Causality in heavy-tailed models"
+
+## Note that with positive and negative beta, there is higher chance of an offset.
+# This leads to weaker unconditional connections, which might lead to poorer perf
+# in finite sample
