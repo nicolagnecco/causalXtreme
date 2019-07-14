@@ -2,6 +2,10 @@ context("test-simulation_helpers")
 
 # Define variables
 u <- sample(1e6, 1)
+n <- sample(1:1e3, 1)
+p <- sample(1:50, 1)
+tail_index <- sample(1:10, 1)
+prob_connect <- runif(1)
 
 # Run tests
 test_that("pick elements works", {
@@ -44,20 +48,13 @@ test_that("inverse mirror uniform works", {
   expect_equal(inverse_mirror_uniform(prob = 1 / 4, min = lb, max = ub),
                2 * 1 / 4 * (ub - lb) - ub)
   expect_equal(inverse_mirror_uniform(prob = 3 / 4, min = lb, max = ub),
-              (2 * 3 / 4 - 1) * (ub - lb) + lb)
+               (2 * 3 / 4 - 1) * (ub - lb) + lb)
 
   expect_error(inverse_mirror_uniform(prob = runif(1), min = ub, max = lb))
   expect_error(inverse_mirror_uniform(prob = runif(1), min = -ub, max = lb))
   expect_error(inverse_mirror_uniform(prob = runif(1), min = ub, max = -lb))
   expect_error(inverse_mirror_uniform(prob = runif(1), min = -ub, max = -lb))
   expect_error(inverse_mirror_uniform(prob = 1.2, min = lb, max = ub))
-
-})
-
-test_that("add random confounders works", {
-  dag <- random_dag(5, 1)
-  add_random_confounders(dag, 1)
-  expect_
 
 })
 
@@ -166,7 +163,7 @@ test_that("random coefficients works", {
   g_coeff <- matrix(0, nrow = p, ncol = p)
   set.seed(u)
   g_coeff[g == 1] <- sample_uniform(n = num_coeff, min = lb, max = ub,
-                                           mirror = TRUE)
+                                    mirror = TRUE)
   set.seed(u)
   expect_equal(random_coeff(g, lb = lb, ub = ub, two_intervals = TRUE),
                g_coeff)
@@ -193,4 +190,156 @@ test_that("random coefficients works", {
   expect_error(random_coeff(g, lb =  ub, ub = -lb, two_intervals = TRUE))
   expect_error(random_coeff(g, lb = -ub, ub = -lb, two_intervals = TRUE))
 
+})
+
+test_that("add random confounders works", {
+
+  ### p = 1
+  p <- 1
+
+  dag <- random_dag(p, prob_connect = runif(1))
+  out <- add_random_confounders(dag, prob_confound = runif(1))
+
+  # is the output the right size?
+  expect_equal(NROW(out$dag_confounders), p + p * (p - 1) / 2)
+
+  # are there zero confounders?
+  expect_equal(length(out$pos_confounders), 0)
+
+  ### p > 1
+  p <- sample(2:20, 1)
+
+  ## Proba confounder = 1
+  prob_confound <- 1
+  dag <- random_dag(p, prob_connect = runif(1))
+  out <- add_random_confounders(dag, prob_confound = prob_confound)
+
+
+  if (length(out$pos_confounders) == 1){
+
+    # are the confounders affecting only 2 vars at a time?
+    expect_equal(sum(out$dag_confounders[out$pos_confounders, ]), 2)
+
+    # are the confounders actually source nodes?
+    expect_equal(sum(out$dag_confounders[, out$pos_confounders]), 0)
+
+  } else {
+
+    # are the confounders affecting only 2 vars at a time?
+    expect_equal(apply(out$dag_confounders[out$pos_confounders, ], 1, sum),
+                 rep(2, length(out$pos_confounders)))
+
+    # are the confounders actually source nodes?
+    expect_equal(apply(out$dag_confounders[, out$pos_confounders], 2, sum),
+                 rep(0, length(out$pos_confounders)))
+  }
+
+
+  ## Proba confounder = 0
+  prob_confound <- 0
+  dag <- random_dag(p, prob_connect = runif(1))
+  out <- add_random_confounders(dag, prob_confound = prob_confound)
+
+  # is the output the right size?
+  expect_equal(NROW(out$dag_confounders), p)
+
+  # are there zero confounders?
+  expect_equal(length(out$pos_confounders), 0)
+
+  # are the confounders affecting only 2 vars at a time?
+  expect_equal(apply(out$dag_confounders[out$pos_confounders, ], 1, sum),
+               rep(2, length(out$pos_confounders)))
+
+  # are the confounders actually source nodes?
+  expect_equal(apply(out$dag_confounders[, out$pos_confounders], 2, sum),
+               rep(0, length(out$pos_confounders)))
+
+
+  ## Proba confounder in (0, 1)
+  prob_confound <- runif(1)
+  dag <- random_dag(p, prob_connect = runif(1))
+  out <- add_random_confounders(dag, prob_confound = prob_confound)
+
+  # is the output the right size?
+  expect_lte(NROW(out$dag_confounders), p + p * (p - 1) / 2)
+  expect_gte(NROW(out$dag_confounders), p)
+
+  if (length(out$pos_confounders) == 1){
+
+    # are the confounders affecting only 2 vars at a time?
+    expect_equal(sum(out$dag_confounders[out$pos_confounders, ]), 2)
+
+    # are the confounders actually source nodes?
+    expect_equal(sum(out$dag_confounders[, out$pos_confounders]), 0)
+
+  } else {
+
+    # are the confounders affecting only 2 vars at a time?
+    expect_equal(apply(out$dag_confounders[out$pos_confounders, ], 1, sum),
+                 rep(2, length(out$pos_confounders)))
+
+    # are the confounders actually source nodes?
+    expect_equal(apply(out$dag_confounders[, out$pos_confounders], 2, sum),
+                 rep(0, length(out$pos_confounders)))
+  }
+
+  ## Error
+  dag <- random_dag(5, prob_connect = 1)
+  expect_error(add_random_confounders(dag * 0.1, runif(1)))
+
+})
+
+test_that("simulate noise works", {
+
+  p <- sample(1:20, 1)
+
+  ## check that size is correct
+  # student_t
+  sim <- simulate_noise(n, p, "student_t", tail_index)
+  expect_equal(NROW(sim), n)
+  expect_equal(NCOL(sim), p)
+
+  # gaussian
+  sim <- simulate_noise(n, p, "gaussian", tail_index)
+  expect_equal(NROW(sim), n)
+  expect_equal(NCOL(sim), p)
+
+  # log_norm
+  sim <- simulate_noise(n, p, "log_normal", tail_index)
+  expect_equal(NROW(sim), n)
+  expect_equal(NCOL(sim), p)
+
+  ## Error
+  expect_error(simulate_noise(n, p, "blahblah", tail_index))
+})
+
+test_that("uniform margin works", {
+  p <- sample(0:10)
+  v <- rnorm(p)
+  expect_equal(uniform_margin(v), rank(v) / length(v))
+})
+
+test_that("broken hockeystick works", {
+  n <- sample(0:10, 1)
+  v <- rnorm(n)
+
+  v_temp <- v
+  r <- rank(v_temp, ties.method = "first")
+  q_low <- runif(1)
+  q_high <- runif(1)
+  v_temp[r > floor(n * q_low) & r <= ceiling(n * q_high)] <- 0
+
+  expect_equal(broken_hockeystick(v, q_low, q_high), v_temp)
+})
+
+test_that("nonlinear scm works", {
+  dag <- random_dag(3, prob_connect = 1, caus_order = 1:3)
+  adj_mat <- random_coeff(dag)
+  noise <- simulate_noise(n, 3, distr = "student_t", tail_index = tail_index)
+  X <- matrix(0, nrow = n, ncol = 3)
+  X[, 1] <- noise[, 1]
+  X[, 2] <- adj_mat[1, 2] * broken_hockeystick(X[, 1]) + noise[, 2]
+  X[, 3] <- adj_mat[1, 3] * broken_hockeystick(X[, 1]) +
+    adj_mat[2, 3] * broken_hockeystick(X[, 2]) + noise[, 3]
+  expect_equal(nonlinear_scm(adj_mat, noise), X)
 })

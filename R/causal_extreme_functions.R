@@ -48,7 +48,8 @@ compute_gamma <- function(v1, v2, k = floor(2 * n ^ 0.4), to_rank = TRUE,
 #' gamma coefficient between the \eqn{i}-th and the \eqn{j}-th
 #' column of \code{dat}. If \eqn{i = j}, the value of the entry \eqn{(i, j)}
 #' is set to \code{NA}.
-compute_gamma_matrix <- function(dat, k = floor(2 * n ^ 0.4), both_tails = TRUE){
+compute_gamma_matrix <- function(dat, k = floor(2 * n ^ 0.4),
+                                 both_tails = TRUE){
   n   <- NROW(dat) # number of observations
   p   <- NCOL(dat) # number of variables
 

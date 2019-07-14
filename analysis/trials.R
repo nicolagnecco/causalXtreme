@@ -45,3 +45,42 @@ apply(out^2, 1, sum)
 A_mod <- t(diag(p) - solve(out))
 A
 A_mod
+
+# Check simulate data
+n <- 1e4
+p <- 50
+
+X <- simulate_data(n, p, prob_connect = 1.5 / (p - 1), distr = "student_t", tail_index = 2,
+                   has_confounder = T, has_uniform_margins = F)
+pairs(X$dataset)
+
+
+
+# Check Psi coefficient
+n <- 1e3
+p <- 15
+X <- simulate_data(n, p, prob_connect = 1.5 / (p - 1), distr = "student_t", tail_index = 3.5,
+                   has_confounder = T, is_nonlinear = T, has_uniform_margins = T)
+dim(X$dataset)
+
+g <- compute_gamma_matrix(X$dataset, both_tails = T)
+
+est_dag <- caus_order_to_dag(minimax_search(g))
+full_est_dag <- X$dag
+full_est_dag[- X$pos_confounders, - X$pos_confounders] <- est_dag
+
+compute_str_int_distance(X$dag, full_est_dag)
+
+est_dag <- lingam_search(X$dataset)
+full_est_dag <- X$dag
+full_est_dag[- X$pos_confounders, - X$pos_confounders] <- est_dag
+compute_str_int_distance(X$dag, full_est_dag)
+
+
+# Plot graphs with different sparsity parameter
+library(igraph)
+X <- simulate_data(n, p, prob_connect = 1.5 / (p - 1), distr = "student_t", tail_index = 1.5,
+                   has_confounder = T, is_nonlinear = T, has_uniform_margins = T)
+g <- graph_from_adjacency_matrix(X$dag)
+V(g)$color <- "white"
+tkplot(g, layout = layout_in_circle(g))

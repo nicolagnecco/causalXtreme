@@ -185,7 +185,7 @@ random_coeff <- function(dag, lb = 0.1, ub = 0.9, two_intervals = TRUE){
 #' \item \code{dag_confounders} --- Square binary matrix. Represents the full
 #' DAG made of observed and hidden variables.
 #' \item \code{pos_confounders} --- Integer vector. Represents the position
-#' of confounders (rows and columns) in dag_confounders.
+#' of confounders (rows and columns) in \code{dag_confounders}.
 #' }
 #'
 add_random_confounders <- function(dag, prob_confound){
@@ -236,16 +236,16 @@ add_random_confounders <- function(dag, prob_confound){
 #' Simulate noise observations
 #'
 #' Sample \code{n} observations for \code{p} independent noise variables
-#' from the distribution \code{distr}. The distribution is one of:
+#' from a certain distribution \code{distr}.
+#' @param n Positive integer. The number of observations.
+#' @param p Positive integer. The number of variables.
+#' @param distr Character. The distribution of the noise. It is one of:
 #' \itemize{
 #' \item \code{student_t}, in this case the user has to specify the
 #' \code{tail_index}, i.e., the degrees of freedom,
 #' \item \code{gaussian},
-#' \item \code {log_normal}.
+#' \item \code{log_normal}.
 #' }
-#' @param n Positive integer. The number of observations.
-#' @param p Positive integer. The number of variables.
-#' @param distr Character. The distribution of the noise.
 #' @param tail_index Positive numeric. The tail index, i.e., degrees
 #' of freedom, of the noise.
 #' @return Numeric matrix. Dataset matrix with \code{n}
@@ -315,7 +315,7 @@ nonlinear_scm <- function(adj_mat, noise){
 #' @param q_low Numeric, between 0 and 1.
 #' @param q_high Numeric, between 0 and 1.
 #' @return Numeric vector.
-broken_hockeystick <- function(v, q_low = 0.01, q_high = 0.99){
+broken_hockeystick <- function(v, q_low = 0.05, q_high = 0.95){
   n <- length(v)
   r <- rank(v, ties.method = "first")
   ind <- which(r > floor(n * q_low) & r <= ceiling(n * q_high))

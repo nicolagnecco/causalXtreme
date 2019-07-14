@@ -18,7 +18,7 @@ List. The list is made of:
 \item \code{dag_confounders} --- Square binary matrix. Represents the full
 DAG made of observed and hidden variables.
 \item \code{pos_confounders} --- Integer vector. Represents the position
-of confounders (rows and columns) in dag_confounders.
+of confounders (rows and columns) in \code{dag_confounders}.
 }
 }
 \description{

@@ -12,7 +12,13 @@ simulate_noise(n, p, distr = c("student_t", "gaussian", "log_normal")[1],
 
 \item{p}{Positive integer. The number of variables.}
 
-\item{distr}{Character. The distribution of the noise.}
+\item{distr}{Character. The distribution of the noise. It is one of:
+\itemize{
+\item \code{student_t}, in this case the user has to specify the
+\code{tail_index}, i.e., the degrees of freedom,
+\item \code{gaussian},
+\item \code{log_normal}.
+}}
 
 \item{tail_index}{Positive numeric. The tail index, i.e., degrees
 of freedom, of the noise.}
@@ -23,11 +29,5 @@ rows (observations) and \code{p} columns (variables).
 }
 \description{
 Sample \code{n} observations for \code{p} independent noise variables
-from the distribution \code{distr}. The distribution is one of:
-\itemize{
-\item \code{student_t}, in this case the user has to specify the
-\code{tail_index}, i.e., the degrees of freedom,
-\item \code{gaussian},
-\item \code {log_normal}.
-}
+from a certain distribution \code{distr}.
 }
