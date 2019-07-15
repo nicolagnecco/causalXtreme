@@ -4,12 +4,25 @@
 \alias{lingam_search}
 \title{Lingam search}
 \usage{
-lingam_search(mat)
+lingam_search(dat, contrast_fun = c("logcosh", "exp")[1])
+}
+\arguments{
+\item{dat}{Numeric matrix. Dataset matrix with \code{n}
+rows (observations) and \code{p} columns (variables).}
+
+\item{contrast_fun}{Character. The functional form of the contrast
+function used in the Fast-ICA step. It is one of:
+\itemize{
+\item \code{logcosh} --- the default choice
+\item \code{exp}
+}
+For further details see the paper from
+Hyvarinen, A. \url{https://ieeexplore.ieee.org/abstract/document/761722/}.}
 }
 \value{
-Numeric matrix (or \code{NA} in case of error).
-The estimated adjacency matrix of a DAG.
+Square binary matrix (or \code{NA} in case of error).
+The DAG estimated from the data.
 }
 \description{
-Runs Lingam given a dataset \code{mat}.
+Runs Lingam given a dataset \code{dat}.
 }

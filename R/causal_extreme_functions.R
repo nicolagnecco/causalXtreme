@@ -17,9 +17,10 @@
 #' \code{causal_tail_coeff(v1, v2) != causal_tail_coeff(v2, v1)}.
 #'
 #' @param v1,v2 Numeric vectors. Two vectors with \code{n} observations.
-#' @param k Integer. The number of extreme observations used to
+#' @param k Positive integer. The number of extreme observations used to
 #' compute the causal tail coefficient. Set by default to
-#' \code{k = floor(2 * n^0.4)}.
+#' \code{k = floor(2 * n^0.4)}. It must be greater than 1 and smaller
+#' than \code{n}.
 #' @param to_rank Boolean. Are the vectors \code{v1} and \code{v2}
 #' already sorted?
 #' Set by default to \code{TRUE}.
@@ -34,6 +35,11 @@ causal_tail_coeff <- function(v1, v2, k = floor(2 * n ^ 0.4), to_rank = TRUE,
                               both_tails = TRUE){
   # number of observations
   n <- NROW(v1)
+
+  # check k
+  if (k <= 1 | k >= n) {
+    stop("k must be greater than 1 and smaller than n!")
+  }
 
   # rank variables?
   if (to_rank){

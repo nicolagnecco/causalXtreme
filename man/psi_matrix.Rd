@@ -4,13 +4,13 @@
 \alias{psi_matrix}
 \title{Compute \eqn{\Psi}-matrix}
 \usage{
-psi_matrix(adj_mat, alpha)
+psi_matrix(adj_mat, tail_index)
 }
 \arguments{
 \item{adj_mat}{Square numeric matrix. The adjacency matrix of a DAG.
 If \code{both_tails = FALSE}, all the entries must be non-negative.}
 
-\item{alpha}{Numeric. The tail-index of the noise distribution.}
+\item{tail_index}{Numeric. The tail-index of the noise distribution.}
 }
 \value{
 Numeric matrix. The entry \eqn{(i, j)} contains the

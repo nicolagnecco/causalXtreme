@@ -237,8 +237,10 @@ add_random_confounders <- function(dag, prob_confound){
 #'
 #' Sample \code{n} observations for \code{p} independent noise variables
 #' from a certain distribution \code{distr}.
-#' @param n Positive integer. The number of observations.
-#' @param p Positive integer. The number of variables.
+#' @param n Positive integer. The number of observations, must be larger
+#' than 1.
+#' @param p Positive integer. The number of variables, must be larger
+#' than 1.
 #' @param distr Character. The distribution of the noise. It is one of:
 #' \itemize{
 #' \item \code{student_t}, in this case the user has to specify the
@@ -252,6 +254,11 @@ add_random_confounders <- function(dag, prob_confound){
 #' rows (observations) and \code{p} columns (variables).
 simulate_noise <- function(n, p, distr = c("student_t", "gaussian",
                                           "log_normal")[1], tail_index){
+
+  if (p <=1 | n <= 1){
+    stop("n and p must be larger than 1!")
+  }
+
   switch(distr,
          "student_t" = {
 

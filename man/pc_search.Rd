@@ -4,23 +4,29 @@
 \alias{pc_search}
 \title{PC search}
 \usage{
-pc_search(mat)
+pc_search(dat, alpha)
+}
+\arguments{
+\item{dat}{Numeric matrix. Dataset matrix with \code{n}
+rows (observations) and \code{p} columns (variables).}
+
+\item{alpha}{Numeric --- between 0 and 1. The significance level for the
+individual conditional independence tests.}
 }
 \value{
-Numeric matrix (or \code{NA} in case of error).
-The estimated adjacency matrix of a CPDAG.
+Square binary matrix (or \code{NA} in case of error).
+The CPDAG estimated from the data.
 }
 \description{
-Runs PC algorithm given a dataset \code{mat}.
+Runs PC algorithm given a dataset \code{dat}.
 }
 \details{
 The function \code{pcalg:pc()} is called with the following
 arguments:
 \itemize{
-\item \code{suffStat = list(C = cor(mat), n = NROW(mat))},
+\item \code{suffStat = list(C = cor(dat), n = NROW(dat))},
 \item \code{indepTest = gaussCItest},
-\item \code{alpha = 0.05},
-\item \code{u2pd = "retry"} --- this makes sure that the produced CPDAG
+\item \code{u2pd = "retry"} --- this ensures that the produced CPDAG
 is extendible to a DAG,
 \item \code{skel.method = "stable"}.
 }

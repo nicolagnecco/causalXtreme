@@ -25,6 +25,10 @@ simulate_data <- function(n, p, prob_connect,
                          tail_index = 1.5, has_confounder = FALSE,
                          is_nonlinear = FALSE, has_uniform_margins = FALSE){
 
+  if (p <=1 | n <= 1){
+    stop("n and p must be larger than 1!")
+  }
+
   # Simulate random DAG
   dag <- random_dag(p = p, prob_connect = prob_connect)
 

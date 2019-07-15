@@ -10,9 +10,10 @@ causal_tail_coeff(v1, v2, k = floor(2 * n^0.4), to_rank = TRUE,
 \arguments{
 \item{v1, v2}{Numeric vectors. Two vectors with \code{n} observations.}
 
-\item{k}{Integer. The number of extreme observations used to
+\item{k}{Positive integer. The number of extreme observations used to
 compute the causal tail coefficient. Set by default to
-\code{k = floor(2 * n^0.4)}.}
+\code{k = floor(2 * n^0.4)}. It must be greater than 1 and smaller
+than \code{n}.}
 
 \item{to_rank}{Boolean. Are the vectors \code{v1} and \code{v2}
 already sorted?

@@ -102,3 +102,21 @@ path_mat <- get_all_paths(adj_mat)
 
 levelplot(abs(est_psi - true_psi),
           col.regions = heat.colors(100)[length(heat.colors(100)):1])
+
+
+# Super gaussian
+gaus_fam <- function(x, alpha){
+  exp(-abs(x) ^ alpha)
+}
+
+x <- seq(-2, 2, length.out = 100)
+alpha <- 2
+plot(gaus_fam(x, alpha))
+points(gaus_fam(x, 1.5), col = "blue")
+lines(3*dt(x, 1.5))
+
+
+# Change Lingam
+t.k <- estLiNGAM(dat2, only.perm = T, fun = "exp")$k
+bb <- prune(t(dat1), t.k)
+bb$Bpruned

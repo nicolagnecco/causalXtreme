@@ -1,8 +1,8 @@
 context("test-simulation_functions")
 
 # Define variables
-n <- sample(1:1e3, 1)
-p <- sample(1:50, 1)
+n <- sample(2:1e3, 1)
+p <- sample(2:50, 1)
 tail_index <- sample(1:10, 1)
 prob_connect <- runif(1)
 

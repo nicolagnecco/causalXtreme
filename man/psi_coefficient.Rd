@@ -4,7 +4,7 @@
 \alias{psi_coefficient}
 \title{Compute \eqn{\Psi}-coefficient}
 \usage{
-psi_coefficient(adj_mat, i, j, alpha)
+psi_coefficient(adj_mat, i, j, tail_index)
 }
 \arguments{
 \item{adj_mat}{Square numeric matrix. The adjacency matrix of a DAG.
@@ -13,7 +13,7 @@ If \code{both_tails = FALSE}, all the entries must be non-negative.}
 \item{i, j}{Integer. The indices of the nodes to consider to compute
 the theoretical gamma coefficient.}
 
-\item{alpha}{Numeric. The tail-index of the noise distribution.}
+\item{tail_index}{Numeric. The tail-index of the noise distribution.}
 }
 \value{
 Numeric --- between 0 and 1. The theoretical psi coefficient

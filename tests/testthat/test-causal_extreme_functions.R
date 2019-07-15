@@ -47,6 +47,8 @@ test_that("causal tail coefficient works", {
   expect_equal(causal_tail_coeff(v2, v1, k = 5, both_tails = TRUE),
                1 / (4 * 10) * 2 * (abs(10 - 5.5) + abs(9 - 5.5) +
                                      abs(8 - 5.5) + abs(6 - 5.5)))
+  expect_error(causal_tail_coeff(v2, v1, k = 1))
+  expect_error(causal_tail_coeff(v1, v2, k = 10))
 })
 
 test_that("causal tail matrix works", {

@@ -18,4 +18,5 @@ Imports:
     gtools,
     pcalg,
     Matrix,
-    purrr
+    purrr,
+    fastICA
