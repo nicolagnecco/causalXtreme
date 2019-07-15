@@ -311,6 +311,9 @@ test_that("simulate noise works", {
 
   ## Error
   expect_error(simulate_noise(n, p, "blahblah", tail_index))
+  expect_error(simulate_noise(1, 2, tail_index = 1.5))
+  expect_error(simulate_noise(2, 1, tail_index = 1.5))
+  expect_error(simulate_noise(1, 1, tail_index = 1.5))
 })
 
 test_that("uniform margin works", {

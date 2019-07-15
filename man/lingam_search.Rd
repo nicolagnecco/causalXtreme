@@ -11,11 +11,8 @@ lingam_search(dat, contrast_fun = c("logcosh", "exp")[1])
 rows (observations) and \code{p} columns (variables).}
 
 \item{contrast_fun}{Character. The functional form of the contrast
-function used in the Fast-ICA step. It is one of:
-\itemize{
-\item \code{logcosh} --- the default choice
-\item \code{exp}
-}
+function used in the Fast-ICA step. It is one of \code{"logcosh"}
+(the default choice) and \code{"exp"}.
 For further details see the paper from
 Hyvarinen, A. \url{https://ieeexplore.ieee.org/abstract/document/761722/}.}
 }

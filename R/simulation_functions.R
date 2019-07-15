@@ -25,7 +25,7 @@ simulate_data <- function(n, p, prob_connect,
                          tail_index = 1.5, has_confounder = FALSE,
                          is_nonlinear = FALSE, has_uniform_margins = FALSE){
 
-  if (p <=1 | n <= 1){
+  if (p <= 1 | n <= 1){
     stop("n and p must be larger than 1!")
   }
 

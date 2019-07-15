@@ -45,4 +45,8 @@ test_that("simulate data works", {
     expect_gte(NCOL(out$dag), p)
     expect_gte(length(out$pos_confounders), 0)
   }
+
+  expect_error(simulate_data(1, 2, prob_connect = .4))
+  expect_error(simulate_data(2, 1, prob_connect = .4))
+  expect_error(simulate_data(1, 1, prob_connect = .4))
 })

@@ -140,7 +140,7 @@ psi_coefficient <- function(adj_mat, i, j, tail_index){
   path_matrix <- t(get_all_paths(adj_mat))
   frac <- (e %*% abs(path_matrix) ^ tail_index %*% e_ij) /
     (e %*% abs (path_matrix) ^ tail_index %*% e_an_i)
-  psi <- drop(1/2 + 1/2 * frac)
+  psi <- drop(1 / 2 + 1 / 2 * frac)
 
   return(psi)
 }

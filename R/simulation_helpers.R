@@ -255,7 +255,7 @@ add_random_confounders <- function(dag, prob_confound){
 simulate_noise <- function(n, p, distr = c("student_t", "gaussian",
                                           "log_normal")[1], tail_index){
 
-  if (p <=1 | n <= 1){
+  if (p <= 1 | n <= 1){
     stop("n and p must be larger than 1!")
   }
 

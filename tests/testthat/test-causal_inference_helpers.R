@@ -1,7 +1,8 @@
 context("test-causal_inference_helpers")
 
 # Define variables
-set.seed(1)
+u <- sample(1:1e6, 1)
+set.seed(u)
 n <- 5e2
 X1 <- rt(n, 2.5)
 X2 <- X1 + rt(n, 2.5)
@@ -13,9 +14,9 @@ dat4 <- simulate_data(n, sample(2:20, 1), prob_connect = runif(1))$dataset
 
 # Run tests
 test_that("random search works", {
-  set.seed(1)
+  set.seed(u)
   dag <- random_dag(p = NCOL(dat1), prob_connect = runif(1))
-  set.seed(1)
+  set.seed(u)
   expect_equal(random_search(dat1), dag)
 })
 
@@ -25,20 +26,20 @@ test_that("greedy ancestral search works", {
 })
 
 test_that("lingam search works", {
-  set.seed(1)
+  set.seed(u)
   out <- pcalg::lingam(dat1)
   dag <- t( (out$Bpruned != 0) * 1)
-  set.seed(1)
+  set.seed(u)
 
-  expect_equal(lingam_search(dat1), dag)
+  expect_equal(lingam_search(dat1, "logcosh"), dag)
   expect_equal(lingam_search(dat2), NA)
 
-  set.seed(1)
-  t.k <- estLiNGAM(dat4, only.perm = T, fun = "logcosh")$k
+  set.seed(u)
+  t.k <- estLiNGAM(dat4, only.perm = T, fun = "exp")$k
   out <- prune(t(dat4), k = t.k)$Bpruned
   dag2 <- (t(out) != 0) * 1
-  set.seed(1)
-  expect_equal(lingam_search(dag4, contrast_fun = "logcosh"), dag2)
+  set.seed(u)
+  expect_equal(lingam_search(dat4, contrast_fun = "exp"), dag2)
 })
 
 test_that("pc search works", {

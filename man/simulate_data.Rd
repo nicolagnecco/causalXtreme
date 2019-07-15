@@ -9,9 +9,11 @@ simulate_data(n, p, prob_connect, distr = c("student_t", "log_norm",
   is_nonlinear = FALSE, has_uniform_margins = FALSE)
 }
 \arguments{
-\item{n}{Positive integer. The number of observations.}
+\item{n}{Positive integer. The number of observations, must be larger
+than 1.}
 
-\item{p}{Positive integer. The number of variables.}
+\item{p}{Positive integer. The number of variables, must be larger
+than 1.}
 
 \item{prob_connect}{Numeric --- between 0 and 1. The probability that an edge
 \eqn{i {\rightarrow} j} is added to the DAG.}

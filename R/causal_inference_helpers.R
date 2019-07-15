@@ -61,20 +61,17 @@ greedy_ancestral_search <- function(dat, k = floor(2 * n ^ 0.4),
 #'
 #' @inheritParams causal_tail_matrix
 #' @param contrast_fun Character. The functional form of the contrast
-#' function used in the Fast-ICA step. It is one of:
-#' \itemize{
-#' \item \code{logcosh} --- the default choice
-#' \item \code{exp}
-#' }
+#' function used in the Fast-ICA step. It is one of \code{"logcosh"}
+#' (the default choice) and \code{"exp"}.
 #' For further details see the paper from
-#' Hyvarinen, A. \url{https://ieeexplore.ieee.org/abstract/document/761722/}.
+#' Hyvarinen, A., \url{https://ieeexplore.ieee.org/abstract/document/761722/}.
 #' @return Square binary matrix (or \code{NA} in case of error).
 #' The DAG estimated from the data.
-lingam_search <- function(dat, contrast_fun = c("logcosh","exp")[1]){
+lingam_search <- function(dat, contrast_fun = c("logcosh", "exp")[1]){
 
   out <- tryCatch({
-    t.k <- estLiNGAM(dat, only.perm = T, fun = constrast_fun)$k
-    lingam_output
+    t.k <- estLiNGAM(dat, only.perm = T, fun = contrast_fun)$k
+    lingam_output <- prune(t(dat), t.k)
     Bpruned <- lingam_output$Bpruned
     dag <- (t(Bpruned) != 0) * 1
     return(dag)
@@ -114,8 +111,10 @@ pc_search <- function(dat, alpha){
 
   out <- tryCatch({
     suff_stat <- list(C = cor(dat), n = n)
-    pc.fit <- pcalg::pc(suffStat = suff_stat, indepTest = pcalg::gaussCItest,
-                        p = p, alpha = alpha, u2pd = "retry", skel.method = "stable")
+    pc.fit <- pcalg::pc(suffStat = suff_stat,
+                        indepTest = pcalg::gaussCItest,
+                        p = p, alpha = alpha, u2pd = "retry",
+                        skel.method = "stable")
     cpdag <- as(pc.fit@graph, "matrix")
     return(cpdag)
   },

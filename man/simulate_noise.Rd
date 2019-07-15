@@ -8,9 +8,11 @@ simulate_noise(n, p, distr = c("student_t", "gaussian", "log_normal")[1],
   tail_index)
 }
 \arguments{
-\item{n}{Positive integer. The number of observations.}
+\item{n}{Positive integer. The number of observations, must be larger
+than 1.}
 
-\item{p}{Positive integer. The number of variables.}
+\item{p}{Positive integer. The number of variables, must be larger
+than 1.}
 
 \item{distr}{Character. The distribution of the noise. It is one of:
 \itemize{
