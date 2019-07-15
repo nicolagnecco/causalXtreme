@@ -125,3 +125,51 @@ pc_search <- function(dat, alpha){
 
   return(out)
 }
+
+
+#' PC (rank) search
+#'
+#' Runs PC (rank) algorithm given a dataset \code{dat}.
+#'
+#' The PC (rank) algorithm has been proposed by Harris, N., and
+#' Drton, M.,
+#' \url{http://jmlr.csail.mit.edu/papers/volume14/harris13a/harris13a.pdf}
+#'
+#' The function \code{pcalg:pc()} is called with the following
+#' arguments:
+#' \itemize{
+#' \item \code{suffStat = list(C = 2 * sin(cor(dat, method = "spearman")
+#' * pi/6), n = nrow(dat))},
+#' \item \code{indepTest = gaussCItest},
+#' \item \code{u2pd = "retry"} --- this ensures that the produced CPDAG
+#' is extendible to a DAG,
+#' \item \code{skel.method = "stable"}.
+#' }
+#'
+#' @inheritParams causal_tail_matrix
+#' @param alpha Numeric --- between 0 and 1. The significance level for the
+#' individual conditional independence tests.
+#' @return Square binary matrix (or \code{NA} in case of error).
+#' The CPDAG estimated from the data.
+pc_rank_search <- function(dat, alpha){
+
+  n <- NROW(dat)
+  p <- NCOL(dat)
+
+  out <- tryCatch({
+    suff_stat <-  list(C = 2 * sin(cor(dat, method = "spearman") * pi/6),
+                       n = nrow(dat))
+    pc.fit <- pcalg::pc(suffStat = suff_stat,
+                        indepTest = pcalg::gaussCItest,
+                        p = p, alpha = alpha, u2pd = "retry",
+                        skel.method = "stable")
+    cpdag <- as(pc.fit@graph, "matrix")
+    return(cpdag)
+  },
+  error = function(e){
+    cpdag <- NA
+    return(cpdag)
+  })
+
+  return(out)
+}

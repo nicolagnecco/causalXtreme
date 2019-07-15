@@ -54,4 +54,19 @@ test_that("pc search works", {
   expect_equal(pc_search(dat1, 5e-2), cpdag)
 
   expect_equal(pc_search(dat3, 5e-2), NA)
-  })
+})
+
+test_that("pc rank search works", {
+  suff_stat <-  list(C = 2 * sin(cor(dat4, method = "spearman") * pi/6),
+                     n = nrow(dat4))
+  out <- pcalg::pc(suffStat = suff_stat,
+                   indepTest = pcalg::gaussCItest,
+                   p = NCOL(dat4),
+                   alpha = 0.05,
+                   u2pd = "retry",
+                   skel.method = "stable")
+  cpdag <- as(out@graph, "matrix")
+
+  expect_equal(pc_rank_search(dat4, 5e-2), cpdag)
+  expect_equal(pc_rank_search(dat3, 5e-2), NA)
+})
