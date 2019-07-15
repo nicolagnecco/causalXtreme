@@ -1,45 +1,44 @@
 #' Perform causal discovery
 #'
 #' Perform causal discovery using a particular \code{method}.
+#' For more information see 'Details'.
 #'
+#' This method is a wrapper around the individual causal
+#' search functions. For each causal method, it returns a list
+#' that can be passed directly to the function \code{\link{causal_metrics}}
+#' for evaluation. In particular, the first entry of the returned list
+#' is a DAG (or CPDAG) and it is used to compute the structural intervention
+#' distance (see \code{\link{compute_str_int_distance}}).
+#' The second entry is a CPDAG and it is used to compute the
+#' structural Hamming distance (see \code{\link{compute_str_ham_distance}}).
+#'
+#' @inheritParams causal_tail_matrix
 #' @param method String. Is one of:
 #' \itemize{
-#' \item \code{"fast"}, see \code{\link{fast_perm_search}}.
-#' \item \code{"full"}, see \code{\link{full_perm_search}}.
-#' \item \code{"greedy"}, see \code{\link{greedy_perm_search}}.
+#' \item \code{"greedy"}, see \code{\link{greedy_ancestral_search}}.
 #' \item \code{"lingam"}, see \code{\link{lingam_search}}.
-#' \item \code{"maxmin"}, see \code{\link{fast_perm_search}}.
-#' \item \code{"minimax"}, see \code{\link{minimax_search}}.
-#' \item \code{"oracle"}, see \code{\link{oracle_search}}.
 #' \item \code{"pc"}, see \code{\link{pc_search}}.
-#' \item \code{"random"}, see \code{\link{random_perm_search}}.
+#' \item \code{"pc_rank"}, see \code{\link{pc_rank_search}}.
+#' \item \code{"random"}, see \code{\link{random_search}}.
 #' }
-#' @param ... The argument for the given \code{method}. Provide:
-#' \itemize{
-#' \item \code{delta = <delta_matrix>},
-#'  when \code{method} is \code{"fast", "full", "greedy", "maxmin"}.
-#' \item \code{gamma = <gamma_matrix>},
-#'  when \code{method} is \code{"minimax"}.
-#' \item \code{mat = <observations_matrix>},
-#'  when \code{method} is \code{"lingam", "pc"}.
-#' \item \code{g = <adjacency_matrix>},
-#'  when \code{method} is \code{"oracle", "random"}.
-#' }
+#' @param ... Parameters to be passed to the respective method's function.
 #' @return List. The list is made of:
 #' \itemize{
-#' \item \code{est_g} --- Numeric matrix (or \code{NA} in case of error).
-#' The estimated adjacency matrix of a DAG or CPDAG.
-#' \item \code{order} --- Numeric vector (or \code{NA} in case of error).
-#' The causal order of the DAG \code{est_g}. If \code{est_g} is a CPDAG,
-#' it is first converted to a DAG in order to obtain the causal order.
+#' \item \code{est_g} --- Square binary matrix
+#' (or \code{NA} in case of error).
+#' The estimated DAG (or CPDAG when the method is \code{pc} or
+#' \code{pc_rank}).
+#' \item \code{est_cpdag} --- Square binary matrix
+#' (or \code{NA} in case of error).
+#' The estimated CPDAG.
 #' }
-causal_discovery <- function(method = c("fast", "full", "greedy",
-                                        "lingam", "maxmin", "minimax",
-                                        "oracle", "pc", "random")[6],
+causal_discovery <- function(dat, method = c("greedy", "lingam", "pc",
+                                        "pc_rank", "random")[1],
                              ...){
 
   # Collect inputs
   argms <- list(...)
+  # !!! continue from here
 
   # set up list
   out <- list(est_g = NA, order = NA)

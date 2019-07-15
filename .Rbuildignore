@@ -1,3 +1,4 @@
 ^causalXtreme\.Rproj$    # Automatically added by Rstudio,
 ^\.Rproj\.user$          # used for temporary files.
 ^R/data_definitions\.R$  # Definitions of important data structures.
+^analysis$

@@ -124,7 +124,7 @@ bb$Bpruned
 
 
 # Test Lingam and PC
-X <- simulate_data(1e3, 50, 1.5 / 19, tail_index = 1.5, is_nonlinear = T)
+X <- simulate_data(1e4, 50, 1.5 / 19, tail_index = 3.5, is_nonlinear = F)
 lingam <- lingam_search(X$dataset, "logcosh")
 lingam2 <- lingam_search(X$dataset, "exp")
 pc <- pc_search(X$dataset, 5e-4)
@@ -135,3 +135,4 @@ compute_str_int_distance(X$dag, lingam2)
 compute_str_int_distance(X$dag, pc)
 compute_str_int_distance(X$dag, rank_pc)
 compute_str_int_distance(X$dag, caus_order_to_dag(greedy))
+

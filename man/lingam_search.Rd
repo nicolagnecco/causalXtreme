@@ -14,7 +14,7 @@ rows (observations) and \code{p} columns (variables).}
 function used in the Fast-ICA step. It is one of \code{"logcosh"}
 (the default choice) and \code{"exp"}.
 For further details see the paper from
-Hyvarinen, A. \url{https://ieeexplore.ieee.org/abstract/document/761722/}.}
+Hyvarinen, A., \url{https://ieeexplore.ieee.org/abstract/document/761722/}.}
 }
 \value{
 Square binary matrix (or \code{NA} in case of error).
