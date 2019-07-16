@@ -136,3 +136,136 @@ compute_str_int_distance(X$dag, pc)
 compute_str_int_distance(X$dag, rank_pc)
 compute_str_int_distance(X$dag, caus_order_to_dag(greedy))
 
+# Check simulated_data
+
+for (i in 1:1000){
+  set.seed(i)
+  X <- simulate_data(1e3, 5, .5, has_confounder = T)
+  if (dim(X$dataset)[2] == 0){break()}
+}
+
+undebug(simulate_data)
+set.seed(i)
+X <- simulate_data(1e3, 5, .5, has_confounder = T)
+
+
+# Check DAG to CPDAG with confounders
+set.seed(1991)
+for(i in 1:1000){
+  n <- sample(2:1e3, 1)
+  p <- sample(2:10, 1)
+  prob_connect <- runif(1)
+  X <- simulate_data(n, p, prob_connect, has_confounder = T)
+  if (length(X$pos_confounders) == 0){next()}
+  if (length(X$pos_confounders) == 1){
+    check <- sum(dag_to_cpdag(X$dag)[X$pos_confounders, ])
+  } else {
+    check <- apply(dag_to_cpdag(X$dag)[X$pos_confounders, ], 1, sum)
+  }
+  if(!all(check == 2)){break()}
+}
+
+
+n <- 1e3
+p <- 5
+prob_connect <- runif(1)
+X <- simulate_data(n, p, prob_connect, has_confounder = T)
+true_cpdag <- dag_to_cpdag(X$dag)
+pc <- causal_discovery(X$dataset, "pc", alpha = 5e-4)
+est_ext_cpdag <- X$dag
+est_ext_cpdag[-X$pos_confounders, -X$pos_confounders] <- pc$est_cpdag
+true_reduced_cpdag <- true_cpdag[-X$pos_confounders, -X$pos_confounders]
+
+SID::hammingDist(true_reduced_cpdag, pc$est_cpdag)
+
+true_dag <- X$dag
+est_ext_g <- X$dag
+est_ext_g[-X$pos_confounders, -X$pos_confounders] <- pc$est_g
+
+SID::structIntervDist(true_dag, est_ext_g)
+SID::structIntervDist(true_dag, dag_to_cpdag(est_ext_g))
+
+
+est_cpdag <- rbind(c(0, 1, 0),
+                   c(1, 0, 0),
+                   c(1, 1, 0))
+true_dag <- rbind(c(0, 1, 0),
+                  c(0, 0, 0),
+                  c(1, 1, 0))
+SID::structIntervDist(true_dag, dag_to_cpdag(est_cpdag))
+
+true_cpdag <- rbind(c(0, 1, 0),
+                    c(0, 0, 1),
+                    c(0, 0, 0))
+est_cpdag <- rbind(c(0, 1, 1),
+                   c(1, 0, 1),
+                   c(1, 1, 0))
+SID::hammingDist(true_cpdag, est_cpdag)
+
+dag8 <- rbind(c(0, 0, 1, 0, 0, 1),
+              c(0, 0, 1, 1, 0, 0),
+              c(0, 0, 0, 0, 1, 0),
+              rep(0, 6),
+              c(rep(0, 5), 1),
+              rep(0, 6))
+dag_to_cpdag((dag8)[-c(1, 2), -c(1, 2)])
+(dag_to_cpdag(dag8))[-c(1, 2), -c(1, 2)]
+
+
+# Check causal metrics
+n <- 1e4
+p <- 50
+prob_connect <- runif(1)
+X <- simulate_data(n, p, 1.5/(p-1))
+greedy <- causal_discovery(X$dataset, "greedy")
+causal_metrics(X, greedy)
+lingam <- causal_discovery(X$dataset, "lingam")
+causal_metrics(X, lingam)
+pc <- causal_discovery(X$dataset, "pc", alpha = 5e-4)
+causal_metrics(X, pc)
+pc_rank <- causal_discovery(X$dataset, "pc_rank", alpha = 5e-4)
+causal_metrics(X, pc_rank)
+undebug(causal_metrics)
+
+# No Confounders
+cpdag <- rbind(c(0, 0, 1, 0, 0, 1),
+               c(0, 0, 1, 0, 0, 0),
+               c(0, 0, 0, 0, 0, 0),
+               c(0, 1, 0, 0, 0, 0),
+               c(0, 0, 1, 0, 0, 1),
+               c(0, 0, 0, 0, 0, 0))
+
+dag <- rbind(c(0, 0, 0, 0, 0, 1),
+             c(0, 0, 0, 0, 0, 0),
+             c(0, 1, 0, 0, 0, 0),
+             c(0, 0, 1, 0, 0, 0),
+             c(1, 0, 1, 0, 0, 1),
+             c(0, 0, 0, 0, 0, 0))
+dag <- rbind(c(0, 0, 0, 0, 0, 1),
+             c(0, 0, 0, 1, 0, 0),
+             c(1, 1, 0, 0, 1, 0),
+             c(0, 0, 0, 0, 0, 0),
+             c(0, 0, 0, 0, 0, 1),
+             c(0, 0, 0, 0, 0, 0))
+
+dag_to_cpdag(dag) - dag
+dag_to_cpdag(dag_to_cpdag(dag_to_cpdag(cpdag))) - dag_to_cpdag(dag_to_cpdag(cpdag))
+
+
+# Confounders
+confounded_true_dag <- rbind(c(0, 1, 0, 0, 0),
+                             c(0, 0, 1, 0, 0),
+                             c(0, 0, 0, 0, 0),
+                             c(1, 0, 1, 0, 0),
+                             c(1, 1, 0, 0, 0))
+
+dag_to_cpdag(confounded_true_dag) - confounded_true_dag
+
+est_ext_cpdag <- rbind(c(0, 1, 0, 0, 0),
+                       c(1, 0, 1, 0, 0),
+                       c(0, 1, 0, 0, 0),
+                       c(1, 0, 1, 0, 0),
+                       c(1, 1, 0, 0, 0))
+dag_to_cpdag(est_ext_cpdag) - est_ext_cpdag
+SID::structIntervDist(confounded_true_dag, est_ext_cpdag)
+SID::structIntervDist(confounded_true_dag, dag_to_cpdag(est_ext_cpdag))

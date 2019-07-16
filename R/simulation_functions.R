@@ -17,7 +17,7 @@
 #' if \code{has_confounder = TRUE}.
 #' \item \code{pos_confounders} --- Integer vector. Represents the position
 #' of confounders (rows and columns) in \code{dag}.
-#' If \code{has_confounder = FALSE}, then it is \code{integer(0)}.
+#' If \code{has_confounder = FALSE}, then \code{pos_confounders = integer(0)}.
 #' }
 #'
 simulate_data <- function(n, p, prob_connect,
@@ -63,7 +63,9 @@ simulate_data <- function(n, p, prob_connect,
 
   # Remove confounders
   if (has_confounder){
-  dataset <- dataset[, -pos_confounders]
+    if (length(pos_confounders) > 0){
+      dataset <- dataset[, -pos_confounders]
+    }
   }
 
   # Return list

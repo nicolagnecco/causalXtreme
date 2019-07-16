@@ -4,14 +4,14 @@
 \alias{pc_search}
 \title{PC search}
 \usage{
-pc_search(dat, alpha)
+pc_search(dat, alpha = 0.05)
 }
 \arguments{
 \item{dat}{Numeric matrix. Dataset matrix with \code{n}
 rows (observations) and \code{p} columns (variables).}
 
 \item{alpha}{Numeric --- between 0 and 1. The significance level for the
-individual conditional independence tests.}
+individual conditional independence tests. By default it is set to 0.05.}
 }
 \value{
 Square binary matrix (or \code{NA} in case of error).

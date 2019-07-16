@@ -101,10 +101,10 @@ lingam_search <- function(dat, contrast_fun = c("logcosh", "exp")[1]){
 #'
 #' @inheritParams causal_tail_matrix
 #' @param alpha Numeric --- between 0 and 1. The significance level for the
-#' individual conditional independence tests.
+#' individual conditional independence tests. By default it is set to 0.05.
 #' @return Square binary matrix (or \code{NA} in case of error).
 #' The CPDAG estimated from the data.
-pc_search <- function(dat, alpha){
+pc_search <- function(dat, alpha = 5e-2){
 
   n <- NROW(dat)
   p <- NCOL(dat)
@@ -146,19 +146,17 @@ pc_search <- function(dat, alpha){
 #' \item \code{skel.method = "stable"}.
 #' }
 #'
-#' @inheritParams causal_tail_matrix
-#' @param alpha Numeric --- between 0 and 1. The significance level for the
-#' individual conditional independence tests.
+#' @inheritParams pc_search
 #' @return Square binary matrix (or \code{NA} in case of error).
 #' The CPDAG estimated from the data.
-pc_rank_search <- function(dat, alpha){
+pc_rank_search <- function(dat, alpha = 5e-2){
 
   n <- NROW(dat)
   p <- NCOL(dat)
 
   out <- tryCatch({
-    suff_stat <-  list(C = 2 * sin(cor(dat, method = "spearman") * pi/6),
-                       n = nrow(dat))
+    suff_stat <-  list(C = 2 * sin(cor(dat, method = "spearman") * pi / 6),
+                       n = n)
     pc.fit <- pcalg::pc(suffStat = suff_stat,
                         indepTest = pcalg::gaussCItest,
                         p = p, alpha = alpha, u2pd = "retry",

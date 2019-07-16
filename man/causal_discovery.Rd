@@ -5,7 +5,7 @@
 \title{Perform causal discovery}
 \usage{
 causal_discovery(dat, method = c("greedy", "lingam", "pc", "pc_rank",
-  "random")[1], ...)
+  "random"), ...)
 }
 \arguments{
 \item{dat}{Numeric matrix. Dataset matrix with \code{n}

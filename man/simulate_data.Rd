@@ -47,7 +47,7 @@ both the observed variables and the confounders,
 if \code{has_confounder = TRUE}.
 \item \code{pos_confounders} --- Integer vector. Represents the position
 of confounders (rows and columns) in \code{dag}.
-If \code{has_confounder = FALSE}, then it is \code{integer(0)}.
+If \code{has_confounder = FALSE}, then \code{pos_confounders = integer(0)}.
 }
 }
 \description{

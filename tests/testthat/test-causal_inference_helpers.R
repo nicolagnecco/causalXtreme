@@ -1,12 +1,12 @@
 context("test-causal_inference_helpers")
 
 # Define variables
-u <- sample(1:1e6, 1)
+u <- 1321
 set.seed(u)
-n <- 5e2
+n <- 500
 X1 <- rt(n, 2.5)
-X2 <- X1 + rt(n, 2.5)
 X3 <- X1 + rt(n, 2.5)
+X2 <- X1 + X3 + rt(n, 2.5)
 dat1 <- cbind(X1, X2, X3)
 dat2 <- cbind(X1, X1, X1)
 dat3 <- matrix("NA", nrow = 3, ncol = 10)
@@ -21,6 +21,7 @@ test_that("random search works", {
 })
 
 test_that("greedy ancestral search works", {
+  set.seed(u)
   expect_equal(greedy_ancestral_search(dat1), c(1, 3, 2))
   expect_equal(greedy_ancestral_search(dat2), c(1, 2, 3))
 })
@@ -57,7 +58,7 @@ test_that("pc search works", {
 })
 
 test_that("pc rank search works", {
-  suff_stat <-  list(C = 2 * sin(cor(dat4, method = "spearman") * pi/6),
+  suff_stat <-  list(C = 2 * sin(cor(dat4, method = "spearman") * pi / 6),
                      n = nrow(dat4))
   out <- pcalg::pc(suffStat = suff_stat,
                    indepTest = pcalg::gaussCItest,

@@ -33,156 +33,191 @@
 #' The estimated CPDAG.
 #' }
 causal_discovery <- function(dat, method = c("greedy", "lingam", "pc",
-                                        "pc_rank", "random")[1],
+                                             "pc_rank", "random"),
                              ...){
+
+  # check method
+  if (missing(method)){
+    stop("Please, provide one of greedy, lingam, pc, pc_rank, random.")
+  }
+
+  if (!(method %in% c("greedy", "lingam", "pc", "pc_rank", "random"))){
+    stop("The passed method must be one of greedy, lingam, pc, pc_rank,
+         random.")
+  }
 
   # Collect inputs
   argms <- list(...)
-  # !!! continue from here
 
   # set up list
-  out <- list(est_g = NA, order = NA)
+  out <- list(est_g = NA, est_cpdag = NA)
 
-  # compute causal order
-  if (method %in% c("fast", "full", "greedy", "maxmin")){
+  # run causal search
+  switch(method,
+         "greedy" = {
 
-    if (is.null(argms$delta)){
-      stop(paste("Please, provide the argument",
-                 "delta = <delta_matrix> for", method, "method."))
-    }
+           # check arguments
+           if (!all(names(argms) %in% c("k", "both_tails"))){
+             stop("Arguments must be k and both_tails.")
+           }
 
-    switch(method,
-           "fast" = {
-             out$order <- fast_perm_search(argms$delta, silent = TRUE,
-                                           mode = "sum")$order
-             out$est_g <- caus_order_to_dag(out$order)
+           # compute DAG/CPDAG and CPDAG
+           caus_order <- greedy_ancestral_search(dat, ...)
+           out$est_g <- caus_order_to_dag(caus_order)
+           out$est_cpdag <- dag_to_cpdag(out$est_g)
 
-           },
-           "full" = {
-             p <- NROW(argms$delta)
-             if (p < 10){
-               out$order <- full_perm_search(argms$delta, silent = TRUE)$order
-               out$est_g <- caus_order_to_dag(out$order)
-             }
-           },
-           "greedy" = {
-             out$order <- greedy_perm_search(argms$delta, silent = TRUE)$order
-             out$est_g <- caus_order_to_dag(out$order)
-           },
-           "maxmin" = {
-             out$order <- fast_perm_search(argms$delta, silent = TRUE,
-                                           mode = "maxmin")$order
-             out$est_g <- caus_order_to_dag(out$order)
+         },
+         "lingam" = {
 
-           })
+           # check arguments
+           if (!all(names(argms) %in% c("contrast_fun"))){
+             stop("Argument must be contrast_fun.")
+           }
 
-  } else if (method %in% c("lingam", "pc")){
+           # compute DAG/CPDAG and CPDAG
+           out$est_g <- lingam_search(dat, ...)
+           out$est_cpdag <- if (all(is.na(out$est_g))) {
+             NA
+           } else {
+             dag_to_cpdag(out$est_g)
+           }
 
-    if (is.null(argms$mat)){
-      stop(paste("Please, provide the argument",
-                 "mat = <observations_matrix> for", method, "method."))
-    }
+         },
+         "pc" = {
 
-    switch(method,
-           "lingam" = {
-             out$est_g <- lingam_search(argms$mat) # DAG
-             out$order <- if (any(is.na(out$est_g))){
-               NA
-             } else {
-               compute_caus_order(out$est_g)
-             }
+           # check arguments
+           if (!all(names(argms) %in% c("alpha"))){
+             stop("Argument must be alpha.")
+           }
 
-           },
-           "pc" = {
-             out$est_g <- pc_search(argms$mat) # CPDAG
-             dag <- out$est_g * (t(out$est_g) == 0)
-             out$order <- if (any(is.na(out$est_g))){
-               NA
-             } else {
-               compute_caus_order(dag)
-             }
+           # compute DAG/CPDAG and CPDAG
+           out$est_g <- pc_search(dat, ...)
+           out$est_cpdag <- if (all(is.na(out$est_g))) {
+             NA
+           } else {
+             out$est_g
+           }
+         },
+         "pc_rank" = {
 
-           })
+           # check arguments
+           if (!all(names(argms) %in% c("alpha"))){
+             stop("Argument must be alpha.")
+           }
 
-  } else if (method %in% c("oracle", "random")){
+           # compute DAG/CPDAG and CPDAG
+           out$est_g <- pc_rank_search(dat, ...)
+           out$est_cpdag <- if (all(is.na(out$est_g))) {
+             NA
+           } else {
+             out$est_g
+           }
+         },
+         "random" = {
 
-    if (is.null(argms$g)){
-      stop(paste("Please, provide the argument",
-                 "g = <adjacency_matrix> for", method, "method."))
-    }
+           # check arguments
+           if (!all(names(argms) %in% NULL)){
+             stop("No arguments are needed.")
+           }
 
-    switch(method,
-           "oracle" = {
-             out$order <- oracle_search(argms$g)
-             out$est_g <- caus_order_to_dag(out$order)
-
-           },
-           "random" = {
-             out$order <- random_perm_search(argms$g)
-             out$est_g <- caus_order_to_dag(out$order)
-
-           })
-
-  } else if (method %in% c("minimax")){
-
-    if (is.null(argms$gamma)){
-      stop(paste("Please, provide the argument",
-                 "gamma = <gamma_matrix> for", method, "method."))
-    }
-
-    switch(method,
-           "minimax" = {
-             out$order <- minimax_search(argms$gamma)
-             out$est_g <- caus_order_to_dag(out$order)
-
-           })
-
-  } else {
-    stop("Wrong method. Enter one of 'fast', 'full', 'greedy',
-              'lingam', 'maxmin', 'minimax', 'oracle', 'random'.")
-  }
+           # compute DAG/CPDAG and CPDAG
+           out$est_g <- random_search(dat)
+           out$est_cpdag <- dag_to_cpdag(out$est_g)
+         })
 
   # return list
   return(out)
 }
 
+
 #' Causal evaluation metrics
 #'
-#' Evaluate the output of some causal inference model,
-#' see \code{\link{causal_discovery}}, with different metrics.
+#' Evaluate the output of the causal inference method called by
+#' \code{\link{causal_discovery}}.
 #'
-#' @inheritParams compute_str_int_distance
-#' @inheritParams compute_caus_order
-#' @inheritParams check_caus_order
+#' The evaluation is done with respect to
+#' the structural intervention
+#' distance (see \code{\link{compute_str_int_distance}}).
+#' and the
+#' structural Hamming distance (see \code{\link{compute_str_ham_distance}}).
 #'
-#' @references List. The list is made of:
+#' @param simulated_data List returned by \code{\link{simulate_data}}.
+#' The list is made of:
 #' \itemize{
-#' \item \code{str_int_dist} Numeric --- between 0 and 1 --- (or \code{NA} if
-#' \code{est_g} is \code{NA}). The structural intervention distance between
-#' the DAG \code{g} and the estimated adjacency matrix \code{est_g}. See also
-#' \code{\link{compute_str_int_distance}}.
-#' \item \code{ancestral_dist} Numeric --- between 0 and 1 --- (or \code{NA} if
-#' \code{order} is \code{NA}). The ancestral distance between the DAG \code{g}
-#' and the estimated order \code{order}.
-#' See also \code{\link{compute_ancestral_distance}}.
+#' \item \code{dataset} --- Numeric matrix. Dataset of simulated data with
+#' \code{n} rows and \code{p} columns (note that the hidden variables are not
+#' included in this matrix).
+#' \item \code{dag} --- Square binary matrix. The generated DAG, including
+#' both the observed variables and the confounders,
+#' if the argument \code{has_confounder = TRUE} when calling
+#' \code{\link{simulate_data}}.
+#' \item \code{pos_confounders} --- Integer vector. Represents the position
+#' of confounders (rows and columns) in \code{dag}.
+#' If the argument \code{has_confounder = FALSE} when calling
+#' \code{\link{simulate_data}}, then \code{pos_confounders = integer(0)}.
 #' }
-causal_metrics <- function(g, est_g, caus_order){
+#' @param estimated_graphs List returned by \code{\link{causal_discovery}}.
+#' The list is made of:
+#' \itemize{
+#' \item \code{est_g} --- Square binary matrix
+#' (or \code{NA} in case of error).
+#' The estimated DAG (or CPDAG when the method is \code{pc} or
+#' \code{pc_rank}).
+#' \item \code{est_cpdag} --- Square binary matrix
+#' (or \code{NA} in case of error).
+#' The estimated CPDAG.
+#' }
+#'
+#' @return List. The list is made of:
+#' \itemize{
+#' \item \code{sid} Numeric --- between 0 and 1 --- (or \code{NA} if
+#' \code{est_g} is \code{NA}). The structural intervention distance between
+#' the true DAG \code{dag} and the estimated DAG (or CPDAG) \code{est_g}.
+#' See also \code{\link{compute_str_int_distance}}.
+#' \item \code{shd} Numeric --- between 0 and 1 --- (or \code{NA} if
+#' \code{est_cpdag} is \code{NA}). The structural Hamming distance
+#' between the true CPDAG (\code{dag_to_cpdag(dag)})
+#' and the estimated CPDAG \code{est_cpdag}.
+#' See also \code{\link{compute_str_ham_distance}}.
+#' }
+causal_metrics <- function(simulated_data, estimated_graphs){
+
+  # collect variables
+  true_dag <- simulated_data$dag
+  pos_confounders <- simulated_data$pos_confounders
+  est_g <- estimated_graphs$est_g
+  est_cpdag <- estimated_graphs$est_cpdag
 
   # set up list
-  out <- list(str_int_dist = NA, ancestral_dist = NA)
+  out <- list(sid = NA, shd = NA)
 
-  # compute structural intervention distance (if caus_order is not NA)
-  if (!any(is.na(est_g))){
-    out$str_int_dist <- compute_str_int_distance(g, est_g)
-  } else {
-    out$str_int_dist <- NA
+  # If there are any NA
+  if (any(is.na(est_g)) | any(is.na(est_cpdag))){
+    out$sid <- NA
+    out$shd <- NA
   }
 
-  # compute ancestral distance (if est_g is not NA)
-  if (!any(is.na(caus_order))){
-    out$ancestral_dist <- compute_ancestral_distance(g, caus_order)
-  }else {
-    out$ancestral_dist <- NA
+  # If there are no confounders
+  if (length(pos_confounders) == 0) {
+    # SID: compute SID between true DAG and estimated DAG\CPDAG
+    out$sid <- compute_str_int_distance(true_dag, est_g)
+
+    # SHD: cast true DAG into CPDAG
+    true_cpdag <- dag_to_cpdag(true_dag)
+    out$shd <- compute_str_ham_distance(true_cpdag, est_cpdag)
+  }
+
+  # If there are confounders
+  if (length(pos_confounders) > 0) {
+    # SID: extend estimated DAG/CPDAG so that they have the confounders
+    extended_est_g <- true_dag
+    extended_est_g[-pos_confounders, -pos_confounders] <- est_g
+    out$sid <- compute_str_int_distance(true_dag, extended_est_g)
+
+    # SHD: remove confounders from the true DAG and cast it into CPDAG
+    reduced_true_dag <- true_dag[-pos_confounders, -pos_confounders]
+    reduced_true_cpdag <- dag_to_cpdag(reduced_true_dag)
+    out$shd <- compute_str_ham_distance(reduced_true_cpdag, est_cpdag)
   }
 
   # return list
