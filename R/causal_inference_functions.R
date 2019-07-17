@@ -195,6 +195,9 @@ causal_metrics <- function(simulated_data, estimated_graphs){
   if (any(is.na(est_g)) | any(is.na(est_cpdag))){
     out$sid <- NA
     out$shd <- NA
+
+    # return list
+    return(out)
   }
 
   # If there are no confounders

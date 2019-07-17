@@ -32,12 +32,37 @@ est_cpdag1 <- rbind(c(0, 0, 0, 0, 1, 1),
                     c(0, 0, 1, 0, 0, 0),
                     c(1, 0, 1, 0, 0, 1),
                     c(1, 0, 0, 0, 1, 0))
-est_cpdag2 <-rbind(c(0, 0, 1, 0, 0, 1),
+est_cpdag2 <- rbind(c(0, 0, 1, 0, 0, 1),
                    c(0, 0, 1, 1, 0, 0),
                    c(1, 1, 0, 0, 1, 0),
                    c(0, 1, 0, 0, 0, 0),
                    c(0, 0, 1, 0, 0, 1),
                    c(0, 0, 0, 0, 0, 0))
+true_dag3 <- rbind(c(0, 1, 0, 0, 0),
+                   c(0, 0, 1, 0, 0),
+                   c(0, 0, 0, 0, 0),
+                   c(1, 0, 1, 0, 0),
+                   c(1, 1, 0, 0, 0))
+true_red_cpdag3 <- rbind(c(0, 1, 0),
+                         c(1, 0, 1),
+                         c(0, 1, 0))
+est_dag4 <- rbind(c(0, 1, 1),
+                  c(0, 0, 0),
+                  c(0, 1, 0))
+est_ext_dag4 <- rbind(c(0, 1, 1, 0, 0),
+                      c(0, 0, 0, 0, 0),
+                      c(0, 1, 0, 0, 0),
+                      c(1, 0, 1, 0, 0),
+                      c(1, 1, 0, 0, 0))
+est_cpdag4 <- rbind(c(0, 1, 1),
+                    c(1, 0, 1),
+                    c(1, 1, 0))
+est_cpdag5 <- true_red_cpdag3
+est_ext_cpdag5 <- rbind(c(0, 1, 1, 0, 0),
+                        c(1, 0, 1, 0, 0),
+                        c(1, 1, 0, 0, 0),
+                        c(1, 0, 1, 0, 0),
+                        c(1, 1, 0, 0, 0))
 
 # Run tests
 test_that("causal discovery works", {
@@ -66,9 +91,9 @@ test_that("causal discovery works", {
   expect_error(causal_discovery(dat, "foobar"))
 })
 
-test_that("causal metrics work",{
-  # No confounders
-  # DAG and CPDAG
+test_that("causal metrics work", {
+  ## No confounders
+  # (Output from Greedy, Lingam, Random) DAG and CPDAG
   sim_data <- list(NA,
                    dag = true_dag,
                    pos_confounders = integer(0))
@@ -79,7 +104,7 @@ test_that("causal metrics work",{
           shd = compute_str_ham_distance(true_cpdag, est_cpdag1))
   expect_equal(causal_metrics(sim_data, est_graphs), out)
 
-  # Both CPDAGs
+  # (Output from PC and PC Rank) Both CPDAGs
   sim_data <- list(NA,
                    dag = true_dag,
                    pos_confounders = integer(0))
@@ -89,6 +114,53 @@ test_that("causal metrics work",{
               shd = compute_str_ham_distance(true_cpdag, est_cpdag2))
   expect_equal(causal_metrics(sim_data, est_graphs), out)
 
-  # Confounders
-  # !!! continue
+  ## Confounders
+  # (Output from Greedy, Lingam, Random) DAG and CPDAG
+  sim_data <- list(NA,
+                   dag = true_dag3,
+                   pos_confounders = c(4, 5))
+  est_graphs <- list(est_g = est_dag4,
+                     est_cpdag = est_cpdag4)
+
+  out <- list(sid = compute_str_int_distance(true_dag3, est_ext_dag4),
+              shd = compute_str_ham_distance(true_red_cpdag3, est_cpdag4))
+  expect_equal(causal_metrics(sim_data, est_graphs), out)
+
+  # (Output from PC and PC Rank) Both CPDAGs
+  sim_data <- list(NA,
+                   dag = true_dag3,
+                   pos_confounders = c(4, 5))
+  est_graphs <- list(est_g = est_cpdag5,
+                     est_cpdag = est_cpdag5)
+  out <- list(sid = compute_str_int_distance(true_dag3, est_ext_cpdag5),
+              shd = compute_str_ham_distance(true_red_cpdag3, est_cpdag5))
+  expect_equal(causal_metrics(sim_data, est_graphs), out)
+
+  ## Estimated graphs are NA
+  sim_data <- list(NA,
+                   dag = true_dag3,
+                   pos_confounders = c(4, 5))
+  est_graphs <- list(est_g = NA,
+                     est_cpdag = est_cpdag5)
+  out <- list(sid = NA,
+              shd = NA)
+  expect_equal(causal_metrics(sim_data, est_graphs), out)
+
+  sim_data <- list(NA,
+                   dag = true_dag3,
+                   pos_confounders = c(4, 5))
+  est_graphs <- list(est_g = est_cpdag5,
+                     est_cpdag = NA)
+  out <- list(sid = NA,
+              shd = NA)
+  expect_equal(causal_metrics(sim_data, est_graphs), out)
+
+  sim_data <- list(NA,
+                   dag = true_dag3,
+                   pos_confounders = c(4, 5))
+  est_graphs <- list(est_g = NA,
+                     est_cpdag = NA)
+  out <- list(sid = NA,
+              shd = NA)
+  expect_equal(causal_metrics(sim_data, est_graphs), out)
 })
