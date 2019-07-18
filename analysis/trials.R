@@ -269,3 +269,43 @@ est_ext_cpdag <- rbind(c(0, 1, 0, 0, 0),
 dag_to_cpdag(est_ext_cpdag) - est_ext_cpdag
 SID::structIntervDist(confounded_true_dag, est_ext_cpdag)
 SID::structIntervDist(confounded_true_dag, dag_to_cpdag(est_ext_cpdag))
+
+
+# Different regimes (i.e., DAGs)
+n <- 1e3
+eps_x <- rt(n, 2.5)
+eps_y <- rt(n, 2.5)
+
+id <- rank(eps_x)/n > .90 | rank(eps_x)/n <= .1 | rank(eps_y)/n > .9 | rank(eps_y)/n <=.1
+X <- Y <-  numeric(n)
+X[id] <- eps_x[id]
+Y[id] <- X[id] + eps_y[id]
+Y[!id] <- eps_y[!id]
+X[!id] <- -1 * Y[!id] + eps_x[!id]
+mat <- cbind(X, Y)
+plot(mat)
+causal_tail_matrix(mat, both_tails = T)
+lm(Y ~ X)
+X1 <- eps_x
+Y1 <- X1 + eps_y
+
+mat1 <- cbind(X1, Y1)
+causal_tail_matrix(mat1, both_tails = T)
+lm(Y1 ~ X1)
+plot(mat1)
+
+
+eps_x <- rt(n, 2.5)
+eps_y <- rt(n, 2.5)
+eps_z <- rt(n, 2.5)
+
+X <- eps_x
+Y <- Z <-  numeric(n)
+id <- rank(eps_x)/n > .9 |  rank(eps_y)/n > .9 |  rank(eps_z)/n > .9
+Y[id] <- 2 * X[id] + eps_y[id]
+Z[id] <- X[id] + Y[id] + eps_z[id]
+Z[!id] <- X[!id] + eps_z[!id]
+Y[!id] <- 2 * X[!id] + .1 * Z[!id] + eps_y[!id]
+plot(Y, Z)
+mat <- cbind(X, Y, Z)
+causal_tail_matrix(mat, both_tails = T)
