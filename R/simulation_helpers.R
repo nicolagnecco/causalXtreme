@@ -9,7 +9,7 @@
 #' @return Numeric vector. A vector with the selected elements
 #'
 pick_elements <- function(vec, prob){
-  r <- rbinom(n = length(vec), size = 1, prob = prob)
+  r <- stats::rbinom(n = length(vec), size = 1, prob = prob)
   vec[r == 1]
 }
 
@@ -88,11 +88,11 @@ sample_uniform <- function(n, min, max, mirror = FALSE){
 
   if (mirror == TRUE){
 
-    purrr::map_dbl(runif(n), inverse_mirror_uniform, min = min, max = max)
+    purrr::map_dbl(stats::runif(n), inverse_mirror_uniform, min = min, max = max)
 
   } else {
 
-    runif(n = n, min = min, max = max)
+    stats::runif(n = n, min = min, max = max)
   }
 }
 
@@ -201,7 +201,7 @@ add_random_confounders <- function(dag, prob_confound){
   max_n_confounders  <- NROW(node_pairs)
 
   # Choose the confounders randomly
-  n_confounders  <- rbinom(n = 1, size = max_n_confounders,
+  n_confounders  <- stats::rbinom(n = 1, size = max_n_confounders,
                            prob = prob_confound)
   confounders <- sample(x = 1:max_n_confounders, size = n_confounders,
                         replace = FALSE)
@@ -262,16 +262,16 @@ simulate_noise <- function(n, p, distr = c("student_t", "gaussian",
   switch(distr,
          "student_t" = {
 
-           noise <- array(rt(n * p, df = tail_index), dim = c(n, p))
+           noise <- array(stats::rt(n * p, df = tail_index), dim = c(n, p))
 
          },
          "gaussian" = {
 
-           noise <- array(rnorm(n * p), dim = c(n, p))
+           noise <- array(stats::rnorm(n * p), dim = c(n, p))
          },
          "log_normal" = {
 
-           noise <- array(rlnorm(n * p), dim = c(n, p))
+           noise <- array(stats::rlnorm(n * p), dim = c(n, p))
 
          },
          stop("Wrong distribution. Enter one of 'student_t',

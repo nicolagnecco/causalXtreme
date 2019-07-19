@@ -1,6 +1,7 @@
 context("test-simulation_helpers")
 
 # Define variables
+set.seed(1991)
 u <- sample(1e6, 1)
 n <- sample(1:1e3, 1)
 p <- sample(1:50, 1)

@@ -1,6 +1,7 @@
 context("test-simulation_functions")
 
 # Define variables
+set.seed(1991)
 n <- sample(2:1e3, 1)
 p <- sample(2:50, 1)
 tail_index <- sample(1:10, 1)

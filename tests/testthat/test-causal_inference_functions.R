@@ -1,6 +1,7 @@
 context("test-causal_inference_functions")
 
 # Define variables
+set.seed(1991)
 n <- sample(2:1e3, 1)
 p <- sample(2:10, 1)
 prob_connect <- runif(1)

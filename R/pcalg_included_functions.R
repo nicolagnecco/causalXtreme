@@ -909,7 +909,7 @@ prune <- function (X, k, method = "resampling", prunefactor = 1, npieces = 10,
       Bp.i <- Bpieces[i, , ]
       for (j in 1:p) {
         themean <- mean(Bp.i[j, ])
-        thestd <- sd(Bp.i[j, ])
+        thestd <- stats::sd(Bp.i[j, ])
         Bfinal[i, j] <- if (abs(themean) < prunefactor *
                             thestd) 0 else themean
       }

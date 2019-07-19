@@ -11,7 +11,7 @@ random_search <- function(dat){
   p <- NCOL(dat)
 
   # generate random DAG
-  dag <- random_dag(p = p, prob_connect = runif(1))
+  dag <- random_dag(p = p, prob_connect = stats::runif(1))
 
   # return DAG
   return(dag)
@@ -110,12 +110,12 @@ pc_search <- function(dat, alpha = 5e-2){
   p <- NCOL(dat)
 
   out <- tryCatch({
-    suff_stat <- list(C = cor(dat), n = n)
+    suff_stat <- list(C = stats::cor(dat), n = n)
     pc.fit <- pcalg::pc(suffStat = suff_stat,
                         indepTest = pcalg::gaussCItest,
                         p = p, alpha = alpha, u2pd = "retry",
                         skel.method = "stable")
-    cpdag <- as(pc.fit@graph, "matrix")
+    cpdag <- methods::as(pc.fit@graph, "matrix")
     return(cpdag)
   },
   error = function(e){
@@ -155,13 +155,13 @@ pc_rank_search <- function(dat, alpha = 5e-2){
   p <- NCOL(dat)
 
   out <- tryCatch({
-    suff_stat <-  list(C = 2 * sin(cor(dat, method = "spearman") * pi / 6),
+    suff_stat <-  list(C = 2 * sin(stats::cor(dat, method = "spearman") * pi / 6),
                        n = n)
     pc.fit <- pcalg::pc(suffStat = suff_stat,
                         indepTest = pcalg::gaussCItest,
                         p = p, alpha = alpha, u2pd = "retry",
                         skel.method = "stable")
-    cpdag <- as(pc.fit@graph, "matrix")
+    cpdag <- methods::as(pc.fit@graph, "matrix")
     return(cpdag)
   },
   error = function(e){

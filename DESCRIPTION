@@ -20,9 +20,9 @@ Suggests:
     testthat (>= 2.1.0)
 Imports: 
     SID (>= 1.0),
-    gtools (>= 3.8.1),
     pcalg (>= 2.6.2),
     clue (>= 0.3.57),
-    Matrix,
-    purrr,
-    fastICA
+    stats (>= 3.6.1),
+    methods (>= 3.6.1),
+    fastICA (>= 1.2.1),
+    purrr (>= 0.3.2)
