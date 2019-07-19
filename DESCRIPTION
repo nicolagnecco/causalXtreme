@@ -13,6 +13,7 @@ Description: Functions for causal structure learning based on the paper
     structural causal model (SCM). to compare EASE with other methods,
     we provide wrapper functions around LiNGAM-ICA, PC and PC-Rank algorithm.
 Encoding: UTF-8
+License: GPL-3
 LazyData: true
 RoxygenNote: 6.1.1
 Suggests: 
@@ -21,6 +22,7 @@ Imports:
     SID (>= 1.0),
     gtools (>= 3.8.1),
     pcalg (>= 2.6.2),
+    clue (>= 0.3.57),
     Matrix,
     purrr,
     fastICA
