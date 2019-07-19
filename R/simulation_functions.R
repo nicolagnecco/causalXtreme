@@ -19,7 +19,7 @@
 #' of confounders (rows and columns) in \code{dag}.
 #' If \code{has_confounder = FALSE}, then \code{pos_confounders = integer(0)}.
 #' }
-#'
+#' @export
 simulate_data <- function(n, p, prob_connect,
                          distr = c("student_t", "log_norm", "norm")[1],
                          tail_index = 1.5, has_confounder = FALSE,

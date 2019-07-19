@@ -1,5 +1,10 @@
-# The original source for most of this came from Markus Kalisch's pcalg
-# code in https://cran.r-project.org/web/packages/pcalg/index.html
+# The original source for most of this comes from pcalg package
+# code in https://CRAN.R-project.org/package=pcalg
+# The credit goes to the authors of the package:
+# Markus Kalisch, Alain Hauser , Martin Maechler, Diego Colombo,
+# Doris Entner, Patrik Hoyer, Antti Hyttinen, Jonas Peters,
+# Nicoletta Andri, Emilija Perkovic, Preetam Nandy, Philipp Ruetimann,
+# Daniel Stekhoven, Manuel Schuerch, Marco Eigenmann.
 #
 # Below is the original license statement for the pcalg package.
 #

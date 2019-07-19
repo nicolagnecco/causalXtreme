@@ -15,7 +15,7 @@
 #' @inheritParams causal_tail_matrix
 #' @param method String. Is one of:
 #' \itemize{
-#' \item \code{"greedy"}, see \code{\link{greedy_ancestral_search}}.
+#' \item \code{"ease"}, see \code{\link{ease}}.
 #' \item \code{"lingam"}, see \code{\link{lingam_search}}.
 #' \item \code{"pc"}, see \code{\link{pc_search}}.
 #' \item \code{"pc_rank"}, see \code{\link{pc_rank_search}}.
@@ -32,17 +32,18 @@
 #' (or \code{NA} in case of error).
 #' The estimated CPDAG.
 #' }
-causal_discovery <- function(dat, method = c("greedy", "lingam", "pc",
+#' @export
+causal_discovery <- function(dat, method = c("ease", "lingam", "pc",
                                              "pc_rank", "random"),
                              ...){
 
   # check method
   if (missing(method)){
-    stop("Please, provide one of greedy, lingam, pc, pc_rank, random.")
+    stop("Please, provide one of ease, lingam, pc, pc_rank, random.")
   }
 
-  if (!(method %in% c("greedy", "lingam", "pc", "pc_rank", "random"))){
-    stop("The passed method must be one of greedy, lingam, pc, pc_rank,
+  if (!(method %in% c("ease", "lingam", "pc", "pc_rank", "random"))){
+    stop("The passed method must be one of ease, lingam, pc, pc_rank,
          random.")
   }
 
@@ -54,7 +55,7 @@ causal_discovery <- function(dat, method = c("greedy", "lingam", "pc",
 
   # run causal search
   switch(method,
-         "greedy" = {
+         "ease" = {
 
            # check arguments
            if (!all(names(argms) %in% c("k", "both_tails"))){
@@ -62,7 +63,7 @@ causal_discovery <- function(dat, method = c("greedy", "lingam", "pc",
            }
 
            # compute DAG/CPDAG and CPDAG
-           caus_order <- greedy_ancestral_search(dat, ...)
+           caus_order <- ease(dat, ...)
            out$est_g <- caus_order_to_dag(caus_order)
            out$est_cpdag <- dag_to_cpdag(out$est_g)
 
@@ -180,6 +181,7 @@ causal_discovery <- function(dat, method = c("greedy", "lingam", "pc",
 #' and the estimated CPDAG \code{est_cpdag}.
 #' See also \code{\link{compute_str_ham_distance}}.
 #' }
+#' @export
 causal_metrics <- function(simulated_data, estimated_graphs){
 
   # collect variables

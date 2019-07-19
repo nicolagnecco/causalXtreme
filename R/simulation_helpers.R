@@ -88,7 +88,8 @@ sample_uniform <- function(n, min, max, mirror = FALSE){
 
   if (mirror == TRUE){
 
-    purrr::map_dbl(stats::runif(n), inverse_mirror_uniform, min = min, max = max)
+    purrr::map_dbl(stats::runif(n),
+                   inverse_mirror_uniform, min = min, max = max)
 
   } else {
 

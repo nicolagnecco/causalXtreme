@@ -6,6 +6,11 @@
 \usage{
 compute_str_ham_distance(cpdag, est_cpdag)
 }
+\arguments{
+\item{cpdag}{Square binary matrix. A matrix representing a CPDAG.}
+
+\item{est_cpdag}{Square binary matrix. The estimated CPDAG.}
+}
 \value{
 Numeric --- between 0 and 1. The structural Hamming
 distance between a true CPDAG \code{cpdag} and the

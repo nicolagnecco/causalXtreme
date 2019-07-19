@@ -20,10 +20,10 @@ test_that("random search works", {
   expect_equal(random_search(dat1), dag)
 })
 
-test_that("greedy ancestral search works", {
+test_that("ease works", {
   set.seed(u)
-  expect_equal(greedy_ancestral_search(dat1), c(1, 3, 2))
-  expect_equal(greedy_ancestral_search(dat2), c(1, 2, 3))
+  expect_equal(ease(dat1), c(1, 3, 2))
+  expect_equal(ease(dat2), c(1, 2, 3))
 })
 
 test_that("lingam search works", {

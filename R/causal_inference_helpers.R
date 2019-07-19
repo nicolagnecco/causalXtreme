@@ -5,6 +5,7 @@
 #'
 #' @inheritParams causal_tail_matrix
 #' @return Square binary matrix. A random DAG.
+#' @export
 random_search <- function(dat){
 
   # number of variables
@@ -18,14 +19,15 @@ random_search <- function(dat){
 }
 
 
-#' Greedy ancestral search
+#' Extremal Ancestral SEarch
 #'
-#' Runs greedy ancestral search permutation search given the dataset
-#' \code{dat}.
+#' Runs extremal ancestral search (EASE) algorithm on the given
+#' dataset \code{dat}.
 #'
 #' @inheritParams causal_tail_matrix
 #' @return  Numeric vector. The causal order estimated from the data.
-greedy_ancestral_search <- function(dat, k = floor(2 * n ^ 0.4),
+#' @export
+ease <- function(dat, k = floor(2 * n ^ 0.4),
                                     both_tails = TRUE){
   # set up variables
   n <- NROW(dat)
@@ -34,7 +36,7 @@ greedy_ancestral_search <- function(dat, k = floor(2 * n ^ 0.4),
   # compute causal tail matrix
   causal_mat <- causal_tail_matrix(dat, k, both_tails)
 
-  # run greedy ancestral search
+  # run Extremal Ancestral SEarch
   current_order <- add <- which.min(apply(causal_mat, 2, max, na.rm = TRUE))
   for (k in 2:d){
     causal_mat[add, ] <- NA
@@ -59,6 +61,19 @@ greedy_ancestral_search <- function(dat, k = floor(2 * n ^ 0.4),
 #'
 #' Runs Lingam given a dataset \code{dat}.
 #'
+#' This function is a wrapper around \code{estLiNGAM} from the package
+#' \code{pcalg} (see \url{https://CRAN.R-project.org/package=pcalg }).
+#' The function \code{estLiNGAM} is slightly modified
+#' to allow for different contrast functions in the fast-ICA step of
+#' LiNGAM. To modify \code{estLiNGAM}, we included in this package
+#' several internal functions from\code{pcalg}.
+#' All the credits go to the authors of the \code{pcalg} package:
+#'
+#' Markus Kalisch, Alain Hauser , Martin Maechler, Diego Colombo,
+#' Doris Entner, Patrik Hoyer, Antti Hyttinen, Jonas Peters,
+#' Nicoletta Andri, Emilija Perkovic, Preetam Nandy, Philipp Ruetimann,
+#' Daniel Stekhoven, Manuel Schuerch, Marco Eigenmann.
+#'
 #' @inheritParams causal_tail_matrix
 #' @param contrast_fun Character. The functional form of the contrast
 #' function used in the Fast-ICA step. It is one of \code{"logcosh"}
@@ -67,6 +82,7 @@ greedy_ancestral_search <- function(dat, k = floor(2 * n ^ 0.4),
 #' Hyvarinen, A., \url{https://ieeexplore.ieee.org/abstract/document/761722/}.
 #' @return Square binary matrix (or \code{NA} in case of error).
 #' The DAG estimated from the data.
+#' @export
 lingam_search <- function(dat, contrast_fun = c("logcosh", "exp")[1]){
 
   out <- tryCatch({
@@ -104,6 +120,7 @@ lingam_search <- function(dat, contrast_fun = c("logcosh", "exp")[1]){
 #' individual conditional independence tests. By default it is set to 0.05.
 #' @return Square binary matrix (or \code{NA} in case of error).
 #' The CPDAG estimated from the data.
+#' @export
 pc_search <- function(dat, alpha = 5e-2){
 
   n <- NROW(dat)
@@ -149,13 +166,15 @@ pc_search <- function(dat, alpha = 5e-2){
 #' @inheritParams pc_search
 #' @return Square binary matrix (or \code{NA} in case of error).
 #' The CPDAG estimated from the data.
+#' @export
 pc_rank_search <- function(dat, alpha = 5e-2){
 
   n <- NROW(dat)
   p <- NCOL(dat)
 
   out <- tryCatch({
-    suff_stat <-  list(C = 2 * sin(stats::cor(dat, method = "spearman") * pi / 6),
+    suff_stat <-  list(C = 2 * sin(stats::cor(dat, method = "spearman") *
+                                     pi / 6),
                        n = n)
     pc.fit <- pcalg::pc(suffStat = suff_stat,
                         indepTest = pcalg::gaussCItest,

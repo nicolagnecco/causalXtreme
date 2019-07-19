@@ -67,13 +67,13 @@ est_ext_cpdag5 <- rbind(c(0, 1, 1, 0, 0),
 
 # Run tests
 test_that("causal discovery works", {
-  expect_error(causal_discovery(dat, "greedy", foobar = 20, both_tails = T))
-  expect_error(causal_discovery(dat, "greedy", k = 20, foobar = T))
-  expect_error(causal_discovery(dat, "greedy", foobar = 20, foobar = T))
-  expect_length(causal_discovery(dat, "greedy", k = 20, both_tails = T), 2)
-  expect_length(causal_discovery(dat, "greedy", k = 20), 2)
-  expect_length(causal_discovery(dat, "greedy", both_tails = T), 2)
-  expect_length(causal_discovery(dat, "greedy"), 2)
+  expect_error(causal_discovery(dat, "ease", foobar = 20, both_tails = T))
+  expect_error(causal_discovery(dat, "ease", k = 20, foobar = T))
+  expect_error(causal_discovery(dat, "ease", foobar = 20, foobar = T))
+  expect_length(causal_discovery(dat, "ease", k = 20, both_tails = T), 2)
+  expect_length(causal_discovery(dat, "ease", k = 20), 2)
+  expect_length(causal_discovery(dat, "ease", both_tails = T), 2)
+  expect_length(causal_discovery(dat, "ease"), 2)
   expect_error(causal_discovery(dat, "lingam", foobar = "exp"))
   expect_length(causal_discovery(dat, "lingam", contrast_fun = "exp"), 2)
   expect_length(causal_discovery(dat, "lingam"), 2)
@@ -94,7 +94,7 @@ test_that("causal discovery works", {
 
 test_that("causal metrics work", {
   ## No confounders
-  # (Output from Greedy, Lingam, Random) DAG and CPDAG
+  # (Output from EASE, Lingam, Random) DAG and CPDAG
   sim_data <- list(NA,
                    dag = true_dag,
                    pos_confounders = integer(0))
@@ -116,7 +116,7 @@ test_that("causal metrics work", {
   expect_equal(causal_metrics(sim_data, est_graphs), out)
 
   ## Confounders
-  # (Output from Greedy, Lingam, Random) DAG and CPDAG
+  # (Output from EASE, Lingam, Random) DAG and CPDAG
   sim_data <- list(NA,
                    dag = true_dag3,
                    pos_confounders = c(4, 5))

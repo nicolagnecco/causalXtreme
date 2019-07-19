@@ -23,3 +23,17 @@ The DAG estimated from the data.
 \description{
 Runs Lingam given a dataset \code{dat}.
 }
+\details{
+This function is a wrapper around \code{estLiNGAM} from the package
+\code{pcalg} (see \url{https://CRAN.R-project.org/package=pcalg }).
+The function \code{estLiNGAM} is slightly modified
+to allow for different contrast functions in the fast-ICA step of
+LiNGAM. To modify \code{estLiNGAM}, we included in this package
+several internal functions from\code{pcalg}.
+All the credits go to the authors of the \code{pcalg} package:
+
+Markus Kalisch, Alain Hauser , Martin Maechler, Diego Colombo,
+Doris Entner, Patrik Hoyer, Antti Hyttinen, Jonas Peters,
+Nicoletta Andri, Emilija Perkovic, Preetam Nandy, Philipp Ruetimann,
+Daniel Stekhoven, Manuel Schuerch, Marco Eigenmann.
+}

@@ -129,12 +129,12 @@ lingam <- lingam_search(X$dataset, "logcosh")
 lingam2 <- lingam_search(X$dataset, "exp")
 pc <- pc_search(X$dataset, 5e-4)
 rank_pc <- pc_rank_search(X$dataset, 5e-4)
-greedy <- greedy_ancestral_search(X$dataset)
+easy <- ease(X$dataset)
 compute_str_int_distance(X$dag, lingam)
 compute_str_int_distance(X$dag, lingam2)
 compute_str_int_distance(X$dag, pc)
 compute_str_int_distance(X$dag, rank_pc)
-compute_str_int_distance(X$dag, caus_order_to_dag(greedy))
+compute_str_int_distance(X$dag, caus_order_to_dag(easy))
 
 # Check simulated_data
 
@@ -217,8 +217,8 @@ n <- 1e4
 p <- 50
 prob_connect <- runif(1)
 X <- simulate_data(n, p, 1.5/(p-1))
-greedy <- causal_discovery(X$dataset, "greedy")
-causal_metrics(X, greedy)
+easy <- causal_discovery(X$dataset, "ease")
+causal_metrics(X, easy)
 lingam <- causal_discovery(X$dataset, "lingam")
 causal_metrics(X, lingam)
 pc <- causal_discovery(X$dataset, "pc", alpha = 5e-4)

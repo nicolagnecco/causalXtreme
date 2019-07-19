@@ -320,8 +320,8 @@ compute_str_int_distance <- function(dag, est_g){
 #' Tsamardinos I., Brown L.E., and Aliferis C.F.,
 #' \url{https://link.springer.com/article/10.1007/s10994-006-6889-7}.
 #'
-#' @inheritParams compute_caus_order
-#' @inheritParams compute_str_int_distance
+#' @param cpdag Square binary matrix. A matrix representing a CPDAG.
+#' @param est_cpdag Square binary matrix. The estimated CPDAG.
 #' @return Numeric --- between 0 and 1. The structural Hamming
 #' distance between a true CPDAG \code{cpdag} and the
 #' estimated CPDAG \code{est_cpdag}.

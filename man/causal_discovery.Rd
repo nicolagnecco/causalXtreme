@@ -4,7 +4,7 @@
 \alias{causal_discovery}
 \title{Perform causal discovery}
 \usage{
-causal_discovery(dat, method = c("greedy", "lingam", "pc", "pc_rank",
+causal_discovery(dat, method = c("ease", "lingam", "pc", "pc_rank",
   "random"), ...)
 }
 \arguments{
@@ -13,7 +13,7 @@ rows (observations) and \code{p} columns (variables).}
 
 \item{method}{String. Is one of:
 \itemize{
-\item \code{"greedy"}, see \code{\link{greedy_ancestral_search}}.
+\item \code{"ease"}, see \code{\link{ease}}.
 \item \code{"lingam"}, see \code{\link{lingam_search}}.
 \item \code{"pc"}, see \code{\link{pc_search}}.
 \item \code{"pc_rank"}, see \code{\link{pc_rank_search}}.
