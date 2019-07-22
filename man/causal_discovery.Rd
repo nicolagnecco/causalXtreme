@@ -5,7 +5,7 @@
 \title{Perform causal discovery}
 \usage{
 causal_discovery(dat, method = c("ease", "lingam", "pc", "pc_rank",
-  "random"), ...)
+  "random"), set_args = list())
 }
 \arguments{
 \item{dat}{Numeric matrix. Dataset matrix with \code{n}
@@ -20,7 +20,11 @@ rows (observations) and \code{p} columns (variables).}
 \item \code{"random"}, see \code{\link{random_search}}.
 }}
 
-\item{...}{Parameters to be passed to the respective method's function.}
+\item{set_args}{List containing the \emph{named} arguments
+to be passed to the respective method's function. If an argument
+is missing, then it is set to its default value. If \code{set_args}
+is not specified, or if it is passed as an empty list,
+then all arguments of the underlying method are set to their default values.}
 }
 \value{
 List. The list is made of:

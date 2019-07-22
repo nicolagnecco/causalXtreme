@@ -21,7 +21,11 @@
 #' \item \code{"pc_rank"}, see \code{\link{pc_rank_search}}.
 #' \item \code{"random"}, see \code{\link{random_search}}.
 #' }
-#' @param ... Parameters to be passed to the respective method's function.
+#' @param set_args List containing the \emph{named} arguments
+#' to be passed to the respective method's function. If an argument
+#' is missing, then it is set to its default value. If \code{set_args}
+#' is not specified, or if it is passed as an empty list,
+#' then all arguments of the underlying method are set to their default values.
 #' @return List. The list is made of:
 #' \itemize{
 #' \item \code{est_g} --- Square binary matrix
@@ -35,22 +39,19 @@
 #' @export
 causal_discovery <- function(dat, method = c("ease", "lingam", "pc",
                                              "pc_rank", "random"),
-                             ...){
+                             set_args = list()){
 
   # check method
   if (missing(method)){
-    stop("Please, provide one of ease, lingam, pc, pc_rank, random.")
+    stop("Please, provide one of 'ease', 'lingam', 'pc', 'pc_rank', 'random'.")
   }
 
   if (!(method %in% c("ease", "lingam", "pc", "pc_rank", "random"))){
-    stop("The passed method must be one of ease, lingam, pc, pc_rank,
-         random.")
+    stop(paste("The passed method must be one of",
+               "'ease', 'lingam', 'pc', 'pc_rank', 'random'."))
   }
 
-  # Collect inputs
-  argms <- list(...)
-
-  # set up list
+  # set up output list
   out <- list(est_g = NA, est_cpdag = NA)
 
   # run causal search
@@ -58,12 +59,27 @@ causal_discovery <- function(dat, method = c("ease", "lingam", "pc",
          "ease" = {
 
            # check arguments
-           if (!all(names(argms) %in% c("k", "both_tails"))){
-             stop("Arguments must be k and both_tails.")
+           if (length(set_args) == 0){
+
+             caus_order <- ease(dat)
+
+           } else if (length(set_args) <= 2){
+
+             if (all(names(set_args) %in% c("k", "both_tails"))){
+
+               caus_order <- purrr::pmap(set_args, ease, dat = dat)[[1]]
+
+             } else{
+
+               stop(paste("Arguments for", toupper(method),
+                          "must be 'k' and 'both_tails'."))
+             }
+           } else{
+
+             stop(paste(toupper(method), "accepts at most 2 arguments."))
            }
 
            # compute DAG/CPDAG and CPDAG
-           caus_order <- ease(dat, ...)
            out$est_g <- caus_order_to_dag(caus_order)
            out$est_cpdag <- dag_to_cpdag(out$est_g)
 
@@ -71,12 +87,28 @@ causal_discovery <- function(dat, method = c("ease", "lingam", "pc",
          "lingam" = {
 
            # check arguments
-           if (!all(names(argms) %in% c("contrast_fun"))){
-             stop("Argument must be contrast_fun.")
+           if (length(set_args) == 0){
+
+             dag <- lingam_search(dat)
+
+           } else if (length(set_args) <= 1){
+
+             if (all(names(set_args) %in% c("contrast_fun"))){
+
+               dag <- purrr::pmap(set_args, lingam_search, dat = dat)[[1]]
+
+             } else{
+
+               stop(paste("Arguments for", toupper(method),
+                          "must be 'contrast_fun'."))
+             }
+           } else{
+
+             stop(paste(toupper(method), "accepts at most 1 argument."))
            }
 
            # compute DAG/CPDAG and CPDAG
-           out$est_g <- lingam_search(dat, ...)
+           out$est_g <- dag
            out$est_cpdag <- if (all(is.na(out$est_g))) {
              NA
            } else {
@@ -87,12 +119,28 @@ causal_discovery <- function(dat, method = c("ease", "lingam", "pc",
          "pc" = {
 
            # check arguments
-           if (!all(names(argms) %in% c("alpha"))){
-             stop("Argument must be alpha.")
+           if (length(set_args) == 0){
+
+             cpdag <- pc_search(dat)
+
+           } else if (length(set_args) <= 1){
+
+             if (all(names(set_args) %in% c("alpha"))){
+
+               cpdag <- purrr::pmap(set_args, pc_search, dat = dat)[[1]]
+
+             } else{
+
+               stop(paste("Arguments for", toupper(method),
+                          "must be 'alpha'."))
+             }
+           } else{
+
+             stop(paste(toupper(method), "accepts at most 1 argument."))
            }
 
            # compute DAG/CPDAG and CPDAG
-           out$est_g <- pc_search(dat, ...)
+           out$est_g <- cpdag
            out$est_cpdag <- if (all(is.na(out$est_g))) {
              NA
            } else {
@@ -102,12 +150,28 @@ causal_discovery <- function(dat, method = c("ease", "lingam", "pc",
          "pc_rank" = {
 
            # check arguments
-           if (!all(names(argms) %in% c("alpha"))){
-             stop("Argument must be alpha.")
+           if (length(set_args) == 0){
+
+             cpdag <- pc_rank_search(dat)
+
+           } else if (length(set_args) <= 1){
+
+             if (all(names(set_args) %in% c("alpha"))){
+
+               cpdag <- purrr::pmap(set_args, pc_rank_search, dat = dat)[[1]]
+
+             } else{
+
+               stop(paste("Arguments for", toupper(method),
+                          "must be 'alpha'."))
+             }
+           } else{
+
+             stop(paste(toupper(method), "accepts at most 1 argument."))
            }
 
            # compute DAG/CPDAG and CPDAG
-           out$est_g <- pc_rank_search(dat, ...)
+           out$est_g <- cpdag
            out$est_cpdag <- if (all(is.na(out$est_g))) {
              NA
            } else {
@@ -117,12 +181,17 @@ causal_discovery <- function(dat, method = c("ease", "lingam", "pc",
          "random" = {
 
            # check arguments
-           if (!all(names(argms) %in% NULL)){
-             stop("No arguments are needed.")
+           if (length(set_args) == 0){
+
+             dag <- random_search(dat)
+
+           } else {
+
+             stop(paste(toupper(method), "accepts no arguments."))
            }
 
            # compute DAG/CPDAG and CPDAG
-           out$est_g <- random_search(dat)
+           out$est_g <- dag
            out$est_cpdag <- dag_to_cpdag(out$est_g)
          })
 
@@ -204,7 +273,7 @@ causal_metrics <- function(simulated_data, estimated_graphs){
 
   # If there are no confounders
   if (length(pos_confounders) == 0) {
-    # SID: compute SID between true DAG and estimated DAG\CPDAG
+    # SID: compute SID between true DAG and estimated DAG/CPDAG
     out$sid <- compute_str_int_distance(true_dag, est_g)
 
     # SHD: cast true DAG into CPDAG

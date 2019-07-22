@@ -39,7 +39,7 @@ causal_tail_coeff <- function(v1, v2, k = floor(2 * n ^ 0.4), to_rank = TRUE,
 
   # check k
   if (k <= 1 | k >= n) {
-    stop("k must be greater than 1 and smaller than n!")
+    stop("k must be greater than 1 and smaller than n.")
   }
 
   # rank variables?
