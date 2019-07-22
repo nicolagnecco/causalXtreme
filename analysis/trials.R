@@ -272,40 +272,206 @@ SID::structIntervDist(confounded_true_dag, dag_to_cpdag(est_ext_cpdag))
 
 
 # Different regimes (i.e., DAGs)
+# Ex 1
+n <- 1e3
+eps_x <- rt(n, 2.5)
+eps_y <- rt(n, 2.5)
+
+id <- rank(eps_x)/n > .90 | rank(eps_x)/n <= .1
+X <- Y <- numeric(n)
+
+# Bulk
+X[!id] <- eps_x[!id]
+Y[!id] <- eps_y[!id]
+
+# Tails
+X[id] <- eps_x[id]
+Y[id] <- X[id] + eps_y[id]
+
+# Results
+mat <- cbind(X, Y)
+plot(mat)
+causal_tail_matrix(mat)
+
+
+
+# Ex 2
 n <- 1e3
 eps_x <- rt(n, 2.5)
 eps_y <- rt(n, 2.5)
 
 id <- rank(eps_x)/n > .90 | rank(eps_x)/n <= .1 | rank(eps_y)/n > .9 | rank(eps_y)/n <=.1
 X <- Y <-  numeric(n)
-X[id] <- eps_x[id]
-Y[id] <- X[id] + eps_y[id]
+
+# Bulk
 Y[!id] <- eps_y[!id]
 X[!id] <- -1 * Y[!id] + eps_x[!id]
+
+# Tails
+X[id] <- eps_x[id]
+Y[id] <- X[id] + eps_y[id]
+
+# Results
 mat <- cbind(X, Y)
 plot(mat)
 causal_tail_matrix(mat, both_tails = T)
-lm(Y ~ X)
-X1 <- eps_x
-Y1 <- X1 + eps_y
-
-mat1 <- cbind(X1, Y1)
-causal_tail_matrix(mat1, both_tails = T)
-lm(Y1 ~ X1)
-plot(mat1)
 
 
+
+# Ex 3
+n <- 1e3
+eps_x <- rt(n, 2.5)
+eps_y <- rt(n, 2.5)
+
+id <- rank(eps_y)/n > .90 | rank(eps_y)/n <= .1
+X <- Y <-  numeric(n)
+
+# Bulk
+Y[!id] <- eps_y[!id]
+X[!id] <- 1 * Y[!id] + eps_x[!id]
+
+# Tails
+X[id] <- eps_x[id]
+Y[id] <- eps_y[id]
+
+X <- eps_x
+Y <- eps_y
+
+# Results
+mat <- cbind(X, Y)
+plot(mat)
+causal_tail_matrix(mat, both_tails = T)
+
+
+
+# Ex 4
 eps_x <- rt(n, 2.5)
 eps_y <- rt(n, 2.5)
 eps_z <- rt(n, 2.5)
 
-X <- eps_x
-Y <- Z <-  numeric(n)
-id <- rank(eps_x)/n > .9 |  rank(eps_y)/n > .9 |  rank(eps_z)/n > .9
-Y[id] <- 2 * X[id] + eps_y[id]
-Z[id] <- X[id] + Y[id] + eps_z[id]
+id <- rank(eps_x)/n > .9 | rank(eps_x)/n <= .1 |
+  rank(eps_y)/n > .9 | rank(eps_y)/n <= .1 |
+  rank(eps_z)/n > .9 | rank(eps_z)/n <= .1
+X <- Y <- Z <-  numeric(n)
+
+# Bulk
+X[!id] <- eps_x[!id]
 Z[!id] <- X[!id] + eps_z[!id]
-Y[!id] <- 2 * X[!id] + .1 * Z[!id] + eps_y[!id]
-plot(Y, Z)
+Y[!id] <- 1 * X[!id] - .8 *  Z[!id] + eps_y[!id]
+
+# Tails
+X[id] <- eps_x[id]
+Y[id] <- 1 * X[id] + eps_y[id]
+Z[id] <-  X[id] + .8 * Y[id] + eps_z[id]
+
+# Results
 mat <- cbind(X, Y, Z)
-causal_tail_matrix(mat, both_tails = T)
+pairs(mat)
+causal_tail_matrix(mat)
+ease(mat)
+
+X <- eps_x
+Y <- X + eps_y
+Z <- X + .8 * Y + eps_z
+mat <- cbind(X, Y, Z)
+pairs(mat)
+causal_tail_matrix(mat)
+ease(mat)
+
+
+
+# Ex 5
+eps_x <- rt(n, 2.5)
+eps_y <- rt(n, 2.5)
+eps_z <- rt(n, 2.5)
+
+id <- rank(eps_x)/n > .9 | rank(eps_x)/n <= .1 |
+  rank(eps_y)/n > .9 | rank(eps_y)/n <= .1 |
+  rank(eps_z)/n > .9 | rank(eps_z)/n <= .1
+X <- Y <- Z <-  numeric(n)
+
+# Bulk
+Z[!id] <- eps_z[!id]
+Y[!id] <- .9 * Z[!id] + eps_y[!id]
+X[!id] <- .9 * Y[!id] + eps_x[!id]
+
+# id2 <- id | rank(Y)/n > .9 | rank(Y)/n <= .1 | rank(X)/n > .9 | rank(X)/n <= .1
+# which(id2 != id)
+
+# Tails
+X[id] <- eps_x[id]
+Y[id] <- eps_y[id]
+Z[id] <- .3 * X[id] + .2 * Y[id] + eps_z[id]
+
+# Results
+mat <- cbind(X, Y, Z)
+pairs(mat)
+causal_tail_matrix(mat)
+ease(mat)
+
+X <- eps_x
+Y <- eps_y
+Z <- .3 * X + .2 * Y + eps_z
+mat <- cbind(X, Y, Z)
+pairs(mat)
+causal_tail_matrix(mat)
+ease(mat)
+
+
+
+# Ex 6
+eps_x <- rt(n, 2.5)
+eps_y <- rt(n, 2.5)
+eps_z <- rt(n, 2.5)
+
+id <- rank(eps_x)/n > .9 | rank(eps_x)/n <= .1
+X <- Y <- Z <-  numeric(n)
+
+# Bulk
+X[!id] <- eps_x[!id]
+Y[!id] <- eps_y[!id]
+Z[!id] <- .9 * X[!id] + Y[!id] + eps_z[!id]
+
+mat <- cbind(X, Y, Z)
+pairs(mat)
+
+# Tails
+X[id] <- eps_x[id]
+Y[id] <- .4 * X[id] + eps_y[id]
+Z[id] <- .3 * X[id] + Y[id] + eps_z[id]
+
+# Results
+mat <- cbind(X, Y, Z)
+pairs(mat)
+causal_tail_matrix(mat)
+ease(mat)
+
+
+
+# Ex 7
+eps_x <- rt(n, 2.5)
+eps_y <- rt(n, 2.5)
+eps_z <- rt(n, 2.5)
+
+id <- (rank(eps_x)/n > .9 | rank(eps_x)/n <= .1) & (rank(eps_y)/n > .9 | rank(eps_y)/n <= .1)
+id <- rank(eps_x)/n > .9 | rank(eps_x)/n <= .1 | rank(eps_y)/n > .9 | rank(eps_y)/n <= .1
+X <- Y <- Z <-  numeric(n)
+
+# Bulk
+X[!id] <- eps_x[!id]
+Y[!id] <- eps_y[!id]
+Z[!id] <- .9 * X[!id] + Y[!id] + eps_z[!id]
+
+mat <- cbind(X, Y, Z)
+pairs(mat)
+
+# Tails
+X[id] <- eps_x[id]
+Y[id] <- eps_y[id]
+Z[id] <- eps_z[id]
+
+# Results
+mat <- cbind(X, Y, Z)
+pairs(mat)
+causal_tail_matrix(mat)
+ease(mat)
