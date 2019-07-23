@@ -50,7 +50,7 @@ test_that("pc search works", {
                    alpha = 0.05,
                    u2pd = "retry",
                    skel.method = "stable")
-  cpdag <- as(out@graph, "matrix")
+  cpdag <- unname(as(out@graph, "matrix"))
 
   expect_equal(pc_search(dat1, 5e-2), cpdag)
 
@@ -66,7 +66,7 @@ test_that("pc rank search works", {
                    alpha = 0.05,
                    u2pd = "retry",
                    skel.method = "stable")
-  cpdag <- as(out@graph, "matrix")
+  cpdag <- unname(as(out@graph, "matrix"))
 
   expect_equal(pc_rank_search(dat4, 5e-2), cpdag)
   expect_equal(pc_rank_search(dat3, 5e-2), NA)

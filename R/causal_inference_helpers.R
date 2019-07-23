@@ -132,7 +132,7 @@ pc_search <- function(dat, alpha = 5e-2){
                         indepTest = pcalg::gaussCItest,
                         p = p, alpha = alpha, u2pd = "retry",
                         skel.method = "stable")
-    cpdag <- methods::as(pc.fit@graph, "matrix")
+    cpdag <- unname(methods::as(pc.fit@graph, "matrix"))
     return(cpdag)
   },
   error = function(e){
@@ -180,7 +180,7 @@ pc_rank_search <- function(dat, alpha = 5e-2){
                         indepTest = pcalg::gaussCItest,
                         p = p, alpha = alpha, u2pd = "retry",
                         skel.method = "stable")
-    cpdag <- methods::as(pc.fit@graph, "matrix")
+    cpdag <- unname(methods::as(pc.fit@graph, "matrix"))
     return(cpdag)
   },
   error = function(e){
