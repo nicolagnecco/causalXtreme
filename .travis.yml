@@ -7,7 +7,4 @@ apt_packages:
 bioc_packages:
 - RBGL
 - graph
-r_packages:
-  - covr
-after_success:
-  - Rscript -e 'library(covr); codecov()'
+
