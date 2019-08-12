@@ -1,5 +1,5 @@
 Package: causalXtreme
-Title: Causality in Heavy-Tailed Models
+Title: Causal discovery in heavy-tailed models
 Version: 0.0.0.9000
 Authors@R: 
     as.person(c(
@@ -9,7 +9,7 @@ Authors@R:
     "Sebastian Engelke [aut]"
     ))
 Description: Functions for causal structure learning based on the paper 
-    "Causality in Heavy-Tailed Models" from Gnecco, N., Meinshausen, N.,
+    "Causal discovery in heavy-tailed models" from Gnecco, N., Meinshausen, N.,
     Peters, J., and, Engelke, S. Extremal ancestral search (EASE) is the main
     algorithm algorithm to recover the causal order of a heavy-tailed 
     structural causal model (SCM). To compare EASE with other methods,

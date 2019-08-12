@@ -4,7 +4,7 @@
 \alias{causal_tail_matrix}
 \title{Estimate causal tail matrix}
 \usage{
-causal_tail_matrix(dat, k = floor(2 * n^0.4), both_tails = TRUE)
+causal_tail_matrix(dat, k = floor(n^0.4), both_tails = TRUE)
 }
 \arguments{
 \item{dat}{Numeric matrix. Dataset matrix with \code{n}
@@ -12,7 +12,7 @@ rows (observations) and \code{p} columns (variables).}
 
 \item{k}{Positive integer. The number of extreme observations used to
 compute the causal tail coefficient. Set by default to
-\code{k = floor(2 * n^0.4)}. It must be greater than 1 and smaller
+\code{k = floor(n^0.4)}. It must be greater than 1 and smaller
 than \code{n}.}
 
 \item{both_tails}{Boolean. Do you consider both tails when computing the

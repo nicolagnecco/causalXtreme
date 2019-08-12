@@ -32,7 +32,7 @@ if (test3$success){
 #              u2pd = "retry", skel.method = "stable")
 
 
-## 3. Add references to "Causality in heavy-tailed models"
+## 3. Add references to "Causal discovery in heavy-tailed models"
 
 ## 4. Change name of "Greedy ancestral search"
 

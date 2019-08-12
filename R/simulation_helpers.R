@@ -283,8 +283,8 @@ simulate_noise <- function(n, p, distr = c("student_t", "gaussian",
 
 #' Generate data from non-linear Structural Equation Model
 #'
-#' Generate data from non-linear Structural Causal Model as shown in the
-#' paper "Causality in heavy-tailed models".
+#' Generate data from non-linear Structural Causal Model as described in the
+#' paper "Causal discovery in heavy-tailed models".
 #'
 #' @inheritParams get_all_paths
 #' @param noise Numeric matrix. Dataset matrix with \code{n}

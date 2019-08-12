@@ -4,7 +4,8 @@
 #' \code{v1} and \code{v2}, given the threshold \code{k}.
 #'
 #' The causal tail coefficient is defined in
-#' the paper "Causality in heavy-tailed models" and has two formulations.
+#' the paper "Causal discovery in heavy-tailed models" and has
+#' two formulations.
 #' \enumerate{
 #' \item The first formulation is defined in the paper as the
 #' \eqn{\Gamma}-coefficient, and it considers only the upper tails of the
@@ -19,7 +20,7 @@
 #' @param v1,v2 Numeric vectors. Two vectors with \code{n} observations.
 #' @param k Positive integer. The number of extreme observations used to
 #' compute the causal tail coefficient. Set by default to
-#' \code{k = floor(2 * n^0.4)}. It must be greater than 1 and smaller
+#' \code{k = floor(n^0.4)}. It must be greater than 1 and smaller
 #' than \code{n}.
 #' @param to_rank Boolean. Are the vectors \code{v1} and \code{v2}
 #' already sorted?
@@ -32,7 +33,7 @@
 #' @return Numeric --- between 0 and 1.
 #' The causal tail coefficient between \code{v1} and \code{v2}.
 #' @export
-causal_tail_coeff <- function(v1, v2, k = floor(2 * n ^ 0.4), to_rank = TRUE,
+causal_tail_coeff <- function(v1, v2, k = floor(n ^ 0.4), to_rank = TRUE,
                               both_tails = TRUE){
   # number of observations
   n <- NROW(v1)
@@ -76,7 +77,7 @@ causal_tail_coeff <- function(v1, v2, k = floor(2 * n ^ 0.4), to_rank = TRUE,
 #' causal tail coefficient between the \eqn{i}-th and the \eqn{j}-th
 #' column of \code{dat}. The values on the main diagonal are set to \code{NA}.
 #' @export
-causal_tail_matrix <- function(dat, k = floor(2 * n ^ 0.4),
+causal_tail_matrix <- function(dat, k = floor(n ^ 0.4),
                                both_tails = TRUE){
 
   # get number of observations and variables
@@ -110,7 +111,7 @@ causal_tail_matrix <- function(dat, k = floor(2 * n ^ 0.4),
 #' Compute \eqn{\Psi}-coefficient
 #'
 #' Computes the theoretical \eqn{\Psi}-coefficient defined
-#' in the paper "Causality in heavy-tailed models".
+#' in the paper "Causal discovery in heavy-tailed models".
 #'
 #' For more information see the documentation of
 #' \code{\link{psi_matrix}}.
@@ -152,10 +153,10 @@ psi_coefficient <- function(adj_mat, i, j, tail_index){
 #' Compute \eqn{\Psi}-matrix
 #'
 #' Computes the theoretical \eqn{\Psi}-matrix defined
-#' in the paper "Causality in heavy-tailed models".
+#' in the paper "Causal discovery in heavy-tailed models".
 #'
 #' The causal tail coefficient is defined in
-#' the paper "Causality in heavy-tailed models" and has two formulations.
+#' the paper "Causal discovery in heavy-tailed models" and has two formulations.
 #' This function considers the \eqn{\Psi}-formulation, and assumes that the
 #' scales of the noise variables are equal to one.
 #'

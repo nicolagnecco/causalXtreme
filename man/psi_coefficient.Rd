@@ -21,7 +21,7 @@ between node \code{i} and \code{j} in the DAG \code{adj_mat}.
 }
 \description{
 Computes the theoretical \eqn{\Psi}-coefficient defined
-in the paper "Causality in heavy-tailed models".
+in the paper "Causal discovery in heavy-tailed models".
 }
 \details{
 For more information see the documentation of

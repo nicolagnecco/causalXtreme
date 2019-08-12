@@ -4,7 +4,7 @@
 \alias{causal_tail_coeff}
 \title{Estimate causal tail coefficient}
 \usage{
-causal_tail_coeff(v1, v2, k = floor(2 * n^0.4), to_rank = TRUE,
+causal_tail_coeff(v1, v2, k = floor(n^0.4), to_rank = TRUE,
   both_tails = TRUE)
 }
 \arguments{
@@ -12,7 +12,7 @@ causal_tail_coeff(v1, v2, k = floor(2 * n^0.4), to_rank = TRUE,
 
 \item{k}{Positive integer. The number of extreme observations used to
 compute the causal tail coefficient. Set by default to
-\code{k = floor(2 * n^0.4)}. It must be greater than 1 and smaller
+\code{k = floor(n^0.4)}. It must be greater than 1 and smaller
 than \code{n}.}
 
 \item{to_rank}{Boolean. Are the vectors \code{v1} and \code{v2}
@@ -35,7 +35,8 @@ Estimates the causal tail coefficient between two variables
 }
 \details{
 The causal tail coefficient is defined in
-the paper "Causality in heavy-tailed models" and has two formulations.
+the paper "Causal discovery in heavy-tailed models" and has
+two formulations.
 \enumerate{
 \item The first formulation is defined in the paper as the
 \eqn{\Gamma}-coefficient, and it considers only the upper tails of the

@@ -17,6 +17,6 @@ Numeric matrix. Dataset matrix with \code{n}
 rows (observations) and \code{p} columns (variables).
 }
 \description{
-Generate data from non-linear Structural Causal Model as shown in the
-paper "Causality in heavy-tailed models".
+Generate data from non-linear Structural Causal Model as described in the
+paper "Causal discovery in heavy-tailed models".
 }

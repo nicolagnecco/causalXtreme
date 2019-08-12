@@ -19,11 +19,11 @@ The values on the main diagonal are set to \code{NA}.
 }
 \description{
 Computes the theoretical \eqn{\Psi}-matrix defined
-in the paper "Causality in heavy-tailed models".
+in the paper "Causal discovery in heavy-tailed models".
 }
 \details{
 The causal tail coefficient is defined in
-the paper "Causality in heavy-tailed models" and has two formulations.
+the paper "Causal discovery in heavy-tailed models" and has two formulations.
 This function considers the \eqn{\Psi}-formulation, and assumes that the
 scales of the noise variables are equal to one.
 }

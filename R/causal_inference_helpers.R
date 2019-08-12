@@ -27,7 +27,7 @@ random_search <- function(dat){
 #' @inheritParams causal_tail_matrix
 #' @return  Numeric vector. The causal order estimated from the data.
 #' @export
-ease <- function(dat, k = floor(2 * n ^ 0.4),
+ease <- function(dat, k = floor(n ^ 0.4),
                                     both_tails = TRUE){
   # set up variables
   n <- NROW(dat)
