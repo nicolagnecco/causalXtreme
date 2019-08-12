@@ -4,7 +4,7 @@ causalXtreme
 ============
 
 <!-- badges: start -->
-[![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing) [![Travis build status](https://api.travis-ci.org/nicolagnecco/causalXtreme.svg?branch=master)](https://travis-ci.org/nicolagnecco/causalXtreme) <!-- badges: end -->
+[![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing) [![Travis build status](https://api.travis-ci.org/nicolagnecco/causalXtreme.svg?branch=master)](https://travis-ci.org/nicolagnecco/causalXtreme) [![codecov](https://codecov.io/gh/nicolagnecco/causalXtreme/branch/master/graph/badge.svg)](https://codecov.io/gh/nicolagnecco/causalXtreme) <!-- badges: end -->
 
 The goal of causalXtreme is to provide an interface to perform causal discovery in linear structural equation models (SEM) with heavy-tailed noise. For more details see the paper "Causal discovery in heavy-tailed models" from Gnecco, N., Meinshausen, N., Peters, J., and, Engelke, S.
 
@@ -53,8 +53,8 @@ At this point, we can compute the *causal tail coefficients* between the two var
 ``` r
 causal_tail_matrix(dat = sem$dataset)
 #>           [,1]      [,2]
-#> [1,]        NA 0.9201667
-#> [2,] 0.6343333        NA
+#> [1,]        NA 0.9523333
+#> [2,] 0.4816667        NA
 ```
 
 We see that the coefficient *Γ*<sub>12</sub> ≈ 1 (entry (1, 2) of the matrix) and *Γ*<sub>21</sub> &lt; 1 (entry (2, 1) of the matrix). This is evidence for a causal relationship from *X*<sub>1</sub> to *X*<sub>2</sub>.
