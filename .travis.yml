@@ -2,6 +2,8 @@
 
 language: R
 cache: packages
+apt_packages:
+  - libv8-dev
 bioc_packages:
 - RBGL
 - graph

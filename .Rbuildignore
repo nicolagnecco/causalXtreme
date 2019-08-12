@@ -10,3 +10,4 @@
 # Files used to debug source code
 ^analysis$
 ^\.travis\.yml$
+^README\.Rmd$
