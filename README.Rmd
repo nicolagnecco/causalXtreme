@@ -21,7 +21,7 @@ status](https://api.travis-ci.org/nicolagnecco/causalXtreme.svg?branch=master)](
 [![codecov](https://codecov.io/gh/nicolagnecco/causalXtreme/branch/master/graph/badge.svg)](https://codecov.io/gh/nicolagnecco/causalXtreme)
 <!-- badges: end -->
 
-The goal of causalXtreme is to provide an interface to perform causal discovery in linear structural equation models (SEM) with heavy-tailed noise. For more details see the paper "Causal discovery in heavy-tailed models" from Gnecco, N., Meinshausen, N., Peters, J., and, Engelke, S.
+The goal of causalXtreme is to provide an interface to perform causal discovery in linear structural equation models (SEM) with heavy-tailed noise. For more details see the paper "Causal discovery in heavy-tailed models" from Gnecco, N., Meinshausen, N., Peters, J., and, Engelke, S. [https://arxiv.org/abs/1908.05097].
 
 ## Installation
 
