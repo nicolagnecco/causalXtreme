@@ -254,11 +254,13 @@ add_random_confounders <- function(dag, prob_confound){
 #' @return Numeric matrix. Dataset matrix with \code{n}
 #' rows (observations) and \code{p} columns (variables).
 simulate_noise <- function(n, p, distr = c("student_t", "gaussian",
-                                          "log_normal")[1], tail_index){
+                                          "log_normal"), tail_index){
 
   if (p <= 1 | n <= 1){
     stop("n and p must be larger than 1!")
   }
+
+  distr <- match.arg(distr)
 
   switch(distr,
          "student_t" = {
@@ -274,9 +276,7 @@ simulate_noise <- function(n, p, distr = c("student_t", "gaussian",
 
            noise <- array(stats::rlnorm(n * p), dim = c(n, p))
 
-         },
-         stop("Wrong distribution. Enter one of 'student_t',
-              'gaussian', 'log_normal'."))
+         })
 
   return(noise)
 }

@@ -43,6 +43,19 @@ test_that("lingam search works", {
   expect_equal(lingam_search(dat4, contrast_fun = "exp"), dag2)
 })
 
+test_that("order-lingam search works", {
+  set.seed(u)
+  order <- estLiNGAM(dat1, only.perm = T, fun = "logcosh")$k
+  set.seed(u)
+  expect_equal(order_lingam_search(dat1, "logcosh"), order)
+  expect_equal(order_lingam_search(dat2), NA)
+
+  set.seed(u)
+  order <- estLiNGAM(dat4, only.perm = T, fun = "exp")$k
+  set.seed(u)
+  expect_equal(order_lingam_search(dat4, contrast_fun = "exp"), order)
+})
+
 test_that("pc search works", {
   out <- pcalg::pc(suffStat = list(C = cor(dat1), n = NROW(dat1)),
                    indepTest = pcalg::gaussCItest,

@@ -59,7 +59,8 @@ ease <- function(dat, k = floor(n ^ 0.4),
 
 #' Lingam search
 #'
-#' Runs Lingam given a dataset \code{dat}.
+#' Runs Lingam given a dataset \code{dat}. Returns the DAG estimated from the
+#' data using the LiNGAM-ICA algorithm.
 #'
 #' This function is a wrapper around \code{estLiNGAM} from the package
 #' \code{pcalg} (see \url{https://CRAN.R-project.org/package=pcalg }).
@@ -83,7 +84,9 @@ ease <- function(dat, k = floor(n ^ 0.4),
 #' @return Square binary matrix (or \code{NA} in case of error).
 #' The DAG estimated from the data.
 #' @export
-lingam_search <- function(dat, contrast_fun = c("logcosh", "exp")[1]){
+lingam_search <- function(dat, contrast_fun = c("logcosh", "exp")){
+
+  contrast_fun <- match.arg(contrast_fun)
 
   out <- tryCatch({
     t.k <- estLiNGAM(dat, only.perm = T, fun = contrast_fun)$k
@@ -95,6 +98,51 @@ lingam_search <- function(dat, contrast_fun = c("logcosh", "exp")[1]){
   error = function(e){
     dag <- NA
     return(dag)
+  })
+
+  return(out)
+}
+
+
+#' Order-Lingam search
+#'
+#' Runs Order-Lingam given a dataset \code{dat}. Returns the causal order
+#' estimated from the data using the first step of
+#' the LiNGAM-ICA algorithm.
+#'
+#' This function is a wrapper around \code{estLiNGAM} from the package
+#' \code{pcalg} (see \url{https://CRAN.R-project.org/package=pcalg }).
+#' The function \code{estLiNGAM} is slightly modified
+#' to allow for different contrast functions in the fast-ICA step of
+#' LiNGAM. To modify \code{estLiNGAM}, we included in this package
+#' several internal functions from\code{pcalg}.
+#' All the credits go to the authors of the \code{pcalg} package:
+#'
+#' Markus Kalisch, Alain Hauser , Martin Maechler, Diego Colombo,
+#' Doris Entner, Patrik Hoyer, Antti Hyttinen, Jonas Peters,
+#' Nicoletta Andri, Emilija Perkovic, Preetam Nandy, Philipp Ruetimann,
+#' Daniel Stekhoven, Manuel Schuerch, Marco Eigenmann.
+#'
+#' @inheritParams causal_tail_matrix
+#' @param contrast_fun Character. The functional form of the contrast
+#' function used in the Fast-ICA step. It is one of \code{"logcosh"}
+#' (the default choice) and \code{"exp"}.
+#' For further details see the paper from
+#' Hyvarinen, A., \url{https://ieeexplore.ieee.org/abstract/document/761722/}.
+#' @return Numeric vector (or \code{NA} in case of error).
+#' The causal order estimated from the data.
+#' @export
+order_lingam_search <- function(dat, contrast_fun = c("logcosh", "exp")){
+
+  contrast_fun <- match.arg(contrast_fun)
+
+  out <- tryCatch({
+    order <- estLiNGAM(dat, only.perm = T, fun = contrast_fun)$k
+    return(order)
+  },
+  error = function(e){
+    order <- NA
+    return(order)
   })
 
   return(out)

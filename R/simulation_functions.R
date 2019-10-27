@@ -21,13 +21,15 @@
 #' }
 #' @export
 simulate_data <- function(n, p, prob_connect,
-                         distr = c("student_t", "log_norm", "norm")[1],
+                         distr = c("student_t", "gaussian", "log_normal"),
                          tail_index = 1.5, has_confounder = FALSE,
                          is_nonlinear = FALSE, has_uniform_margins = FALSE){
 
   if (p <= 1 | n <= 1){
     stop("n and p must be larger than 1!")
   }
+
+  distr <- match.arg(distr)
 
   # Simulate random DAG
   dag <- random_dag(p = p, prob_connect = prob_connect)

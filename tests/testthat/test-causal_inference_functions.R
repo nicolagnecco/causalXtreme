@@ -67,6 +67,15 @@ est_ext_cpdag5 <- rbind(c(0, 1, 1, 0, 0),
 
 # Run tests
 test_that("causal discovery works", {
+  expect_error(causal_discovery(dat, set_args =  list(foobar = 20, both_tails = T)))
+  expect_error(causal_discovery(dat, set_args = list(k = 20, foobar = T)))
+  expect_error(causal_discovery(dat, set_args = list(foobar = 20, foobar = T)))
+  expect_error(causal_discovery(dat, set_args =
+                                  list(k = 20, both_tails = T, foobar = 3)))
+  expect_length(causal_discovery(dat, set_args = list(k = 20, both_tails = T)), 2)
+  expect_length(causal_discovery(dat,set_args = list(k = 20)), 2)
+  expect_length(causal_discovery(dat, set_args = list(both_tails = T)), 2)
+  expect_length(causal_discovery(dat), 2)
   expect_error(causal_discovery(dat, "ease", list(foobar = 20, both_tails = T)))
   expect_error(causal_discovery(dat, "ease", list(k = 20, foobar = T)))
   expect_error(causal_discovery(dat, "ease", list(foobar = 20, foobar = T)))
@@ -82,6 +91,13 @@ test_that("causal discovery works", {
   expect_length(causal_discovery(dat, "lingam", list(contrast_fun = "exp")), 2)
   expect_length(causal_discovery(dat, "lingam"), 2)
   expect_length(causal_discovery(dat2, "lingam"), 2)
+  expect_error(causal_discovery(dat, "order_lingam", list(foobar = "exp")))
+  expect_error(causal_discovery(dat, "order_lingam",
+                                list(contrast_fun = "logcosh", foobar = "exp")))
+  expect_length(causal_discovery(dat, "order_lingam",
+                                 list(contrast_fun = "exp")), 2)
+  expect_length(causal_discovery(dat, "order_lingam"), 2)
+  expect_length(causal_discovery(dat2, "order_lingam"), 2)
   expect_error(causal_discovery(dat, "pc", list(foobar = 5e-3)))
   expect_error(causal_discovery(dat, "pc", list(alpha = 5e-3, foobar = 2)))
   expect_length(causal_discovery(dat, "pc", list(alpha = 5e-3)), 2)
@@ -94,7 +110,6 @@ test_that("causal discovery works", {
   expect_length(causal_discovery(dat2, "pc_rank"), 2)
   expect_error(causal_discovery(dat, "random", list(foobar = 5e-3)))
   expect_length(causal_discovery(dat, "random"), 2)
-  expect_error(causal_discovery(dat))
   expect_error(causal_discovery(dat, "foobar"))
 })
 
@@ -129,7 +144,13 @@ test_that("causal metrics work", {
   est_graphs <- list(est_g = est_dag4,
                      est_cpdag = est_cpdag4)
 
-  out <- list(sid = compute_str_int_distance(true_dag3, est_ext_dag4),
+  p_obs <- NROW(est_graphs$est_g)
+  p <- NROW(sim_data$dag)
+
+  sid <- compute_str_int_distance(true_dag3, est_ext_dag4) *
+    (p * (p - 1)) / (p_obs * (p_obs - 1))
+
+  out <- list(sid = sid,
               shd = compute_str_ham_distance(true_red_cpdag3, est_cpdag4))
   expect_equal(causal_metrics(sim_data, est_graphs), out)
 

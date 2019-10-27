@@ -6,16 +6,16 @@
 #' This method is a wrapper around the individual causal
 #' search functions. For each causal method, it returns a list
 #' that can be passed directly to the function \code{\link{causal_metrics}}
-#' for evaluation. In particular, the first entry of the returned list
+#' for evaluation. In particular, the first element of the returned list
 #' is a DAG (or CPDAG) and it is used to compute the structural intervention
 #' distance (see \code{\link{compute_str_int_distance}}).
-#' The second entry is a CPDAG and it is used to compute the
+#' The second element of the list is a CPDAG and it is used to compute the
 #' structural Hamming distance (see \code{\link{compute_str_ham_distance}}).
 #'
 #' @inheritParams causal_tail_matrix
 #' @param method String. Is one of:
 #' \itemize{
-#' \item \code{"ease"}, see \code{\link{ease}}.
+#' \item \code{"ease"} (the default choice), see \code{\link{ease}}.
 #' \item \code{"lingam"}, see \code{\link{lingam_search}}.
 #' \item \code{"pc"}, see \code{\link{pc_search}}.
 #' \item \code{"pc_rank"}, see \code{\link{pc_rank_search}}.
@@ -37,19 +37,12 @@
 #' The estimated CPDAG.
 #' }
 #' @export
-causal_discovery <- function(dat, method = c("ease", "lingam", "pc",
-                                             "pc_rank", "random"),
+causal_discovery <- function(dat, method = c("ease", "lingam", "order_lingam",
+                                             "pc", "pc_rank", "random"),
                              set_args = list()){
 
   # check method
-  if (missing(method)){
-    stop("Please, provide one of 'ease', 'lingam', 'pc', 'pc_rank', 'random'.")
-  }
-
-  if (!(method %in% c("ease", "lingam", "pc", "pc_rank", "random"))){
-    stop(paste("The passed method must be one of",
-               "'ease', 'lingam', 'pc', 'pc_rank', 'random'."))
-  }
+  method <- match.arg(method)
 
   # set up output list
   out <- list(est_g = NA, est_cpdag = NA)
@@ -109,6 +102,44 @@ causal_discovery <- function(dat, method = c("ease", "lingam", "pc",
 
            # compute DAG/CPDAG and CPDAG
            out$est_g <- dag
+           out$est_cpdag <- if (all(is.na(out$est_g))) {
+             NA
+           } else {
+             dag_to_cpdag(out$est_g)
+           }
+
+         },
+         "order_lingam" = {
+
+           # check arguments
+           if (length(set_args) == 0){
+
+             caus_order <- order_lingam_search(dat)
+
+           } else if (length(set_args) <= 1){
+
+             if (all(names(set_args) %in% c("contrast_fun"))){
+
+               caus_order <- purrr::pmap(set_args,
+                                         order_lingam_search, dat = dat)[[1]]
+
+             } else{
+
+               stop(paste("Arguments for", toupper(method),
+                          "must be 'contrast_fun'."))
+             }
+           } else{
+
+             stop(paste(toupper(method), "accepts at most 1 argument."))
+           }
+
+           # compute DAG/CPDAG and CPDAG
+           out$est_g <- if(all(is.na(caus_order))){
+             NA
+           } else {
+             caus_order_to_dag(caus_order)
+           }
+
            out$est_cpdag <- if (all(is.na(out$est_g))) {
              NA
            } else {
@@ -286,7 +317,13 @@ causal_metrics <- function(simulated_data, estimated_graphs){
     # SID: extend estimated DAG/CPDAG so that they have the confounders
     extended_est_g <- true_dag
     extended_est_g[-pos_confounders, -pos_confounders] <- est_g
-    out$sid <- compute_str_int_distance(true_dag, extended_est_g)
+    sid <- compute_str_int_distance(true_dag, extended_est_g)
+    p_obs <- NCOL(est_g)
+    p <- NCOL(true_dag)
+    # adjust for the number of observed variables (not for the total number of
+    # variables p = p_obs + p_confounded)
+    out$sid <- sid * (p * (p - 1)) / (p_obs * (p_obs - 1))
+
 
     # SHD: remove confounders from the true DAG and cast it into CPDAG
     reduced_true_dag <- true_dag[-pos_confounders, -pos_confounders]
