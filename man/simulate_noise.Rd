@@ -4,7 +4,7 @@
 \alias{simulate_noise}
 \title{Simulate noise observations}
 \usage{
-simulate_noise(n, p, distr = c("student_t", "gaussian", "log_normal")[1],
+simulate_noise(n, p, distr = c("student_t", "gaussian", "log_normal"),
   tail_index)
 }
 \arguments{

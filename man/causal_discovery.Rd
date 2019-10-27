@@ -4,8 +4,8 @@
 \alias{causal_discovery}
 \title{Perform causal discovery}
 \usage{
-causal_discovery(dat, method = c("ease", "lingam", "pc", "pc_rank",
-  "random"), set_args = list())
+causal_discovery(dat, method = c("ease", "lingam", "order_lingam", "pc",
+  "pc_rank", "random"), set_args = list())
 }
 \arguments{
 \item{dat}{Numeric matrix. Dataset matrix with \code{n}
@@ -13,7 +13,7 @@ rows (observations) and \code{p} columns (variables).}
 
 \item{method}{String. Is one of:
 \itemize{
-\item \code{"ease"}, see \code{\link{ease}}.
+\item \code{"ease"} (the default choice), see \code{\link{ease}}.
 \item \code{"lingam"}, see \code{\link{lingam_search}}.
 \item \code{"pc"}, see \code{\link{pc_search}}.
 \item \code{"pc_rank"}, see \code{\link{pc_rank_search}}.
@@ -46,9 +46,9 @@ For more information see 'Details'.
 This method is a wrapper around the individual causal
 search functions. For each causal method, it returns a list
 that can be passed directly to the function \code{\link{causal_metrics}}
-for evaluation. In particular, the first entry of the returned list
+for evaluation. In particular, the first element of the returned list
 is a DAG (or CPDAG) and it is used to compute the structural intervention
 distance (see \code{\link{compute_str_int_distance}}).
-The second entry is a CPDAG and it is used to compute the
+The second element of the list is a CPDAG and it is used to compute the
 structural Hamming distance (see \code{\link{compute_str_ham_distance}}).
 }
