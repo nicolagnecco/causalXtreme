@@ -21,9 +21,8 @@ Numeric vector (or \code{NA} in case of error).
 The causal order estimated from the data.
 }
 \description{
-Runs Order-Lingam given a dataset \code{dat}. Returns the causal order
-estimated from the data using the first step of
-the LiNGAM-ICA algorithm.
+Runs order-Lingam given a dataset \code{dat}. Returns the causal order
+estimated from the data using the LiNGAM-ICA algorithm.
 }
 \details{
 This function is a wrapper around \code{estLiNGAM} from the package

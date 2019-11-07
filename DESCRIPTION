@@ -9,12 +9,12 @@ Authors@R:
     "Sebastian Engelke [aut]"
     ))
 Description: Functions for causal structure learning based on the paper 
-    "Causal discovery in heavy-tailed models" from Gnecco, N., Meinshausen, N.,
-    Peters, J., and, Engelke, S, <arXiv:1908.05097>.
-    Extremal ancestral search (EASE) is the main
-    algorithm algorithm to recover the causal order of a heavy-tailed 
-    structural causal model (SCM). To compare EASE with other methods,
-    we provide wrapper functions around LiNGAM-ICA, PC and PC-Rank algorithm.
+    'Causal discovery in heavy-tailed models' by Gnecco, Meinshausen,
+    Peters, and Engelke, (2018) <arXiv:1908.05097>.
+    Extremal ancestral search (EASE) is the main algorithm to recover the causal
+    order of a heavy-tailed structural causal model (SCM). To compare EASE with
+    other methods, we provide wrapper functions around LiNGAM-ICA, PC and 
+    PC-Rank algorithm.
 Encoding: UTF-8
 License: GPL-3
 LazyData: true
@@ -29,3 +29,4 @@ Imports:
     methods (>= 3.6.1),
     fastICA (>= 1.2.1),
     purrr (>= 0.3.2)
+biocViews:
