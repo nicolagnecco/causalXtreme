@@ -6,8 +6,5 @@ r_packages:
   - covr
 apt_packages:
   - libv8-dev
-bioc_packages:
-- RBGL
-- graph
 after_success:
   - Rscript -e 'library(covr);codecov()'
