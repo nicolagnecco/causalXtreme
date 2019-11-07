@@ -87,6 +87,8 @@ ease <- function(dat, k = floor(n ^ 0.4),
 lingam_search <- function(dat, contrast_fun = c("logcosh", "exp")){
 
   contrast_fun <- match.arg(contrast_fun)
+  n <- NROW(dat)
+  p <- NCOL(dat)
 
   out <- tryCatch({
     t.k <- estLiNGAM(dat, only.perm = T, fun = contrast_fun)$k
@@ -135,6 +137,8 @@ lingam_search <- function(dat, contrast_fun = c("logcosh", "exp")){
 order_lingam_search <- function(dat, contrast_fun = c("logcosh", "exp")){
 
   contrast_fun <- match.arg(contrast_fun)
+  n <- NROW(dat)
+  p <- NCOL(dat)
 
   out <- tryCatch({
     order <- estLiNGAM(dat, only.perm = T, fun = contrast_fun)$k
