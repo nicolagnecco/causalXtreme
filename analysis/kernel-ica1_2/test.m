@@ -1,0 +1,81 @@
+rng(42)
+n = 1e5;
+X1 = randn(1, n);
+X2 = X1 + randn(1, n);
+Cov = cov(X1, X2);
+R2 = X2 - Cov(1, 2) / Cov(1, 1) * X1;
+
+x = [R2; X1];
+
+
+
+% Call Kernel ICA
+[m,N]=size(x);
+
+
+% set the parameters
+contrast='kgv';
+% contrast='kcca';
+if N < 1000
+    sigma=1;
+    kappa=2e-2;
+else % Added by SS (24 Sep 2010)
+    sigma = 1/2;
+    kappa = 2e-3;
+end
+
+kernel='gaussian';
+
+mc=m;
+kparam.kappas=kappa*ones(1,mc);
+kparam.etas=kappa*1e-2*ones(1,mc);
+kparam.neigs=N*ones(1,mc);
+kparam.nchols=N*ones(1,mc);
+kparam.kernel=kernel;
+kparam.sigmas=sigma*ones(1,mc);
+%
+% tic
+% contrast_ica(contrast, x, kparam)
+% toc
+%
+%
+% csvwrite('../X_mat.csv', x')
+%% function contrast_ica
+
+N=size(x,2);		% number of data points
+m=size(x,1);      % number of components
+kappas=kparam.kappas;
+etas=kparam.etas;
+Rkappa=[];
+sizes=[];
+i = 1;
+[G,Pvec] =chol_gauss(x(i,:)/kparam.sigmas(i),1,N*kparam.etas(i));
+%% regularization (see paper for details)
+[A,D]=eig(G'*G);
+D=diag(D);
+
+%%
+indexes=find(D>=N*etas(i) & isreal(D)); %removes small eigenvalues
+[newinds,order]=sort(D(indexes));
+
+%%
+order=flipud(order);
+
+%%
+neig=length(indexes);
+indexes=indexes(order(1:neig));
+if (isempty(indexes)), indexes=[1]; end
+D=D(indexes);
+V=G*(A(:,indexes)*diag(sqrt(1./(D))));
+Us{i}=V;
+Lambdas{i}=D;
+Dr=D;
+for j=1:length(D)
+    Dr(j)=D(j)/(N*kappas(i)+D(j));
+end
+Drs{i}=Dr;
+sizes(i)=size(Drs{i},1);
+
+
+
+center

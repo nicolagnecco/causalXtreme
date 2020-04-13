@@ -111,48 +111,6 @@ end
 %
 % end
 
-function [J] = my_call_contrast(x)
-% Author: Yasuhiro Sogawa
-% Modified by SS (27 Sep 2010)
-% my_call_contrast - set parameters of KernelICA.
-% and call a contrast function employed in KernelICA.
-% The details of the parameters are shown in section 4.5,
-% "Kernel Independent Component Analysis" (F. R. Bachand and M.I.Jordan).
-
-[m,N]=size(x);
-
-% set the parameters
-contrast='kgv';
-% contrast='kcca';
-if N < 1000
-    sigma=1;
-    kappa=2e-2;
-else % Added by SS (24 Sep 2010)
-    sigma = 1/2;
-    kappa = 2e-3;
-end
-
-kernel='gaussian';
-
-mc=m;
-kparam.kappas=kappa*ones(1,mc);
-kparam.etas=kappa*1e-2*ones(1,mc);
-kparam.neigs=N*ones(1,mc);
-kparam.nchols=N*ones(1,mc);
-kparam.kernel=kernel;
-kparam.sigmas=sigma*ones(1,mc);
-
-% Commented out by SS (24 Sep 2010)
-% % scales data
-% covmatrix=x*x'/N;
-% sqrcovmatrix=sqrtm(covmatrix);
-% invsqrcovmatrix=inv(sqrcovmatrix);
-% x=invsqrcovmatrix*x;
-
-% perform contrast function
-J = contrast_ica(contrast,x,kparam);
-
-end
 
 function R = computeR( X, candidates, U_K, M )
 
@@ -218,3 +176,48 @@ end
 [minval, index] = min(T);
 
 end
+
+
+function [J] = my_call_contrast(x)
+% Author: Yasuhiro Sogawa
+% Modified by SS (27 Sep 2010)
+% my_call_contrast - set parameters of KernelICA.
+% and call a contrast function employed in KernelICA.
+% The details of the parameters are shown in section 4.5,
+% "Kernel Independent Component Analysis" (F. R. Bachand and M.I.Jordan).
+
+[m,N]=size(x);
+
+% set the parameters
+contrast='kgv';
+% contrast='kcca';
+if N < 1000
+    sigma=1;
+    kappa=2e-2;
+else % Added by SS (24 Sep 2010)
+    sigma = 1/2;
+    kappa = 2e-3;
+end
+
+kernel='gaussian';
+
+mc=m;
+kparam.kappas=kappa*ones(1,mc);
+kparam.etas=kappa*1e-2*ones(1,mc);
+kparam.neigs=N*ones(1,mc);
+kparam.nchols=N*ones(1,mc);
+kparam.kernel=kernel;
+kparam.sigmas=sigma*ones(1,mc);
+
+% Commented out by SS (24 Sep 2010)
+% % scales data
+% covmatrix=x*x'/N;
+% sqrcovmatrix=sqrtm(covmatrix);
+% invsqrcovmatrix=inv(sqrcovmatrix);
+% x=invsqrcovmatrix*x;
+
+% perform contrast function
+J = contrast_ica(contrast,x,kparam);
+
+end
+
