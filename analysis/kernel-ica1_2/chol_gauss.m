@@ -26,6 +26,7 @@ G=[];
 
 while ((sum(diagG(i:n))>tol)) 
    G=[G zeros(n,1)];
+   
    % find best new element
    if i>1
       [diagmax,jast]=max(diagG(i:n));
@@ -35,6 +36,7 @@ while ((sum(diagG(i:n))>tol))
       % updates all elements of G due to new permutation
       G([i jast],1:i)=G([ jast i],1:i);
       % do the cholesky update
+      
       
       
    else
@@ -55,12 +57,13 @@ while ((sum(diagG(i:n))>tol))
       end
       
    end
-   
+%    disp(sum(sqdist(x(:, Pvec((i+1):n) ),x(:,Pvec(i))))) % !!!
    % updates diagonal elements
    if (i<n) 
       diagG((i+1):n)=ones(n-i,1)-sum(   G((i+1):n,1:i).^2,2  );
    end
    i=i+1;
+   
 end
 
 

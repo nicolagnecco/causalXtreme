@@ -43,11 +43,12 @@ for i=1:m
    case 'poly'
       [G,Pvec] =chol_poly(x(i,:),kparam.rs(i),kparam.ss(i),kparam.ds(i),N*etas(i)); 
    end
-   
+
    [a,Pvec]=sort(Pvec);
    G=centerpartial(G(Pvec,:));
    
    % regularization (see paper for details)
+   
    [A,D]=eig(G'*G);
    D=diag(D);
    indexes=find(D>=N*etas(i) & isreal(D)); %removes small eigenvalues
@@ -81,7 +82,6 @@ for i=2:m
 end
 
 
-
 switch contrast
 case 'kcca'
    OPTIONS.disp=0;
@@ -110,7 +110,8 @@ case 'kcca'
    end
    
 case 'kgv'
-   D=det(Rkappa);     
+   D=det(Rkappa);
+   
    J=-.5*log(D);
    if (nargout>1)
       % outputs details

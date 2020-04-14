@@ -1,3 +1,4 @@
+clc
 rng(42)
 n = 1e5;
 X1 = randn(1, n);
@@ -8,6 +9,7 @@ R2 = X2 - Cov(1, 2) / Cov(1, 1) * X1;
 x = [R2; X1];
 
 
+x = x(:, 1:100);
 
 % Call Kernel ICA
 [m,N]=size(x);
@@ -33,23 +35,26 @@ kparam.neigs=N*ones(1,mc);
 kparam.nchols=N*ones(1,mc);
 kparam.kernel=kernel;
 kparam.sigmas=sigma*ones(1,mc);
-%
-% tic
-% contrast_ica(contrast, x, kparam)
-% toc
-%
-%
+
+tic
+J = contrast_ica(contrast, x, kparam);
+toc
+
+%%
 % csvwrite('../X_mat.csv', x')
 %% function contrast_ica
-
-N=size(x,2);		% number of data points
+clc
+format long g
+N=size(x,2); 		% number of data points
 m=size(x,1);      % number of components
 kappas=kparam.kappas;
 etas=kparam.etas;
 Rkappa=[];
 sizes=[];
 i = 1;
-[G,Pvec] =chol_gauss(x(i,:)/kparam.sigmas(i),1,N*kparam.etas(i));
+tic
+[G,Pvec] =chol_gauss(x(i,1:100)/kparam.sigmas(i),1,N*kparam.etas(i));
+toc
 %% regularization (see paper for details)
 [A,D]=eig(G'*G);
 D=diag(D);
@@ -76,6 +81,10 @@ end
 Drs{i}=Dr;
 sizes(i)=size(Drs{i},1);
 
-
-
-center
+%% Try direct lingam
+clc
+clear all
+rng(32)
+X = randn(2, 100);
+X = [X(1, :); X(1, :)];
+A = Dlingam(X); 

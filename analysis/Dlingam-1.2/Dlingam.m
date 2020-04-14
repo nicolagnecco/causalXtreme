@@ -74,11 +74,11 @@ for m = 1:p-1
     else
         candidates = exogenous;
     end
-    
+
     % (a) %
     % calculate R
     R = computeR( X, candidates, U_K, M );
-    
+
     % skip exogenous finding if it is found
     if length(candidates) == 1
         index = candidates;
@@ -86,13 +86,13 @@ for m = 1:p-1
         % find exogenous
         index = findindex( X, R, candidates, U_K );
     end
-    
+
     % (b) %
     K(m) = index;
     U_K(U_K == index) = [];
     M(:,index) = NaN;
     M(index,:) = NaN;
-    
+
     % (c) %
     X = R(:,:,index);
 end
@@ -147,7 +147,7 @@ for j = candidates
     %                 Corr = corrcoef([g(R(i,:,j)); X(j,:); R(i,:,j); g(X(j,:))]');
     %                 T(j) = T(j) + abs(Corr(1,2)) + abs(Corr(3,4));
     %             end
-    
+
     if minT == -1 %% SS (24 Sep 2010) Input: minT, X, R, j
         T(j) = 0;
         for i = setdiff(U_K, j)
@@ -160,16 +160,16 @@ for j = candidates
         for i = setdiff(U_K, j)
             J = my_call_contrast([R(i,:,j); X(j,:)]); %using kernel based independence measure
             T(j) = T(j) + J;
-            
+
             if T(j) > minT
                 T(j) = Inf;
                 break;
             end
-            
+
         end
         minT = min( [ T(j), minT ] );
     end %% SS (24 Sep 2010) Output: minT, T(j)
-    
+
 end
 
 % find argmin T
