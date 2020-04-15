@@ -98,6 +98,7 @@ rm(list = ls())
 library(bench)
 library(Rcpp)
 sourceCpp("analysis/chol_gaussc.cpp")
+sourceCpp("analysis/contrast_ica.cpp")
 source("analysis/kernel_ica_test.R")
 
 x <- rbind(1:3, 4:6)
@@ -122,5 +123,9 @@ bench::mark(
 )
 
 
-sourceCpp("analysis/contrast_ica.cpp")
-contrast_ica(xx, 1, 1, 1)
+Rcpp::sourceCpp("analysis/chol_gaussc.cpp")
+x <- rbind(1:3, 4:6)
+contrast_ica(x, 1, .3, 1)
+chol_gaussc(x[2, , drop = FALSE], 1, .3*3)
+
+

@@ -1,5 +1,6 @@
 #include <RcppArmadillo.h>
 #include <math.h>
+#include <chol_gaussc.h>
 // [[Rcpp::depends(RcppArmadillo)]]
 
 using namespace Rcpp;

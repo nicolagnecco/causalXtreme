@@ -14,17 +14,16 @@ using namespace arma;
 //   http://adv-r.had.co.nz/Rcpp.html
 //   http://gallery.rcpp.org/
 //
-
 // [[Rcpp::export]]
-Rcpp::List chol_gaussc(Rcpp::NumericMatrix x, double sigma, double tol) {
+Rcpp::List chol_gaussc(Rcpp::NumericVector x, double sigma, double tol) {
   // Variable definition
   int m, n, nmax, i, iter, j, jast;
   double residual, a, b, c, maxdiagG;
 
   // Variable instantiation
-  m = x.nrow(); /* dimension of input space might be greater than 1*/
-  n = x.ncol(); /* number of samples */
-  nmax = 20 * 3 * m / 2;
+  // m = x.nrow(); /* dimension of input space might be greater than 1*/
+  n = x.size(); /* number of samples */
+  nmax = 20 * 3  / 2;
 
   // Dynamic vectors
   Rcpp::NumericVector diagG(n);
@@ -129,4 +128,40 @@ Rcpp::List chol_gaussc(Rcpp::NumericMatrix x, double sigma, double tol) {
     Rcpp::Named("G") = g_out,
     Rcpp::Named("Pvec") = pvec_out
   );
+}
+
+// [[Rcpp::export]]
+Rcpp::List contrast_ica(const arma::mat & X, double sigma, double eta, double kappa) {
+
+  int i, N, m;
+  arma::mat Rkappa;
+  arma::mat sizes;
+  Rcpp::NumericVector x;
+  Rcpp::List res;
+
+  N = X.n_cols;
+  m = X.n_rows;
+
+  // convert from armadillo to rcpp
+  NumericMatrix mymat = NumericMatrix(m, N, X.begin());
+
+  for (i = 0; i < m; ++i){
+
+    // subset matrix
+    x = mymat(i, _);
+
+    // pass it to chol_gaussc
+    res = chol_gaussc(x / sigma, 1, N * eta);
+
+  }
+
+  return Rcpp::List::create(
+    Rcpp::Named("m") = m,
+    Rcpp::Named("N") =  N,
+    Rcpp::Named("v") = x,
+    Rcpp::Named("res") = res,
+    Rcpp::Named("i") = i
+  );
+
+  // return 2;
 }
