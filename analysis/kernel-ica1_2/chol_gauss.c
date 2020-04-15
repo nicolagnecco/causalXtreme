@@ -1,6 +1,6 @@
 #include "mex.h"
 #include <math.h>
-    
+
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {
 double *z,a,b,c,maxdiagG;
@@ -13,7 +13,7 @@ double *x, *y, residual;
 
 m = mxGetM(prhs[0]); /* dimension of input space might be greater than 1*/
 n = mxGetN(prhs[0]); /* number of samples */
-x = mxGetPr(prhs[0]); 
+x = mxGetPr(prhs[0]);
 temp=mxGetPr(prhs[1]);
 sigma=*temp;
 temp=mxGetPr(prhs[2]);
@@ -24,7 +24,7 @@ if (nrhs>3)
 	nmax=*temp;
 	if (nmax==0) nmax=20*3*m/2; else nmax+=1+nmax/8;
 	}
-	else nmax=20*3*m/2; 
+	else nmax=20*3*m/2;
 
 diagG= (double*) calloc (n,sizeof(double));
 G= (double*) calloc (nmax*n,sizeof(double));
@@ -63,8 +63,7 @@ if (jast!=iter)
 
 G[iter*(n+1)]=sqrt(diagG[jast]);
 a=-.5/sigma/sigma;
-
-for (i=iter+1; i<=n-1; i++) 
+for (i=iter+1; i<=n-1; i++)
 	{
 	if (m<=1)
 		b=(x[pp[iter]]-x[pp[i]])*(x[pp[iter]]-x[pp[i]]);
@@ -84,7 +83,7 @@ if (iter>0)
 	for (j=0; j<=iter-1; j++)
 		for (i=iter+1; i<=n-1; i++) G[i+n*iter]-=G[i+n*j]*G[iter+n*j];
 
-for (i=iter+1; i<=n-1; i++) 
+for (i=iter+1; i<=n-1; i++)
 	{
 	G[i+n*iter]/=G[iter*(n+1)];
 	}
@@ -106,18 +105,18 @@ for (i=iter+1; i<=n-1; i++)
 		maxdiagG=b;
 		}
       residual+=b;
-	} 
+	}
 
 iter++;
 }
 
-plhs[0]=mxCreateDoubleMatrix(n,iter,0); 
-z= mxGetPr(plhs[0]); 
+plhs[0]=mxCreateDoubleMatrix(n,iter,0);
+z= mxGetPr(plhs[0]);
 for (i=0;i<=n*iter-1;i++) z[i]=G[i];
 
 
-plhs[1]=mxCreateDoubleMatrix(1,n,0); 
-z= mxGetPr(plhs[1]); 
+plhs[1]=mxCreateDoubleMatrix(1,n,0);
+z= mxGetPr(plhs[1]);
 for (i=0;i<=n-1;i++) z[i]=0.0+pp[i];
 
 free(diagG);

@@ -16,7 +16,7 @@ contrast_ica <- function(contrast, x, kparam){
   Drs <- list()
 
   for (i in 1:m){
-    res <- chol_gauss(x[i, , drop = FALSE] / kparam$sigmas[i], 1, N * etas[i])
+    res <- chol_gaussc(x[i, , drop = FALSE] / kparam$sigmas[i], 1, N * etas[i])
     G <- res$G
     # file_nm <-  paste("analysis/G", i, ".csv", sep = "") # !!!
     # G <- as.matrix(read.csv(file_nm, header = FALSE)) # !!!
@@ -29,9 +29,14 @@ contrast_ica <- function(contrast, x, kparam){
     G <- centerCols(G[Pvec, , drop = FALSE])
 
     # regularization (see paper for details)
-    eigen_decomp <- eigen(t(G) %*% G)
+    eigen_decomp <- eigen(crossprod(G))
     A <- eigen_decomp$vectors[, k:1, drop = FALSE]
     D <- eigen_decomp$values[k:1]
+
+
+    # eigen_decomp <- symm_eigen(crossprod(G))
+    # A <- eigen_decomp$vectors[, k:1, drop = FALSE]
+    # D <- as.numeric(eigen_decomp$values)[k:1]
 
     indexes <- which(D >= N * etas[i] & is.double(D));  #removes small eigenvalues
     newinds <- sort(D[indexes])
@@ -68,7 +73,7 @@ contrast_ica <- function(contrast, x, kparam){
 
   for (i in 2:m){
     for (j in 1:(i-1)){
-      newbottom <- diag(Drs[[i]], nrow = length(Drs[[i]])) %*% (t(Us[[i]]) %*% Us[[j]]) %*% diag(Drs[[j]], nrow = length(Drs[[j]]))
+      newbottom <- diag(Drs[[i]], nrow = length(Drs[[i]])) %*% crossprod(Us[[i]], Us[[j]]) %*% diag(Drs[[j]], nrow = length(Drs[[j]]))
       ran1 <- starts[i]:(starts[i] + sizes[i] - 1)
       ran2 <- starts[j]:(starts[j] + sizes[j] - 1)
       Rkappa[ran1, ran2] <- newbottom
@@ -154,7 +159,7 @@ chol_gauss <- function(x, sigma, tol){
   # return results
   res <- list()
   res$G <- G
-  res$Pvec <- Pvec
+  res$Pvec <- matrix(Pvec - 1, nrow = 1)
 
   return(res)
 }

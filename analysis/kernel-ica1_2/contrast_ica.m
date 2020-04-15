@@ -27,7 +27,7 @@ N=size(x,2);		% number of data points
 m=size(x,1);      % number of components
 kappas=kparam.kappas;
 etas=kparam.etas;
-Rkappa=[];
+Rkappa=[]
 sizes=[];
 for i=1:m
    % cholesky decomposition using a MEX-file

@@ -1,7 +1,4 @@
-rm(list = ls())
 
-library(tictoc)
-source("analysis/kernel_ica_test.R")
 # Main ####
 direct_lingam <- function(X){
   # perform direct lingam on dataset X
@@ -180,35 +177,5 @@ mutual_info <- function(x){
   return(J)
 }
 
-# Tests ####
-n <- 1e3
-p <- 20
 
-X <- read.csv("analysis/lingamX.csv", header = FALSE)
-X <- t(X)
-X1 <- rt(n, df = 2.5)
-X2 <- X1 + rt(n, df = 2.5)
-X3 <- rt(n, df = 2.5)
-X <- data.frame(X1, X1)
-
-library(causalXtreme)
-X <- simulate_data(500, 16, .2, has_confounder = FALSE)
-
-library(profvis)
-profvis(direct_lingam(X$dataset))
-
-est_g <- causalXtreme:::caus_order_to_dag(order_ling)
-est_cpdag <- causalXtreme:::dag_to_cpdag(est_g)
-ling_res <- list(est_g = est_g, est_cpdag = est_cpdag)
-
-tic()
-ease_res <- causal_discovery(X$dataset, "ease")
-toc()
-
-ica_res <- causal_discovery(X$dataset, "order_lingam")
-
-
-causal_metrics(X, ling_res)
-causal_metrics(X, ease_res)
-causal_metrics(X, ica_res)
 

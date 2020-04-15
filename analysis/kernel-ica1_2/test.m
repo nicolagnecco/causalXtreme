@@ -55,6 +55,12 @@ i = 1;
 tic
 [G,Pvec] =chol_gauss(x(i,1:100)/kparam.sigmas(i),1,N*kparam.etas(i));
 toc
+
+%% 
+x = [1:3;1:3];
+tic
+[G, pvec] = chol_gauss(x, 1, 1);
+toc
 %% regularization (see paper for details)
 [A,D]=eig(G'*G);
 D=diag(D);
@@ -88,3 +94,11 @@ rng(32)
 X = randn(2, 100);
 X = [X(1, :); X(1, :)];
 A = Dlingam(X); 
+
+%%
+X = csvread("../lingamX2.csv",1);
+X = X';
+
+tic
+A = Dlingam(X);
+toc
