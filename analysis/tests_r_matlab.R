@@ -3,10 +3,10 @@ library(causalXtreme)
 library(profvis)
 library(Rcpp)
 library(tictoc)
+devtools::load_all(".")
 
 # First tests ####
 rm(list = ls())
-source("analysis/direct_lingam_test.R")
 sourceCpp("analysis/cpp/misc.cpp")
 
 # Import data
@@ -36,7 +36,6 @@ toc()
 
 # Tests Lingam ####
 rm(list = ls())
-source("analysis/direct_lingam_test.R")
 sourceCpp("analysis/cpp/misc.cpp")
 
 # Simulate data
@@ -48,7 +47,7 @@ X <- simulate_data(n, p, 2/(p - 1), has_confounder = TRUE)
 
 # Run direct lingam
 tic()
-order_ling <- direct_lingam(X$dataset)
+order_ling <- direct_lingam_search(X$dataset)
 toc()
 est_g <- causalXtreme:::caus_order_to_dag(order_ling)
 est_cpdag <- causalXtreme:::dag_to_cpdag(est_g)
@@ -70,9 +69,8 @@ causal_metrics(X, ease_res)
 causal_metrics(X, ica_res)
 
 
-# C++ tests ####
+# Kernel ICA C++ tests ####
 rm(list = ls())
-source("analysis/direct_lingam_test.R")
 
 # Test 1
 sourceCpp("analysis/cpp/misc.cpp")
@@ -104,3 +102,8 @@ symm_eigen(xx)
 
 x <- c(1, NA, -1, 2)
 which2(x, 0)
+
+
+# Pairwise Lingam C++ tests ####
+rm(list = ls())
+sourceCpp("analysis/cpp/pwling_funcs.cpp")

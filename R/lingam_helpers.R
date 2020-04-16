@@ -1,75 +1,3 @@
-# Main ####
-direct_lingam <- function(X){
-  # perform direct lingam on dataset X
-
-  # transpose matrix
-  X <- t(X)
-
-
-  # Step 1
-  # prepare data
-  X_orig <- X
-  p <- NROW(X)
-  n <- NCOL(X)
-
-  # center variables
-  X <- center_rows(X)
-
-  # prepare matrix M
-  M <- matrix(-1, ncol = p, nrow = p)
-  diag(M) <- 0
-
-  # prepare vector K and U - K
-  K <- numeric(p)
-  U_K <- 1:p
-
-  # Step 2
-  for (m in 1:(p - 1)){
-    # find exogenous by using M
-    exogenous <- which(colSums(t(M) == 0) == p - m + 1)
-
-    if (identical(exogenous, integer(0))){
-      endogenous <- which(colSums(t(M) == 1) > 0)
-      candidates <- setdiff(U_K, endogenous)
-    } else{
-      candidates <- exogenous
-    }
-
-
-    # (a)
-    # compute R, i.e., matrix containing residuals
-    R <- computeR(X, candidates, U_K, M)
-
-    # skip exogenous finding if it is found
-    if (length(candidates) == 1){
-      index <- candidates
-    } else {
-      # find exogenous
-      index <- findindex(X, R, candidates, U_K)
-    }
-
-    # (b)
-    K[m] <- index
-    U_K <- U_K[U_K != index]
-    M[ , index] <- NA
-    M[index, ] <- NA
-
-    # (c)
-    X <- R[ , , index]
-
-  }
-
-
-  # Step 3
-  # update last entry of causal ordering
-  K[p] <- U_K
-
-  # return estimated causal ordering
-  return(K)
-}
-
-
-# Helpers ####
 computeR <- function(X, candidates, U_K, M){
   # compute residual matrix when regressing
 
@@ -80,7 +8,7 @@ computeR <- function(X, candidates, U_K, M){
 
   for (j in candidates){
     for (i in setdiff(U_K, j)){
-     # skip residual calculations by looking at M
+      # skip residual calculations by looking at M
       if (M[i, j] == 0) {
         R[i, , j] <- X[i, ]
       } else{
@@ -106,7 +34,7 @@ findindex <- function(X, R, candidates, U_K){
       T_vec[j] <- 0
 
       for (i in setdiff(U_K, j)){
-        J <- pwling(rbind(X[i, ], X[j, ]))  #kernel_ica(rbind(R[i, , j], X[j, ])) # or
+        J <- runif(1) #pwlingc(rbind(X[i, ], X[j, ]))  #kernel_ica(rbind(R[i, , j], X[j, ])) # or
         T_vec[j] <- T_vec[j] + J
       }
 
@@ -117,7 +45,7 @@ findindex <- function(X, R, candidates, U_K){
       T_vec[j] <- 0
 
       for (i in setdiff(U_K, j)){
-        J <-pwling(rbind(X[i, ], X[j, ])) #kernel_ica(rbind(R[i, , j], X[j, ])) # or
+        J <- runif(1) #pwlingc(rbind(X[i, ], X[j, ])) #kernel_ica(rbind(R[i, , j], X[j, ])) # or
         T_vec[j] <- T_vec[j] + J
 
         if (T_vec[j] > minT & !is.nan(minT)){
@@ -139,7 +67,6 @@ findindex <- function(X, R, candidates, U_K){
   return(index)
 }
 
-# Independence measure's functions ####
 kernel_ica <- function(x){
   # Try kernel ica
   m <- NROW(x)
@@ -174,11 +101,16 @@ kernel_ica <- function(x){
 
 pwling <- function(X){
   ## numeric_matrix -> numeric
-  ## computes pwling measure given a matrix p x n
+  ## computes pwling measure given a matrix 2 x n
 
   # compute size of matrix
   p <- NROW(X)
   n <- NCOL(X)
+
+  # check if p == 2
+  if (p != 2){
+    stop(paste("Matrix X must have exactly 2 rows."))
+  }
 
   # standardize rows
   X <- t(scale(t(X)))
@@ -205,6 +137,7 @@ mentappr <- function(x){
   ## computes maximum entropy approximation
 
   # standardize
+  xstd <- sd(x)
   x <- scale(x)
 
   # Constants we need
@@ -217,7 +150,7 @@ mentappr <- function(x){
   negentropy <- k2 * (mean(log(cosh(x)))-gamma)^2+k1*mean(x*exp(-x^2/2))^2
 
   # This is entropy
-  entropy = gaussianEntropy - negentropy + log(sd(x));
+  entropy = gaussianEntropy - negentropy + log(xstd);
 
   return(entropy)
 }

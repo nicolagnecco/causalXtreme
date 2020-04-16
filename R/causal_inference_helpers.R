@@ -67,7 +67,7 @@ ease <- function(dat, k = floor(n ^ 0.4),
 #' The function \code{estLiNGAM} is slightly modified
 #' to allow for different contrast functions in the fast-ICA step of
 #' LiNGAM. To modify \code{estLiNGAM}, we included in this package
-#' several internal functions from\code{pcalg}.
+#' several internal functions from \code{pcalg}.
 #' All the credits go to the authors of the \code{pcalg} package:
 #'
 #' Markus Kalisch, Alain Hauser , Martin Maechler, Diego Colombo,
@@ -85,7 +85,7 @@ ease <- function(dat, k = floor(n ^ 0.4),
 #' The DAG estimated from the data.
 #' @export
 lingam_search <- function(dat, contrast_fun = c("logcosh", "exp")){
-
+  # !!! rename old_ica_lingam_search
   contrast_fun <- match.arg(contrast_fun)
   n <- NROW(dat)
   p <- NCOL(dat)
@@ -116,7 +116,7 @@ lingam_search <- function(dat, contrast_fun = c("logcosh", "exp")){
 #' The function \code{estLiNGAM} is slightly modified
 #' to allow for different contrast functions in the fast-ICA step of
 #' LiNGAM. To modify \code{estLiNGAM}, we included in this package
-#' several internal functions from\code{pcalg}.
+#' several internal functions from \code{pcalg}.
 #' All the credits go to the authors of the \code{pcalg} package:
 #'
 #' Markus Kalisch, Alain Hauser , Martin Maechler, Diego Colombo,
@@ -134,7 +134,7 @@ lingam_search <- function(dat, contrast_fun = c("logcosh", "exp")){
 #' The causal order estimated from the data.
 #' @export
 order_lingam_search <- function(dat, contrast_fun = c("logcosh", "exp")){
-
+  # !!! rename ica_lingam_search
   contrast_fun <- match.arg(contrast_fun)
   n <- NROW(dat)
   p <- NCOL(dat)
@@ -241,3 +241,102 @@ pc_rank_search <- function(dat, alpha = 5e-2){
 
   return(out)
 }
+
+
+#' Direct Lingam search
+#'
+#' Runs Direct Lingam given a dataset \code{dat}. Returns the causal order
+#' estimated from the data using the Direct LiNGAM algorithm.
+#'
+#' # !!! update desc
+#' This function is a wrapper around \code{estLiNGAM} from the package
+#' \code{pcalg} (see \url{https://CRAN.R-project.org/package=pcalg }).
+#' The function \code{estLiNGAM} is slightly modified
+#' to allow for different contrast functions in the fast-ICA step of
+#' LiNGAM. To modify \code{estLiNGAM}, we included in this package
+#' several internal functions from \code{pcalg}.
+#' All the credits go to the authors of the \code{pcalg} package:
+#'
+#' Markus Kalisch, Alain Hauser , Martin Maechler, Diego Colombo,
+#' Doris Entner, Patrik Hoyer, Antti Hyttinen, Jonas Peters,
+#' Nicoletta Andri, Emilija Perkovic, Preetam Nandy, Philipp Ruetimann,
+#' Daniel Stekhoven, Manuel Schuerch, Marco Eigenmann.
+#'
+#' @inheritParams causal_tail_matrix
+#' @param contrast_fun Character. The functional form of the contrast
+#' function used in the Fast-ICA step. It is one of \code{"logcosh"}
+#' (the default choice) and \code{"exp"}.
+#' For further details see the paper from
+#' Hyvarinen, A., \url{https://ieeexplore.ieee.org/abstract/document/761722/}.
+#' @return Numeric vector (or \code{NA} in case of error).
+#' The causal order estimated from the data.
+#' @export
+direct_lingam_search <- function(dat){
+  ## numeric_matrix -> causal_order
+  # perform direct lingam on dataset X
+
+  # transpose matrix
+  dat <- t(dat)
+
+
+  # Step 1
+  # prepare data
+  dat_orig <- dat
+  p <- NROW(dat)
+  n <- NCOL(dat)
+
+  # center variables
+  dat <- center_rows(dat)
+
+  # prepare matrix M
+  M <- matrix(-1, ncol = p, nrow = p)
+  diag(M) <- 0
+
+  # prepare vector K and U - K
+  K <- numeric(p)
+  U_K <- 1:p
+
+  # Step 2
+  for (m in 1:(p - 1)){
+    # find exogenous by using M
+    exogenous <- which(colSums(t(M) == 0) == p - m + 1)
+
+    if (identical(exogenous, integer(0))){
+      endogenous <- which(colSums(t(M) == 1) > 0)
+      candidates <- setdiff(U_K, endogenous)
+    } else{
+      candidates <- exogenous
+    }
+
+    # (a)
+    # compute R, i.e., matrix containing residuals
+    R <- computeR(dat, candidates, U_K, M)
+
+    # skip exogenous finding if it is found
+    if (length(candidates) == 1){
+      index <- candidates
+    } else {
+      # find exogenous
+      index <- findindex(dat, R, candidates, U_K)
+    }
+
+    # (b)
+    K[m] <- index
+    U_K <- U_K[U_K != index]
+    M[ , index] <- NA
+    M[index, ] <- NA
+
+    # (c)
+    dat <- R[ , , index]
+
+  }
+
+
+  # Step 3
+  # update last entry of causal ordering
+  K[p] <- U_K
+
+  # return estimated causal ordering
+  return(K)
+}
+
