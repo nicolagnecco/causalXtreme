@@ -57,10 +57,13 @@ tic
 toc
 
 %% 
-x = [1:3;1:3];
+x = [1:30];
 tic
 [G, pvec] = chol_gauss(x, 1, 1);
 toc
+
+%%
+G = [1:3; 3:5];
 %% regularization (see paper for details)
 [A,D]=eig(G'*G);
 D=diag(D);

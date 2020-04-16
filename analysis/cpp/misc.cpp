@@ -1,9 +1,6 @@
 #include <RcppArmadillo.h>
-#include <math.h>
 // [[Rcpp::depends(RcppArmadillo)]]
-
-using namespace Rcpp;
-using namespace arma;
+#include <math.h>
 
 // This is a simple example of exporting a C++ function to R. You can
 // source this function into an R session using the Rcpp::sourceCpp
@@ -15,7 +12,7 @@ using namespace arma;
 //   http://gallery.rcpp.org/
 //
 // [[Rcpp::export]]
-Rcpp::List chol_gaussc(Rcpp::NumericVector x, double sigma, double tol) {
+Rcpp::List chol_gaussc(const Rcpp::NumericVector & x, double sigma, double tol) {
   // Variable definition
   int m, n, nmax, i, iter, j, jast;
   double residual, a, b, c, maxdiagG;
@@ -131,7 +128,62 @@ Rcpp::List chol_gaussc(Rcpp::NumericVector x, double sigma, double tol) {
 }
 
 // [[Rcpp::export]]
-Rcpp::List contrast_ica(const arma::mat & X, double sigma, double eta, double kappa) {
+arma::mat center_cols(const arma::mat & G){
+  int N;
+  arma::mat G2;
+
+  N = G.n_rows;
+  G2 = G - arma::repmat(arma::mean(G), N, 1);
+
+  return G2;
+}
+
+// [[Rcpp::export]]
+arma::mat center_rows(const arma::mat & G){
+  int N;
+  arma::mat G1;
+  arma::mat G2;
+
+  G1 = G.t();
+
+  N = G1.n_rows;
+  G2 = G1 - arma::repmat(arma::mean(G1), N, 1);
+
+  return G2.t();
+}
+
+// [[Rcpp::export]]
+Rcpp::List symm_eigen(const arma::mat & X) {
+  int N;
+  arma::mat U, V_temp, V;
+  arma::vec S_temp, S;
+  arma::vec ids;
+
+  N = X.n_rows;
+  arma::svd(U, S_temp, V_temp, X, "standard");
+  V = arma::fliplr(V_temp);
+  S = arma::flipud(S_temp);
+
+  return Rcpp::List::create(
+    Rcpp::Named("D") = S,
+    Rcpp::Named("A") = V
+  );
+}
+
+// [[Rcpp::export]]
+Rcpp::List which2(Rcpp::NumericVector x, double lb) {
+  Rcpp::IntegerVector v = Rcpp::seq(0, x.size()-1);
+  Rcpp::NumericVector x_temp = x[!Rcpp::is_na(x)];
+  Rcpp::IntegerVector v_temp = v[!Rcpp::is_na(x)];
+
+  return Rcpp::List::create(
+    Rcpp::Named("x") = x_temp[x_temp > lb],
+    Rcpp::Named("id") = v_temp[x_temp > lb]
+  );
+}
+
+// [[Rcpp::export]]
+Rcpp::List contrast_icac(const arma::mat & X, double sigma, double eta, double kappa) {
 
   int i, N, m;
   arma::mat Rkappa;
@@ -143,22 +195,43 @@ Rcpp::List contrast_ica(const arma::mat & X, double sigma, double eta, double ka
   m = X.n_rows;
 
   // convert from armadillo to rcpp
-  NumericMatrix mymat = NumericMatrix(m, N, X.begin());
+  Rcpp::NumericMatrix mymat = Rcpp::NumericMatrix(m, N, X.begin());
+  Rcpp::NumericVector D_filtered;
 
   for (i = 0; i < m; ++i){
 
     // subset matrix
-    x = mymat(i, _);
+    x = mymat(i, Rcpp::_);
 
     // pass it to chol_gaussc
     res = chol_gaussc(x / sigma, 1, N * eta);
+
+    // take out values
+    arma::mat G_temp = Rcpp::as<arma::mat>(res["G"]);
+    arma::vec Pvec_temp = Rcpp::as<arma::vec>(res["Pvec"]);
+    arma::uvec Pvec = arma::sort_index(Pvec_temp);
+
+    // center cols of G
+    arma::mat G = center_cols(G_temp);
+
+    // regularization
+    Rcpp::List res_eigen = symm_eigen(G.t() * G);
+    Rcpp::NumericVector D = Rcpp::as<Rcpp::NumericVector>(res_eigen["D"]);
+    Rcpp::List res_which = which2(D, .1);
+
+    D_filtered = res_which["x"];
+    Rcpp::IntegerVector indexes = res_which["id"];
+    // !!!
+
+    Rcpp::Rcout << D_filtered << "\n";
+    Rcpp::Rcout << indexes << "\n";
 
   }
 
   return Rcpp::List::create(
     Rcpp::Named("m") = m,
     Rcpp::Named("N") =  N,
-    Rcpp::Named("v") = x,
+    Rcpp::Named("D_filtered") = D_filtered,
     Rcpp::Named("res") = res,
     Rcpp::Named("i") = i
   );

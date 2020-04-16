@@ -1,4 +1,3 @@
-
 # Main ####
 direct_lingam <- function(X){
   # perform direct lingam on dataset X
@@ -14,7 +13,7 @@ direct_lingam <- function(X){
   n <- NCOL(X)
 
   # center variables
-  X <- centerRows(X)
+  X <- center_rows(X)
 
   # prepare matrix M
   M <- matrix(-1, ncol = p, nrow = p)
@@ -71,11 +70,6 @@ direct_lingam <- function(X){
 
 
 # Helpers ####
-centerRows <- function(X){
-  n <- NCOL(X)
-  X - matrix(rep(rowMeans(X), n), ncol = n)
-}
-
 computeR <- function(X, candidates, U_K, M){
   # compute residual matrix when regressing
 
@@ -112,7 +106,7 @@ findindex <- function(X, R, candidates, U_K){
       T_vec[j] <- 0
 
       for (i in setdiff(U_K, j)){
-        J <- mutual_info(rbind(R[i, , j], X[j, ])) # or mutual_info(rbind(X[i, ], X[j, ]))
+        J <- pwling(rbind(X[i, ], X[j, ]))  #kernel_ica(rbind(R[i, , j], X[j, ])) # or
         T_vec[j] <- T_vec[j] + J
       }
 
@@ -123,7 +117,7 @@ findindex <- function(X, R, candidates, U_K){
       T_vec[j] <- 0
 
       for (i in setdiff(U_K, j)){
-        J <- mutual_info(rbind(R[i, , j], X[j, ])) # or mutual_info(rbind(X[i, ], X[j, ]))
+        J <-pwling(rbind(X[i, ], X[j, ])) #kernel_ica(rbind(R[i, , j], X[j, ])) # or
         T_vec[j] <- T_vec[j] + J
 
         if (T_vec[j] > minT & !is.nan(minT)){
@@ -145,7 +139,8 @@ findindex <- function(X, R, candidates, U_K){
   return(index)
 }
 
-mutual_info <- function(x){
+# Independence measure's functions ####
+kernel_ica <- function(x){
   # Try kernel ica
   m <- NROW(x)
   N <- NCOL(x)
@@ -177,5 +172,222 @@ mutual_info <- function(x){
   return(J)
 }
 
+pwling <- function(X){
+  ## numeric_matrix -> numeric
+  ## computes pwling measure given a matrix p x n
+
+  # compute size of matrix
+  p <- NROW(X)
+  n <- NCOL(X)
+
+  # standardize rows
+  X <- t(scale(t(X)))
+
+  # compute covariance matrix
+  C <- cov(t(X))
+
+  # General entropy-based method, for variables of any distribution
+  i <- 2
+  j <- 1
+  res1 <- X[j, ] - C[j, i] * X[i, ]
+  res2 <- X[i, ] - C[i, j] * X[j, ]
+  LR <-  mentappr(X[j, ]) - mentappr(X[i, ]) - mentappr(res1) + mentappr(res2)
+
+  # compute score
+  J = min(0, LR)^2
+
+  # return score
+  return(J)
+}
+
+mentappr <- function(x){
+  ## numeric_vector -> numeric
+  ## computes maximum entropy approximation
+
+  # standardize
+  x <- scale(x)
+
+  # Constants we need
+  k1 <- 36 / (8 * sqrt(3) - 9)
+  gamma <- 0.37457
+  k2 <- 79.047
+  gaussianEntropy <- log(2 * pi) / 2 + 0.5
+
+  # This is negentropy
+  negentropy <- k2 * (mean(log(cosh(x)))-gamma)^2+k1*mean(x*exp(-x^2/2))^2
+
+  # This is entropy
+  entropy = gaussianEntropy - negentropy + log(sd(x));
+
+  return(entropy)
+}
+
+contrast_ica <- function(contrast, x, kparam){
+  # character matrix (pxN) list -> numeric
+
+  # computes constrast kernel ICA
+  N <- NCOL(x)
+  m <- NROW(x)
+  kappas <- kparam$kappas
+  etas <- kparam$etas
+  sizes <- numeric(m)
+
+  Us <- list()
+  Lambdas <- list()
+  Drs <- list()
+
+  for (i in 1:m){
+    res <- chol_gaussc(x[i, , drop = FALSE] / kparam$sigmas[i], 1, N * etas[i])
+    G <- res$G
+    # file_nm <-  paste("analysis/G", i, ".csv", sep = "") # !!!
+    # G <- as.matrix(read.csv(file_nm, header = FALSE)) # !!!
+    Pvec <- res$Pvec
+
+    k <- NCOL(G)
+    a <- sort(Pvec)
+    Pvec <- order(Pvec)
+
+    G <- center_cols(G[Pvec, , drop = FALSE])
+
+    # regularization (see paper for details)
+    eigen_decomp <- eigen(crossprod(G))
+    A <- eigen_decomp$vectors[, k:1, drop = FALSE]
+    D <- eigen_decomp$values[k:1]
 
 
+    # eigen_decomp <- symm_eigen(crossprod(G))
+    # A <- eigen_decomp$vectors[, k:1, drop = FALSE]
+    # D <- as.numeric(eigen_decomp$values)[k:1]
+
+    indexes <- which(D >= N * etas[i] & is.double(D));  #removes small eigenvalues
+    newinds <- sort(D[indexes])
+    neworder <- order(D[indexes])
+    neworder <- rev(neworder)
+    neig <- length(indexes)
+
+    indexes <- indexes[neworder[seq_len(neig)]]
+    if (identical(indexes, integer(0))){
+      indexes = 1
+    }
+
+    D <- D[indexes]
+    V = G %*% (A[, indexes] %*% diag(sqrt(1 / D), nrow = length(D)))
+
+    Us[[i]] <- V
+    Lambdas[[i]] <- D
+    Dr <- D
+
+    for (j in seq_along(D)){
+      Dr[j] <- D[j] / (N * kappas[i] + D[j])
+    }
+
+    Drs[[i]] <- Dr
+    sizes[i] <- length(Drs[[i]])
+
+  }
+
+
+  # calculated RKappa
+  Rkappa <- diag(sum(sizes))
+  starts <- cumsum(c(1, sizes))
+  starts <- starts[1:m]
+
+  for (i in 2:m){
+    for (j in 1:(i-1)){
+      newbottom <- diag(Drs[[i]], nrow = length(Drs[[i]])) %*% crossprod(Us[[i]], Us[[j]]) %*% diag(Drs[[j]], nrow = length(Drs[[j]]))
+      ran1 <- starts[i]:(starts[i] + sizes[i] - 1)
+      ran2 <- starts[j]:(starts[j] + sizes[j] - 1)
+      Rkappa[ran1, ran2] <- newbottom
+      Rkappa[ran2, ran1] <- t(newbottom)
+    }
+  }
+
+  # output details
+  D <- det(Rkappa)
+  J <- -.5 * log(D)
+
+  return(J)
+
+}
+
+chol_gauss <- function(x, sigma, tol){
+  # incomplete cholesky decomposition of the gram matrix defined by data x
+
+  n <- dim(x)[2]
+  Pvec <- 1:n
+  I <- integer(0)
+
+  # calculates diagonal elements (all equal to 1 for gaussian kernels)
+  diagG <- rep(1, n)
+  i = 1
+  G <- integer(0)
+
+  while ((sum(diagG[i:n])) > tol) {
+    G <- cbind(G, rep(0, n))
+
+    # find best new element
+    if (i > 1){
+
+      diagmax <- max(diagG[i:n])
+      jast <- which.max(diagG[i:n])
+      jast <- jast + i - 1
+
+      # updates permutation
+      Pvec[c(i, jast)] <- Pvec[c(jast, i)]
+
+      # updates all elements of G due to new permutation
+      G[c(i, jast), 1:i] <- G[c(jast, i), 1:i, drop = FALSE]
+
+      # do the cholesky update
+
+    } else {
+      jast <- 1
+    }
+
+    G[i, i] <- diagG[jast]
+    G[i, i] <- sqrt(G[i, i, drop = FALSE])
+
+    if (i < n){
+      # calculates newAcol = A[Pvec[(i+1):n], Pvec[i]]
+      newAcol = exp(-.5 / sigma^2 * sqdist(x[, Pvec[(i + 1):n], drop = FALSE],
+                                           x[, Pvec[i], drop = FALSE]))
+
+      if (i > 1){
+        G[(i + 1):n, i] <- 1 / G[i, i] *
+          (newAcol - G[(i + 1):n, 1:(i - 1), drop = FALSE] %*%
+             t(G[i, 1:(i - 1), drop = FALSE]))
+      } else {
+        G[(i + 1):n, i] <- 1 / G[i, i] * newAcol
+      }
+    }
+
+    # updates diagonal elements
+    if (i < n){
+      diagG[(i + 1):n] <- rep(1, n - i) - rowSums(G[(i + 1):n, 1:i, drop = FALSE]^2)
+    }
+
+    i <- i + 1
+
+  }
+
+  # return results
+  res <- list()
+  res$G <- G
+  res$Pvec <- matrix(Pvec - 1, nrow = 1)
+
+  return(res)
+}
+
+sqdist <- function(a, b){
+  # computes squared euclidean distance matrix
+  # computes a rectangular matrix of pairwise distances
+  # between points in A (given in columns) and points in B
+  # NOTE: very fast implementation taken from Rolang Bunschoten
+
+  aa <- matrix(colSums(a * a), nrow = 1)
+  bb <- matrix(colSums(b * b), nrow = 1)
+  ab <- t(a) %*% b
+  d <- abs(t(aa) + matrix(bb, nrow = dim(aa)[2]) - 2 * ab)
+
+  return(d)
+}
