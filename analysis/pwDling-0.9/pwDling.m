@@ -98,7 +98,8 @@ end
 K(p) = U_K;
 
 % 4. %
-[B, stde, ci] = ols(Xorig, K);
+% [B, stde, ci] = ols(Xorig, K);
+B = 0; stde = 0; ci = 0;
 
 end
 

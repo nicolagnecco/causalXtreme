@@ -310,14 +310,16 @@ direct_lingam_search <- function(dat){
 
     # (a)
     # compute R, i.e., matrix containing residuals
-    R <- computeR(dat, candidates, U_K, M)
+    # R <- computeR(dat, candidates, U_K, M)
+    R <- computeRc(dat, candidates - 1, U_K - 1, M)
 
     # skip exogenous finding if it is found
     if (length(candidates) == 1){
       index <- candidates
     } else {
       # find exogenous
-      index <- findindex(dat, R, candidates, U_K)
+      # index <- findindex(dat, R, candidates, U_K)
+      index <- findindexc(dat, candidates - 1, U_K - 1)
     }
 
     # (b)

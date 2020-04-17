@@ -1,3 +1,74 @@
+direct_lingam_search_r <- function(dat){
+  ## numeric_matrix -> causal_order
+  # perform direct lingam on dataset X
+
+  # transpose matrix
+  dat <- t(dat)
+
+
+  # Step 1
+  # prepare data
+  dat_orig <- dat
+  p <- NROW(dat)
+  n <- NCOL(dat)
+
+  # center variables
+  dat <- center_rows(dat)
+
+  # prepare matrix M
+  M <- matrix(-1, ncol = p, nrow = p)
+  diag(M) <- 0
+
+  # prepare vector K and U - K
+  K <- numeric(p)
+  U_K <- 1:p
+
+  # Step 2
+  for (m in 1:(p - 1)){
+    # find exogenous by using M
+    exogenous <- which(colSums(t(M) == 0) == p - m + 1)
+
+    if (identical(exogenous, integer(0))){
+      endogenous <- which(colSums(t(M) == 1) > 0)
+      candidates <- setdiff(U_K, endogenous)
+    } else{
+      candidates <- exogenous
+    }
+
+    # (a)
+    # compute R, i.e., matrix containing residuals
+    R <- computeR(dat, candidates, U_K, M)
+    # R <- computeRc(dat, candidates - 1, U_K - 1, M)
+
+    # skip exogenous finding if it is found
+    if (length(candidates) == 1){
+      index <- candidates
+    } else {
+      # find exogenous
+      index <- findindex(dat, R, candidates, U_K)
+      # index <- findindexc(dat, candidates - 1, U_K - 1)
+    }
+
+    # (b)
+    K[m] <- index
+    U_K <- U_K[U_K != index]
+    M[ , index] <- NA
+    M[index, ] <- NA
+
+    # (c)
+    dat <- R[ , , index]
+
+  }
+
+
+  # Step 3
+  # update last entry of causal ordering
+  K[p] <- U_K
+
+  # return estimated causal ordering
+  return(K)
+}
+
 computeR <- function(X, candidates, U_K, M){
   # compute residual matrix when regressing
 
@@ -34,7 +105,7 @@ findindex <- function(X, R, candidates, U_K){
       T_vec[j] <- 0
 
       for (i in setdiff(U_K, j)){
-        J <- runif(1) #pwlingc(rbind(X[i, ], X[j, ]))  #kernel_ica(rbind(R[i, , j], X[j, ])) # or
+        J <- pwlingc(rbind(X[i, ], X[j, ]))  #kernel_ica(rbind(R[i, , j], X[j, ])) # or
         T_vec[j] <- T_vec[j] + J
       }
 
@@ -45,7 +116,7 @@ findindex <- function(X, R, candidates, U_K){
       T_vec[j] <- 0
 
       for (i in setdiff(U_K, j)){
-        J <- runif(1) #pwlingc(rbind(X[i, ], X[j, ])) #kernel_ica(rbind(R[i, , j], X[j, ])) # or
+        J <- pwlingc(rbind(X[i, ], X[j, ])) #kernel_ica(rbind(R[i, , j], X[j, ])) # or
         T_vec[j] <- T_vec[j] + J
 
         if (T_vec[j] > minT & !is.nan(minT)){
@@ -324,3 +395,4 @@ sqdist <- function(a, b){
 
   return(d)
 }
+

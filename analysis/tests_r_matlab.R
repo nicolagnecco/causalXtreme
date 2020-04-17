@@ -107,3 +107,68 @@ which2(x, 0)
 # Pairwise Lingam C++ tests ####
 rm(list = ls())
 sourceCpp("analysis/cpp/pwling_funcs.cpp")
+
+set.seed(42)
+x <- sample(1:1e3, 500)
+y <- sample(1:1e3, 500)
+
+bench::mark(
+  setdiff(x, y),
+  mysetdiff(x, y),
+  check = FALSE
+)
+
+
+# Find index AND compute Residuals C++ tests ####
+rm(list = ls())
+sourceCpp("analysis/cpp/pwling_funcs.cpp")
+
+n <- 1000
+p <- 30
+set.seed(42)
+Xsim <- simulate_data(n, p, .8)
+X <- t(Xsim$dataset)
+M <- matrix(-1, ncol = p, nrow = p)
+diag(M) <- 0
+candidates <- 1:p
+U_K <- 1:p
+
+# Compute residuals
+R <- computeRc(X, candidates - 1, U_K - 1, M)
+R2 <- computeR(X, candidates, U_K, M)
+
+bench::mark(
+  computeRc(X, candidates - 1, U_K - 1, M),
+  computeR(X, candidates, U_K, M)
+)
+
+
+# Find index
+findindexc(X, candidates-1, U_K-1)
+findindex(X, R, candidates, U_K)
+
+bench::mark(
+  findindexc(X, candidates-1, U_K-1),
+  findindex(X, R, candidates, U_K)
+)
+
+
+# Tests Lingam C++ speed ####
+rm(list = ls())
+sourceCpp("analysis/cpp/pwling_funcs.cpp")
+devtools::load_all(".")
+set.seed(42)
+X5 <- simulate_data(10000, 30, 0.2, has_uniform_margins = FALSE)
+write.csv(X5$dataset, "analysis/temp_csv/X5.csv", row.names = FALSE)
+
+tic()
+direct_lingam_search(X5$dataset)
+toc()
+
+tic()
+direct_lingam_search_r(X5$dataset)
+toc()
+
+profvis(direct_lingam_search(X5$dataset))
+profvis(direct_lingam_search_r(X5$dataset))
+
