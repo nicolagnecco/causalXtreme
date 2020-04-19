@@ -1,4 +1,4 @@
-context("test-lingam_helpers")
+context("test-direct_lingam")
 
 # Define variables
 set.seed(42)
@@ -18,31 +18,22 @@ X4 <- simulate_data(200, 15, 0.2)
 # write.csv(X4$dataset, "analysis/temp_csv/X4.csv", row.names = FALSE)
 
 X5 <- simulate_data(10000, 30, 0.2, has_uniform_margins = FALSE)
-write.csv(X5$dataset, "analysis/temp_csv/X5.csv", row.names = FALSE)
+# write.csv(X5$dataset, "analysis/temp_csv/X5.csv", row.names = FALSE)
 
 X6 <- simulate_data(1000, 30, 0.2, has_uniform_margins = FALSE)
-write.csv(X6$dataset, "analysis/temp_csv/X6.csv", row.names = FALSE)
+# write.csv(X6$dataset, "analysis/temp_csv/X6.csv", row.names = FALSE)
 
 X7 <- simulate_data(100, 3, 0.1, has_confounder = TRUE,
                     has_uniform_margins = FALSE)
-write.csv(X7$dataset, "analysis/temp_csv/X7.csv", row.names = FALSE)
+# write.csv(X7$dataset, "analysis/temp_csv/X7.csv", row.names = FALSE)
 
 
 X8 <- simulate_data(1000, 20, 0.2, has_confounder = TRUE,
                     has_uniform_margins = FALSE)
-write.csv(X8$dataset, "analysis/temp_csv/X8.csv", row.names = FALSE)
+# write.csv(X8$dataset, "analysis/temp_csv/X8.csv", row.names = FALSE)
 
 
 # Run tests
-test_that("mentappr works", {
-  expect_equal(mentappr(x), 1.441529478667)
-})
-
-test_that("pwling works", {
-  expect_equal(pwling(X1), (-0.00250585943443604)^2)
-  expect_error(pwling(X2))
-})
-
 test_that("direct lingam works", {
   expect_equal(direct_lingam_search(X3$dataset), c(2, 5, 4, 3, 1))
   expect_equal(direct_lingam_search(X4$dataset),

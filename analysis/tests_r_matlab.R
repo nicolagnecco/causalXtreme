@@ -30,19 +30,19 @@ if (N < 1000){
 eta <- kappa * 1e-2
 i <- 1
 tic()
-res <- chol_gauss(x[i,, drop = FALSE] / sigma, 1, N * eta);
+res <- chol_gaussc(x[i,, drop = FALSE] / sigma, 1, N * eta);
 toc()
 
 
 # Tests Lingam ####
 rm(list = ls())
-sourceCpp("analysis/cpp/misc.cpp")
+sourceCpp("analysis/cpp/pwling_funcs.cpp")
 
 # Simulate data
-n <- 100
-p <- 5
+n <- 500
+p <- 50
 set.seed(42)
-X <- simulate_data(n, p, 2/(p - 1), has_confounder = TRUE)
+X <- simulate_data(n, p, 2/(p - 1), has_confounder = TRUE, has_uniform_margins = TRUE)
 
 
 # Run direct lingam
@@ -74,6 +74,7 @@ rm(list = ls())
 
 # Test 1
 sourceCpp("analysis/cpp/misc.cpp")
+source("analysis/lingam_helpers.R")
 x <- rbind(1:3)
 a <- chol_gaussc(x, 1, 1)
 b <- chol_gauss(x, 1, 1)
@@ -109,8 +110,8 @@ rm(list = ls())
 sourceCpp("analysis/cpp/pwling_funcs.cpp")
 
 set.seed(42)
-x <- sample(1:1e3, 500)
-y <- sample(1:1e3, 500)
+x <- sample(1:1e6, 1e4)
+y <- sample(1:1e6, 1e4)
 
 bench::mark(
   setdiff(x, y),
@@ -122,6 +123,7 @@ bench::mark(
 # Find index AND compute Residuals C++ tests ####
 rm(list = ls())
 sourceCpp("analysis/cpp/pwling_funcs.cpp")
+source("analysis/lingam_helpers.R")
 
 n <- 1000
 p <- 30
@@ -156,9 +158,10 @@ bench::mark(
 # Tests Lingam C++ speed ####
 rm(list = ls())
 sourceCpp("analysis/cpp/pwling_funcs.cpp")
+source("analysis/lingam_helpers.R")
 devtools::load_all(".")
 set.seed(42)
-X5 <- simulate_data(10000, 30, 0.2, has_uniform_margins = FALSE)
+X5 <- simulate_data(10000, 50, 0.2, has_uniform_margins = FALSE)
 write.csv(X5$dataset, "analysis/temp_csv/X5.csv", row.names = FALSE)
 
 tic()
