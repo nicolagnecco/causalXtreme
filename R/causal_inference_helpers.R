@@ -246,7 +246,8 @@ pc_rank_search <- function(dat, alpha = 5e-2){
 #' Direct Lingam search
 #'
 #' Runs Direct Lingam given a dataset \code{dat}. Returns the causal order
-#' estimated from the data using the Direct LiNGAM algorithm.
+#' estimated from the data using the Direct LiNGAM algorithm with the
+#' Pairwise LiNGAM independence test.
 #'
 #' # !!! update desc
 #' This function is a wrapper around \code{estLiNGAM} from the package
@@ -263,11 +264,6 @@ pc_rank_search <- function(dat, alpha = 5e-2){
 #' Daniel Stekhoven, Manuel Schuerch, Marco Eigenmann.
 #'
 #' @inheritParams causal_tail_matrix
-#' @param contrast_fun Character. The functional form of the contrast
-#' function used in the Fast-ICA step. It is one of \code{"logcosh"}
-#' (the default choice) and \code{"exp"}.
-#' For further details see the paper from
-#' Hyvarinen, A., \url{https://ieeexplore.ieee.org/abstract/document/761722/}.
 #' @return Numeric vector (or \code{NA} in case of error).
 #' The causal order estimated from the data.
 #' @export
@@ -275,70 +271,6 @@ direct_lingam_search <- function(dat){
   ## numeric_matrix -> causal_order
   # perform direct lingam on dataset X
 
-  # transpose matrix
-  dat <- t(dat)
-
-
-  # Step 1
-  # prepare data
-  dat_orig <- dat
-  p <- NROW(dat)
-  n <- NCOL(dat)
-
-  # center variables
-  dat <- .Call("_causalXtreme_center_rows", dat) #center_rows(dat)
-
-  # prepare matrix M
-  M <- matrix(-1, ncol = p, nrow = p)
-  diag(M) <- 0
-
-  # prepare vector K and U - K
-  K <- numeric(p)
-  U_K <- 1:p
-
-  # Step 2
-  for (m in 1:(p - 1)){
-    # find exogenous by using M
-    exogenous <- which(colSums(t(M) == 0) == p - m + 1)
-
-    if (identical(exogenous, integer(0))){
-      endogenous <- which(colSums(t(M) == 1) > 0)
-      candidates <- setdiff(U_K, endogenous)
-    } else{
-      candidates <- exogenous
-    }
-
-    # (a)
-    # compute R, i.e., matrix containing residuals
-    # R <- computeR(dat, candidates, U_K, M)
-    R <-  .Call("_causalXtreme_computeRc", dat, candidates - 1, U_K - 1, M) #computeRc(dat, candidates - 1, U_K - 1, M)
-
-    # skip exogenous finding if it is found
-    if (length(candidates) == 1){
-      index <- candidates
-    } else {
-      # find exogenous
-      # index <- findindex(dat, R, candidates, U_K)
-      index <- .Call("_causalXtreme_findindexc", dat, candidates - 1, U_K - 1) #findindexc(dat, candidates - 1, U_K - 1)
-    }
-
-    # (b)
-    K[m] <- index
-    U_K <- U_K[U_K != index]
-    M[ , index] <- NA
-    M[index, ] <- NA
-
-    # (c)
-    dat <- R[ , , index]
-
-  }
-
-
-  # Step 3
-  # update last entry of causal ordering
-  K[p] <- U_K
-
-  # return estimated causal ordering
-  return(K)
+  .Call(`_causalXtreme_direct_lingam_c`, dat)
 }
 

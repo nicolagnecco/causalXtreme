@@ -180,10 +180,16 @@ profvis(direct_lingam_search_r(X5$dataset))
 # Tests Lingam C++ speed 2 ####
 rm(list = ls())
 devtools::load_all(".")
-Rcpp::sourceCpp("analysis/cpp/pwling_funcs.cpp")
 set.seed(21)
-X <- simulate_data(10000, 50, 0.2, has_uniform_margins = FALSE)$dataset
+X <- simulate_data(10000, 30, 0.2, has_uniform_margins = FALSE)$dataset
+
+tic()
 direct_lingam_c(X)
+toc()
+
+.Call("direct_lingam_c", X)
+
+
 direct_lingam_search(X)
 
 bench::mark(

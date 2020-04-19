@@ -244,8 +244,8 @@ arma::cube computeRc(const arma::mat & X,
 }
 
 
-// [[Rcpp::export]]
-std::vector<double> direct_lingam_c(const arma::mat & X){
+// [[Rcpp::export(rng = FALSE)]]
+std::vector<double> direct_lingam_c(arma::mat X){
   // define variables
   int n, p, index;
 

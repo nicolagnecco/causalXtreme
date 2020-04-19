@@ -9,12 +9,6 @@ direct_lingam_search(dat)
 \arguments{
 \item{dat}{Numeric matrix. Dataset matrix with \code{n}
 rows (observations) and \code{p} columns (variables).}
-
-\item{contrast_fun}{Character. The functional form of the contrast
-function used in the Fast-ICA step. It is one of \code{"logcosh"}
-(the default choice) and \code{"exp"}.
-For further details see the paper from
-Hyvarinen, A., \url{https://ieeexplore.ieee.org/abstract/document/761722/}.}
 }
 \value{
 Numeric vector (or \code{NA} in case of error).
@@ -22,7 +16,8 @@ The causal order estimated from the data.
 }
 \description{
 Runs Direct Lingam given a dataset \code{dat}. Returns the causal order
-estimated from the data using the Direct LiNGAM algorithm.
+estimated from the data using the Direct LiNGAM algorithm with the
+Pairwise LiNGAM independence test.
 }
 \details{
 # !!! update desc

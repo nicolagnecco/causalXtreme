@@ -28,6 +28,9 @@ Imports:
     stats (>= 3.6.1),
     methods (>= 3.6.1),
     fastICA (>= 1.2.1),
-    purrr (>= 0.3.2)
+    purrr (>= 0.3.2),
+    Rcpp
 biocViews:
-
+LinkingTo: 
+    Rcpp,
+    RcppArmadillo
