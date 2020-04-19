@@ -183,10 +183,10 @@ devtools::load_all(".")
 Rcpp::sourceCpp("analysis/cpp/pwling_funcs.cpp")
 set.seed(21)
 X <- simulate_data(10000, 50, 0.2, has_uniform_margins = FALSE)$dataset
-direct_lingamc(X)
+direct_lingam_c(X)
 direct_lingam_search(X)
 
 bench::mark(
-  direct_lingamc(X),
+  direct_lingam_c(X),
   direct_lingam_search(X)
 )

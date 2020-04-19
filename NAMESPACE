@@ -14,5 +14,4 @@ export(psi_coefficient)
 export(psi_matrix)
 export(random_search)
 export(simulate_data)
-importFrom(Rcpp,sourceCpp)
-useDynLib(causalXtreme, .registration = TRUE)
+

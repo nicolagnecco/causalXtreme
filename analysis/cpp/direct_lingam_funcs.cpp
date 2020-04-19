@@ -1,17 +1,6 @@
 #include <RcppArmadillo.h>
 // [[Rcpp::depends(RcppArmadillo)]]
 
-arma::mat center_cols(const arma::mat & G){
-  int N;
-  arma::mat G2;
-
-  N = G.n_rows;
-  G2 = G - arma::repmat(arma::mean(G), N, 1);
-
-  return G2;
-}
-
-// [[Rcpp::export(rng = false)]]
 arma::mat center_rows(const arma::mat & G){
   int N;
   arma::mat G1;
@@ -23,16 +12,6 @@ arma::mat center_rows(const arma::mat & G){
   G2 = G1 - arma::repmat(arma::mean(G1), N, 1);
 
   return G2.t();
-}
-
-arma::mat scale_cols(const arma::mat & G){
-  int N;
-  arma::mat G2;
-
-  N = G.n_rows;
-  G2 = G / arma::repmat(arma::stddev(G), N, 1);
-
-  return G2;
 }
 
 arma::mat scale_rows(const arma::mat & G){
@@ -78,16 +57,6 @@ double mentapprc(const arma::rowvec & x){
   return entropy;
 }
 
-std::vector<double> mysetdiff(Rcpp::NumericVector x, Rcpp::NumericVector y) {
-  std::vector<double> diff;
-
-  std::set_difference(x.begin(), x.end(), y.begin(), y.end(),
-                      std::inserter(diff, diff.begin()));
-
-  return diff;
-
-}
-
 double pwlingc(const arma::mat & X) {
   // define variables
   int p, n;
@@ -121,15 +90,24 @@ double pwlingc(const arma::mat & X) {
   return pow(std::min(0.0, LR), 2);
 }
 
+arma::vec mysetdiff(const arma::vec & x, const arma::vec & y) {
+  std::vector<double> diff;
+
+  std::set_difference(x.begin(), x.end(), y.begin(), y.end(),
+                      std::inserter(diff, diff.begin()));
+
+  return arma::vec(diff);
+
+}
+
 arma::mat bind_row_vectors(const arma::rowvec & A, const arma::rowvec & B){
   arma::mat out = join_vert(A, B); // same as join_cols
   return out;
 }
 
-// [[Rcpp::export(rng = false)]]
-double findindexc(const arma::mat & X,
-                  const Rcpp::IntegerVector & candidates,
-                  const Rcpp::IntegerVector & U_K){
+int findindexc(const arma::mat & X,
+                  const arma::vec & candidates,
+                  const arma::vec & U_K){
   // define variables
   int i, j, n, p;
   double minT, J;
@@ -224,10 +202,9 @@ double findindexc(const arma::mat & X,
   return index_min(T_vec) + 1;
 }
 
-// [[Rcpp::export(rng = false)]]
 arma::cube computeRc(const arma::mat & X,
-                     const Rcpp::IntegerVector & candidates,
-                     const Rcpp::IntegerVector & U_K,
+                     const arma::vec & candidates,
+                     const arma::vec & U_K,
                      const arma::mat & M){
   // define variables
   int i, j, n, p;
@@ -253,7 +230,7 @@ arma::cube computeRc(const arma::mat & X,
         continue;
 
       } else if (M.at(U_K_i, candidate_j) == 0){
-        Rcpp::Rcout << i << j << "\n";
+        // Rcpp::Rcout << i << j << "\n";
         R(arma::span(U_K_i), arma::span::all, arma::span(candidate_j)) = X.row(U_K_i);
       } else {
         R(arma::span(U_K_i), arma::span::all, arma::span(candidate_j)) =
@@ -266,11 +243,70 @@ arma::cube computeRc(const arma::mat & X,
   return R;
 }
 
-// You can include R code blocks in C++ files processed with sourceCpp
-// (useful for testing and development). The R code will be automatically
-// run after the compilation.
-//
 
-/*** R
+// [[Rcpp::export(rng = false)]]
+std::vector<double> direct_lingam_c(const arma::mat & X){
+  // define variables
+  int n, p, index;
 
-*/
+  n = X.n_rows;
+  p = X.n_cols;
+
+  arma::mat X_(p, n);
+  arma::mat M(p, p);
+  arma::rowvec K(p);
+  arma::vec candidates;
+  arma::cube R(p, n, p);
+
+  // transpose matrix
+  X_ = X.t();
+
+  // center variables
+  X_ = center_rows(X_);
+
+  // prepare matrix M
+  M.fill(-1);
+  M.diag().fill(0);
+
+  // prepare vector K and U_K
+  K = arma::zeros<arma::rowvec>(p);
+  candidates = arma::linspace(0, p - 1, p);
+
+  // loop through variables
+  for (int m = 0; m < p; m++){
+
+    // compute R, i.e., matrix containing residuals
+    R = computeRc(X_, candidates, candidates, M);
+
+    // find exogenous variables
+    if (candidates.size() == 1){
+      index = candidates[0];
+    } else {
+      index = findindexc(X_, candidates, candidates) - 1;
+    }
+
+    // update causal order
+    K[m] = index;
+
+
+    // update objects
+    M.col(index).fill(NA_REAL);
+    M.row(index).fill(NA_REAL);
+    X_ = R(arma::span::all, arma::span::all, arma::span(index));
+
+    // update candidates
+    // Rcpp::Rcout << "m = " << m << "\n";
+    // Rcpp::Rcout << "one-by-one = " << arma::vec(1).fill(index) << "\n";
+    // Rcpp::Rcout << "index = " << index << "\n";
+    // Rcpp::Rcout << "candidates = " <<
+      // mysetdiff(candidates, arma::vec(1).fill(index)) << "\n";
+    candidates = mysetdiff(candidates, arma::vec(1).fill(index));
+
+  }
+
+  // return causal order
+  K = K + 1;
+
+  return arma::conv_to<std::vector<double>>::from(K);
+
+}
