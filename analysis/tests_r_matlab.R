@@ -110,8 +110,8 @@ rm(list = ls())
 sourceCpp("analysis/cpp/pwling_funcs.cpp")
 
 set.seed(42)
-x <- sample(1:1e6, 1e4)
-y <- sample(1:1e6, 1e4)
+x <- sample(1:1e6, 1e5)
+y <- sample(1:1e6, 1e5)
 
 bench::mark(
   setdiff(x, y),
@@ -161,7 +161,7 @@ sourceCpp("analysis/cpp/pwling_funcs.cpp")
 source("analysis/lingam_helpers.R")
 devtools::load_all(".")
 set.seed(42)
-X5 <- simulate_data(100, 50, 0.2, has_uniform_margins = FALSE)
+X5 <- simulate_data(10000, 50, 0.2, has_uniform_margins = FALSE)
 write.csv(X5$dataset, "analysis/temp_csv/X5.csv", row.names = FALSE)
 
 tic()
@@ -175,3 +175,18 @@ toc()
 profvis(direct_lingam_search(X5$dataset))
 profvis(direct_lingam_search_r(X5$dataset))
 
+
+
+# Tests Lingam C++ speed 2 ####
+rm(list = ls())
+devtools::load_all(".")
+Rcpp::sourceCpp("analysis/cpp/pwling_funcs.cpp")
+set.seed(21)
+X <- simulate_data(10000, 50, 0.2, has_uniform_margins = FALSE)$dataset
+direct_lingamc(X)
+direct_lingam_search(X)
+
+bench::mark(
+  direct_lingamc(X),
+  direct_lingam_search(X)
+)

@@ -11,7 +11,6 @@ arma::mat center_rows(const arma::mat& G);
 RcppExport SEXP _causalXtreme_center_rows(SEXP GSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::mat& >::type G(GSEXP);
     rcpp_result_gen = Rcpp::wrap(center_rows(G));
     return rcpp_result_gen;
@@ -22,7 +21,6 @@ double findindexc(const arma::mat& X, const Rcpp::IntegerVector& candidates, con
 RcppExport SEXP _causalXtreme_findindexc(SEXP XSEXP, SEXP candidatesSEXP, SEXP U_KSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
     Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type candidates(candidatesSEXP);
     Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type U_K(U_KSEXP);
@@ -35,7 +33,6 @@ arma::cube computeRc(const arma::mat& X, const Rcpp::IntegerVector& candidates, 
 RcppExport SEXP _causalXtreme_computeRc(SEXP XSEXP, SEXP candidatesSEXP, SEXP U_KSEXP, SEXP MSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
     Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type candidates(candidatesSEXP);
     Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type U_K(U_KSEXP);

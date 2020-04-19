@@ -286,7 +286,7 @@ direct_lingam_search <- function(dat){
   n <- NCOL(dat)
 
   # center variables
-  dat <- center_rows(dat)
+  dat <- .Call("_causalXtreme_center_rows", dat) #center_rows(dat)
 
   # prepare matrix M
   M <- matrix(-1, ncol = p, nrow = p)
@@ -311,7 +311,7 @@ direct_lingam_search <- function(dat){
     # (a)
     # compute R, i.e., matrix containing residuals
     # R <- computeR(dat, candidates, U_K, M)
-    R <- computeRc(dat, candidates - 1, U_K - 1, M)
+    R <-  .Call("_causalXtreme_computeRc", dat, candidates - 1, U_K - 1, M) #computeRc(dat, candidates - 1, U_K - 1, M)
 
     # skip exogenous finding if it is found
     if (length(candidates) == 1){
@@ -319,7 +319,7 @@ direct_lingam_search <- function(dat){
     } else {
       # find exogenous
       # index <- findindex(dat, R, candidates, U_K)
-      index <- findindexc(dat, candidates - 1, U_K - 1)
+      index <- .Call("_causalXtreme_findindexc", dat, candidates - 1, U_K - 1) #findindexc(dat, candidates - 1, U_K - 1)
     }
 
     # (b)

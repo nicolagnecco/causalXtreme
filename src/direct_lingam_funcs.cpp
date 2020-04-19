@@ -11,7 +11,7 @@ arma::mat center_cols(const arma::mat & G){
   return G2;
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(rng = false)]]
 arma::mat center_rows(const arma::mat & G){
   int N;
   arma::mat G1;
@@ -126,7 +126,7 @@ arma::mat bind_row_vectors(const arma::rowvec & A, const arma::rowvec & B){
   return out;
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(rng = false)]]
 double findindexc(const arma::mat & X,
                   const Rcpp::IntegerVector & candidates,
                   const Rcpp::IntegerVector & U_K){
@@ -224,7 +224,7 @@ double findindexc(const arma::mat & X,
   return index_min(T_vec) + 1;
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(rng = false)]]
 arma::cube computeRc(const arma::mat & X,
                      const Rcpp::IntegerVector & candidates,
                      const Rcpp::IntegerVector & U_K,
