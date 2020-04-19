@@ -4,9 +4,16 @@
 \alias{simulate_data}
 \title{Generate data from a random DAG}
 \usage{
-simulate_data(n, p, prob_connect, distr = c("student_t", "gaussian",
-  "log_normal"), tail_index = 1.5, has_confounder = FALSE,
-  is_nonlinear = FALSE, has_uniform_margins = FALSE)
+simulate_data(
+  n,
+  p,
+  prob_connect,
+  distr = c("student_t", "gaussian", "log_normal"),
+  tail_index = 1.5,
+  has_confounder = FALSE,
+  is_nonlinear = FALSE,
+  has_uniform_margins = FALSE
+)
 }
 \arguments{
 \item{n}{Positive integer. The number of observations, must be larger

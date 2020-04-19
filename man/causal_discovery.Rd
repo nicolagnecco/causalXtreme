@@ -4,8 +4,11 @@
 \alias{causal_discovery}
 \title{Perform causal discovery}
 \usage{
-causal_discovery(dat, method = c("ease", "lingam", "order_lingam", "pc",
-  "pc_rank", "random"), set_args = list())
+causal_discovery(
+  dat,
+  method = c("ease", "lingam", "order_lingam", "pc", "pc_rank", "random"),
+  set_args = list()
+)
 }
 \arguments{
 \item{dat}{Numeric matrix. Dataset matrix with \code{n}

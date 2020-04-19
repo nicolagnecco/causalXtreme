@@ -18,7 +18,7 @@ Description: Functions for causal structure learning based on the paper
 Encoding: UTF-8
 License: GPL-3
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
 Suggests: 
     testthat (>= 2.1.0)
 Imports: 
@@ -28,5 +28,9 @@ Imports:
     stats (>= 3.6.1),
     methods (>= 3.6.1),
     fastICA (>= 1.2.1),
-    purrr (>= 0.3.2)
+    purrr (>= 0.3.2),
+    Rcpp
 biocViews:
+LinkingTo: 
+    Rcpp,
+    RcppArmadillo

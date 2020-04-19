@@ -161,7 +161,7 @@ sourceCpp("analysis/cpp/pwling_funcs.cpp")
 source("analysis/lingam_helpers.R")
 devtools::load_all(".")
 set.seed(42)
-X5 <- simulate_data(10000, 50, 0.2, has_uniform_margins = FALSE)
+X5 <- simulate_data(100, 50, 0.2, has_uniform_margins = FALSE)
 write.csv(X5$dataset, "analysis/temp_csv/X5.csv", row.names = FALSE)
 
 tic()

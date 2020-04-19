@@ -105,7 +105,7 @@ findindex <- function(X, R, candidates, U_K){
       T_vec[j] <- 0
 
       for (i in setdiff(U_K, j)){
-        J <- pwlingc(rbind(X[i, ], X[j, ]))  #kernel_ica(rbind(R[i, , j], X[j, ])) # or
+        J <- pwling(rbind(X[i, ], X[j, ]))  #kernel_ica(rbind(R[i, , j], X[j, ])) # or
         T_vec[j] <- T_vec[j] + J
       }
 
@@ -116,7 +116,7 @@ findindex <- function(X, R, candidates, U_K){
       T_vec[j] <- 0
 
       for (i in setdiff(U_K, j)){
-        J <- pwlingc(rbind(X[i, ], X[j, ])) #kernel_ica(rbind(R[i, , j], X[j, ])) # or
+        J <- pwling(rbind(X[i, ], X[j, ])) #kernel_ica(rbind(R[i, , j], X[j, ])) # or
         T_vec[j] <- T_vec[j] + J
 
         if (T_vec[j] > minT & !is.nan(minT)){

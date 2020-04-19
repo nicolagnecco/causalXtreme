@@ -4,8 +4,7 @@
 \alias{causal_tail_coeff}
 \title{Estimate causal tail coefficient}
 \usage{
-causal_tail_coeff(v1, v2, k = floor(n^0.4), to_rank = TRUE,
-  both_tails = TRUE)
+causal_tail_coeff(v1, v2, k = floor(n^0.4), to_rank = TRUE, both_tails = TRUE)
 }
 \arguments{
 \item{v1, v2}{Numeric vectors. Two vectors with \code{n} observations.}

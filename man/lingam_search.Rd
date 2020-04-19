@@ -30,7 +30,7 @@ This function is a wrapper around \code{estLiNGAM} from the package
 The function \code{estLiNGAM} is slightly modified
 to allow for different contrast functions in the fast-ICA step of
 LiNGAM. To modify \code{estLiNGAM}, we included in this package
-several internal functions from\code{pcalg}.
+several internal functions from \code{pcalg}.
 All the credits go to the authors of the \code{pcalg} package:
 
 Markus Kalisch, Alain Hauser , Martin Maechler, Diego Colombo,
