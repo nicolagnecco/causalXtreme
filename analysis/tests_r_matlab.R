@@ -60,7 +60,7 @@ toc()
 
 # Run lingam ICA
 tic()
-ica_res <- causal_discovery(X$dataset, "order_lingam")
+ica_res <- causal_discovery(X$dataset, "ica_lingam")
 toc()
 
 # Compare performances

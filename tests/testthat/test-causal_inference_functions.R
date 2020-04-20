@@ -91,13 +91,18 @@ test_that("causal discovery works", {
   expect_length(causal_discovery(dat, "lingam", list(contrast_fun = "exp")), 2)
   expect_length(causal_discovery(dat, "lingam"), 2)
   expect_length(causal_discovery(dat2, "lingam"), 2)
-  expect_error(causal_discovery(dat, "order_lingam", list(foobar = "exp")))
-  expect_error(causal_discovery(dat, "order_lingam",
+  expect_error(causal_discovery(dat, "ica_lingam", list(foobar = "exp")))
+  expect_error(causal_discovery(dat, "ica_lingam",
                                 list(contrast_fun = "logcosh", foobar = "exp")))
-  expect_length(causal_discovery(dat, "order_lingam",
+  expect_length(causal_discovery(dat, "ica_lingam",
                                  list(contrast_fun = "exp")), 2)
-  expect_length(causal_discovery(dat, "order_lingam"), 2)
-  expect_length(causal_discovery(dat2, "order_lingam"), 2)
+  expect_length(causal_discovery(dat, "ica_lingam"), 2)
+  expect_length(causal_discovery(dat2, "ica_lingam"), 2)
+  expect_error(causal_discovery(dat, "direct_lingam", list(foobar = "exp")))
+  expect_error(causal_discovery(dat, "direct_lingam",
+                                list(contrast_fun = "logcosh", foobar = "exp")))
+  expect_length(causal_discovery(dat, "direct_lingam"), 2)
+  expect_length(causal_discovery(dat2, "direct_lingam"), 2)
   expect_error(causal_discovery(dat, "pc", list(foobar = 5e-3)))
   expect_error(causal_discovery(dat, "pc", list(alpha = 5e-3, foobar = 2)))
   expect_length(causal_discovery(dat, "pc", list(alpha = 5e-3)), 2)

@@ -49,6 +49,7 @@ test_that("direct lingam works", {
   expect_equal(direct_lingam_search(X8$dataset),
                c(18, 10, 7, 11, 16, 20, 4, 13, 5, 3, 2, 6, 9, 15,
                  1, 8, 14, 12, 19, 17))
+  expect_equal(direct_lingam_search(3), NA)
 
 })
 

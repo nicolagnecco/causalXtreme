@@ -57,9 +57,9 @@ ease <- function(dat, k = floor(n ^ 0.4),
 }
 
 
-#' Lingam search
+#' LiNGAM ICA search
 #'
-#' Runs Lingam given a dataset \code{dat}. Returns the DAG estimated from the
+#' Runs ICA-based LiNGAM given a dataset \code{dat}. Returns the DAG estimated from the
 #' data using the LiNGAM-ICA algorithm.
 #'
 #' This function is a wrapper around \code{estLiNGAM} from the package
@@ -85,7 +85,7 @@ ease <- function(dat, k = floor(n ^ 0.4),
 #' The DAG estimated from the data.
 #' @export
 lingam_search <- function(dat, contrast_fun = c("logcosh", "exp")){
-  # !!! rename old_ica_lingam_search
+  # !!! consider to remove it
   contrast_fun <- match.arg(contrast_fun)
   n <- NROW(dat)
   p <- NCOL(dat)
@@ -106,9 +106,9 @@ lingam_search <- function(dat, contrast_fun = c("logcosh", "exp")){
 }
 
 
-#' Order-Lingam search
+#' Lingam ICA search
 #'
-#' Runs order-Lingam given a dataset \code{dat}. Returns the causal order
+#' Runs ICA-based Lingam given a dataset \code{dat}. Returns the causal order
 #' estimated from the data using the LiNGAM-ICA algorithm.
 #'
 #' This function is a wrapper around \code{estLiNGAM} from the package
@@ -133,8 +133,7 @@ lingam_search <- function(dat, contrast_fun = c("logcosh", "exp")){
 #' @return Numeric vector (or \code{NA} in case of error).
 #' The causal order estimated from the data.
 #' @export
-order_lingam_search <- function(dat, contrast_fun = c("logcosh", "exp")){
-  # !!! rename ica_lingam_search
+ica_lingam_search <- function(dat, contrast_fun = c("logcosh", "exp")){
   contrast_fun <- match.arg(contrast_fun)
   n <- NROW(dat)
   p <- NCOL(dat)
@@ -243,34 +242,34 @@ pc_rank_search <- function(dat, alpha = 5e-2){
 }
 
 
-#' Direct Lingam search
+#' DirectLiNGAM search
 #'
-#' Runs Direct Lingam given a dataset \code{dat}. Returns the causal order
-#' estimated from the data using the Direct LiNGAM algorithm with the
-#' Pairwise LiNGAM independence test.
+#' Runs DirectLiNGAM given a dataset \code{dat}. Returns the causal order
+#' estimated from the data using the Direct LiNGAM algorithm.
 #'
-#' # !!! update desc
-#' This function is a wrapper around \code{estLiNGAM} from the package
-#' \code{pcalg} (see \url{https://CRAN.R-project.org/package=pcalg }).
-#' The function \code{estLiNGAM} is slightly modified
-#' to allow for different contrast functions in the fast-ICA step of
-#' LiNGAM. To modify \code{estLiNGAM}, we included in this package
-#' several internal functions from \code{pcalg}.
-#' All the credits go to the authors of the \code{pcalg} package:
-#'
-#' Markus Kalisch, Alain Hauser , Martin Maechler, Diego Colombo,
-#' Doris Entner, Patrik Hoyer, Antti Hyttinen, Jonas Peters,
-#' Nicoletta Andri, Emilija Perkovic, Preetam Nandy, Philipp Ruetimann,
-#' Daniel Stekhoven, Manuel Schuerch, Marco Eigenmann.
+#' This function performs the performs pairwise~LiNGAM algorithm of Hyvarinen
+#' and Smith (2013, JMLR) in the DirectLiNGAM framework of Shimizu et al. (2011, JMLR).
+#' The function calls internal C++ code.
 #'
 #' @inheritParams causal_tail_matrix
 #' @return Numeric vector (or \code{NA} in case of error).
 #' The causal order estimated from the data.
 #' @export
 direct_lingam_search <- function(dat){
-  ## numeric_matrix -> causal_order
-  # perform direct lingam on dataset X
 
-  .Call(`_causalXtreme_direct_lingam_c`, dat)
+  if (typeof(dat) != "double"){
+    return(NA)
+  }
+
+  out <- tryCatch({
+    order <- .Call(`_causalXtreme_direct_lingam_c`, dat)
+    return(order)
+  },
+  error = function(e){
+    order <- NA
+    return(order)
+  })
+
+  return(out)
 }
 

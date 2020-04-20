@@ -2,7 +2,7 @@
 % Please edit documentation in R/causal_inference_helpers.R
 \name{direct_lingam_search}
 \alias{direct_lingam_search}
-\title{Direct Lingam search}
+\title{DirectLiNGAM search}
 \usage{
 direct_lingam_search(dat)
 }
@@ -15,22 +15,11 @@ Numeric vector (or \code{NA} in case of error).
 The causal order estimated from the data.
 }
 \description{
-Runs Direct Lingam given a dataset \code{dat}. Returns the causal order
-estimated from the data using the Direct LiNGAM algorithm with the
-Pairwise LiNGAM independence test.
+Runs DirectLiNGAM given a dataset \code{dat}. Returns the causal order
+estimated from the data using the Direct LiNGAM algorithm.
 }
 \details{
-# !!! update desc
-This function is a wrapper around \code{estLiNGAM} from the package
-\code{pcalg} (see \url{https://CRAN.R-project.org/package=pcalg }).
-The function \code{estLiNGAM} is slightly modified
-to allow for different contrast functions in the fast-ICA step of
-LiNGAM. To modify \code{estLiNGAM}, we included in this package
-several internal functions from \code{pcalg}.
-All the credits go to the authors of the \code{pcalg} package:
-
-Markus Kalisch, Alain Hauser , Martin Maechler, Diego Colombo,
-Doris Entner, Patrik Hoyer, Antti Hyttinen, Jonas Peters,
-Nicoletta Andri, Emilija Perkovic, Preetam Nandy, Philipp Ruetimann,
-Daniel Stekhoven, Manuel Schuerch, Marco Eigenmann.
+This function performs the performs pairwise~LiNGAM algorithm of Hyvarinen
+and Smith (2013, JMLR) in the DirectLiNGAM framework of Shimizu et al. (2011, JMLR).
+The function calls internal C++ code.
 }

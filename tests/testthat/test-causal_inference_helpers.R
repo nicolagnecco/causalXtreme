@@ -47,13 +47,13 @@ test_that("order-lingam search works", {
   set.seed(u)
   order <- estLiNGAM(dat1, only.perm = T, fun = "logcosh")$k
   set.seed(u)
-  expect_equal(order_lingam_search(dat1, "logcosh"), order)
-  expect_equal(order_lingam_search(dat2), NA)
+  expect_equal(ica_lingam_search(dat1, "logcosh"), order)
+  expect_equal(ica_lingam_search(dat2), NA)
 
   set.seed(u)
   order <- estLiNGAM(dat4, only.perm = T, fun = "exp")$k
   set.seed(u)
-  expect_equal(order_lingam_search(dat4, contrast_fun = "exp"), order)
+  expect_equal(ica_lingam_search(dat4, contrast_fun = "exp"), order)
 })
 
 test_that("pc search works", {

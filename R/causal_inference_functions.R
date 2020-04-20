@@ -17,7 +17,8 @@
 #' \itemize{
 #' \item \code{"ease"} (the default choice), see \code{\link{ease}}.
 #' \item \code{"lingam"}, see \code{\link{lingam_search}}.
-#' \item \code{"order_lingam"}, see \code{\link{order_lingam_search}}.
+#' \item \code{"ica_lingam"}, see \code{\link{ica_lingam_search}}.
+#' \item \code{"direct_lingam"}, see \code{\link{direct_lingam_search}}.
 #' \item \code{"pc"}, see \code{\link{pc_search}}.
 #' \item \code{"pc_rank"}, see \code{\link{pc_rank_search}}.
 #' \item \code{"random"}, see \code{\link{random_search}}.
@@ -38,9 +39,9 @@
 #' The estimated CPDAG.
 #' }
 #' @export
-causal_discovery <- function(dat, method = c("ease", "lingam", "order_lingam",
-                                             "pc", "pc_rank", "random"),
-                             set_args = list()){
+causal_discovery <- function(dat, method = c("ease", "lingam", "ica_lingam",
+                                        "direct_lingam","pc", "pc_rank",
+                                        "random"), set_args = list()){
 
   # check method
   method <- match.arg(method)
@@ -110,19 +111,19 @@ causal_discovery <- function(dat, method = c("ease", "lingam", "order_lingam",
            }
 
          },
-         "order_lingam" = {
+         "ica_lingam" = {
 
            # check arguments
            if (length(set_args) == 0){
 
-             caus_order <- order_lingam_search(dat)
+             caus_order <- ica_lingam_search(dat)
 
            } else if (length(set_args) <= 1){
 
              if (all(names(set_args) %in% c("contrast_fun"))){
 
                caus_order <- purrr::pmap(set_args,
-                                         order_lingam_search, dat = dat)[[1]]
+                                         ica_lingam_search, dat = dat)[[1]]
 
              } else{
 
@@ -209,6 +210,33 @@ causal_discovery <- function(dat, method = c("ease", "lingam", "order_lingam",
            } else {
              out$est_g
            }
+         },
+         "direct_lingam" = {
+
+           # check arguments
+           if (length(set_args) == 0){
+
+             caus_order <- direct_lingam_search(dat)
+
+           } else {
+
+             stop(paste(toupper(method),
+                        "does *not* accept additional arguments."))
+           }
+
+           # compute DAG/CPDAG and CPDAG
+           out$est_g <- if(all(is.na(caus_order))){
+             NA
+           } else {
+             caus_order_to_dag(caus_order)
+           }
+
+           out$est_cpdag <- if (all(is.na(out$est_g))) {
+             NA
+           } else {
+             dag_to_cpdag(out$est_g)
+           }
+
          },
          "random" = {
 

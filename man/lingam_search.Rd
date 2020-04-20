@@ -2,7 +2,7 @@
 % Please edit documentation in R/causal_inference_helpers.R
 \name{lingam_search}
 \alias{lingam_search}
-\title{Lingam search}
+\title{LiNGAM ICA search}
 \usage{
 lingam_search(dat, contrast_fun = c("logcosh", "exp"))
 }
@@ -21,7 +21,7 @@ Square binary matrix (or \code{NA} in case of error).
 The DAG estimated from the data.
 }
 \description{
-Runs Lingam given a dataset \code{dat}. Returns the DAG estimated from the
+Runs ICA-based LiNGAM given a dataset \code{dat}. Returns the DAG estimated from the
 data using the LiNGAM-ICA algorithm.
 }
 \details{
