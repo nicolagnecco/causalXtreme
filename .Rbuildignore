@@ -11,3 +11,4 @@
 ^analysis$
 ^\.travis\.yml$
 ^README\.Rmd$
+^\.github$

@@ -1,6 +1,6 @@
 ---
 output: github_document
-bibliography: ref.bib
+bibliography: inst/ref.bib
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -20,6 +20,7 @@ knitr::opts_chunk$set(
 [![Travis build
 status](https://api.travis-ci.org/nicolagnecco/causalXtreme.svg?branch=master)](https://travis-ci.org/nicolagnecco/causalXtreme)
 [![codecov](https://codecov.io/gh/nicolagnecco/causalXtreme/branch/master/graph/badge.svg)](https://codecov.io/gh/nicolagnecco/causalXtreme)
+[![R build status](https://github.com/nicolagnecco/causalXtreme/workflows/R-CMD-check/badge.svg)](https://github.com/nicolagnecco/causalXtreme/actions)
 <!-- badges: end -->
 
 The goal of causalXtreme is to provide an interface to perform causal discovery in linear structural equation models (SEM) with heavy-tailed noise. For more details see @gne2019 [https://arxiv.org/abs/1908.05097].

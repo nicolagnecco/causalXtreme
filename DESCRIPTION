@@ -34,3 +34,5 @@ biocViews:
 LinkingTo: 
     Rcpp,
     RcppArmadillo
+URL: https://github.com/nicolagnecco/causalXtreme
+BugReports: https://github.com/nicolagnecco/causalXtreme/issues
