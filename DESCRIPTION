@@ -20,7 +20,9 @@ License: GPL-3
 LazyData: true
 RoxygenNote: 7.1.0
 Suggests: 
-    testthat (>= 2.1.0)
+    testthat (>= 2.1.0),
+    knitr,
+    rmarkdown
 Imports: 
     SID (>= 1.0),
     pcalg (>= 2.6.2),
@@ -36,3 +38,4 @@ LinkingTo:
     RcppArmadillo
 URL: https://github.com/nicolagnecco/causalXtreme
 BugReports: https://github.com/nicolagnecco/causalXtreme/issues
+VignetteBuilder: knitr
