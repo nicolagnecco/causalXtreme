@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(causalXtreme)
+2 + 2
 ```
 
 ```{r include=FALSE}
