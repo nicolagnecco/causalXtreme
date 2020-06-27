@@ -88,6 +88,18 @@ For more information see 'Details'." />
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/my_first_vignette.html">my first vignette</a>
+    </li>
+  </ul>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -119,11 +131,11 @@ For more information see 'Details'." />
 For more information see 'Details'.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>causal_discovery</span>(
-  <span class='no'>dat</span>,
-  <span class='kw'>method</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"ease"</span>, <span class='st'>"lingam"</span>, <span class='st'>"ica_lingam"</span>, <span class='st'>"direct_lingam"</span>, <span class='st'>"pc"</span>, <span class='st'>"pc_rank"</span>,
+    <pre class="usage"><span class='fu'><a href='https://rdrr.io/pkg/causalXtreme/man/causal_discovery.html'>causal_discovery</a></span>(
+  <span class='kw'>dat</span>,
+  method = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"ease"</span>, <span class='st'>"lingam"</span>, <span class='st'>"ica_lingam"</span>, <span class='st'>"direct_lingam"</span>, <span class='st'>"pc"</span>, <span class='st'>"pc_rank"</span>,
     <span class='st'>"random"</span>),
-  <span class='kw'>set_args</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>()
+  set_args = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>()
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -137,13 +149,13 @@ rows (observations) and <code>p</code> columns (variables).</p></td>
     <tr>
       <th>method</th>
       <td><p>String. Is one of:</p><ul>
-<li><p><code>"ease"</code> (the default choice), see <code><a href='ease.html'>ease</a></code>.</p></li>
-<li><p><code>"lingam"</code>, see <code><a href='lingam_search.html'>lingam_search</a></code>.</p></li>
-<li><p><code>"ica_lingam"</code>, see <code><a href='ica_lingam_search.html'>ica_lingam_search</a></code>.</p></li>
-<li><p><code>"direct_lingam"</code>, see <code><a href='direct_lingam_search.html'>direct_lingam_search</a></code>.</p></li>
-<li><p><code>"pc"</code>, see <code><a href='pc_search.html'>pc_search</a></code>.</p></li>
-<li><p><code>"pc_rank"</code>, see <code><a href='pc_rank_search.html'>pc_rank_search</a></code>.</p></li>
-<li><p><code>"random"</code>, see <code><a href='random_search.html'>random_search</a></code>.</p></li>
+<li><p><code>"ease"</code> (the default choice), see <code><a href='https://rdrr.io/pkg/causalXtreme/man/ease.html'>ease</a></code>.</p></li>
+<li><p><code>"lingam"</code>, see <code><a href='https://rdrr.io/pkg/causalXtreme/man/lingam_search.html'>lingam_search</a></code>.</p></li>
+<li><p><code>"ica_lingam"</code>, see <code><a href='https://rdrr.io/pkg/causalXtreme/man/ica_lingam_search.html'>ica_lingam_search</a></code>.</p></li>
+<li><p><code>"direct_lingam"</code>, see <code><a href='https://rdrr.io/pkg/causalXtreme/man/direct_lingam_search.html'>direct_lingam_search</a></code>.</p></li>
+<li><p><code>"pc"</code>, see <code><a href='https://rdrr.io/pkg/causalXtreme/man/pc_search.html'>pc_search</a></code>.</p></li>
+<li><p><code>"pc_rank"</code>, see <code><a href='https://rdrr.io/pkg/causalXtreme/man/pc_rank_search.html'>pc_rank_search</a></code>.</p></li>
+<li><p><code>"random"</code>, see <code><a href='https://rdrr.io/pkg/causalXtreme/man/random_search.html'>random_search</a></code>.</p></li>
 </ul></td>
     </tr>
     <tr>
@@ -172,12 +184,12 @@ The estimated CPDAG.</p></li>
 
     <p>This method is a wrapper around the individual causal
 search functions. For each causal method, it returns a list
-that can be passed directly to the function <code><a href='causal_metrics.html'>causal_metrics</a></code>
+that can be passed directly to the function <code><a href='https://rdrr.io/pkg/causalXtreme/man/causal_metrics.html'>causal_metrics</a></code>
 for evaluation. In particular, the first element of the returned list
 is a DAG (or CPDAG) and it is used to compute the structural intervention
-distance (see <code><a href='compute_str_int_distance.html'>compute_str_int_distance</a></code>).
+distance (see <code><a href='https://rdrr.io/pkg/causalXtreme/man/compute_str_int_distance.html'>compute_str_int_distance</a></code>).
 The second element of the list is a CPDAG and it is used to compute the
-structural Hamming distance (see <code><a href='compute_str_ham_distance.html'>compute_str_ham_distance</a></code>).</p>
+structural Hamming distance (see <code><a href='https://rdrr.io/pkg/causalXtreme/man/compute_str_ham_distance.html'>compute_str_ham_distance</a></code>).</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
