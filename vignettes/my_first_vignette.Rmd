@@ -19,12 +19,3 @@ library(causalXtreme)
 2 + 2
 ```
 
-```{r include=FALSE}
-do.call(knitr::read_chunk, list(path = "test.R"))
-
-```
-
-```{r chunk-label}
-
-```
-
