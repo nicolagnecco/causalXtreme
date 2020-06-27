@@ -1,8 +1,8 @@
 ---
-title: "my_first_vignette"
+title: "my first vignette"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{my_first_vignette}
+  %\VignetteIndexEntry{my first vignette}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -21,6 +21,7 @@ library(causalXtreme)
 
 ```{r include=FALSE}
 do.call(knitr::read_chunk, list(path = "test.R"))
+
 ```
 
 ```{r chunk-label}
