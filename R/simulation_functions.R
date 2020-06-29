@@ -1,8 +1,24 @@
 #' Generate data from a random DAG
 #'
 #' Generate data from a random DAG.
-#' @inheritParams simulate_noise
-#' @inheritParams random_dag
+#' @param p Integer --- greater than 0. Number of nodes.
+#' @param prob_connect Numeric --- between 0 and 1. The probability that an edge
+#' \eqn{i {\rightarrow} j} is added to the DAG.
+#' @param caus_order Numeric vector. The causal order of the DAG.
+#' If the argument is not provided it is generated randomly.
+#' @param n Positive integer. The number of observations, must be larger
+#' than 1.
+#' @param p Positive integer. The number of variables, must be larger
+#' than 1.
+#' @param distr Character. The distribution of the noise. It is one of:
+#' \itemize{
+#' \item \code{student_t}, in this case the user has to specify the
+#' \code{tail_index}, i.e., the degrees of freedom,
+#' \item \code{gaussian},
+#' \item \code{log_normal}.
+#' }
+#' @param tail_index Positive numeric. The tail index, i.e., degrees
+#' of freedom, of the noise.
 #' @param has_confounder Boolean. Are there confounders in the system?
 #' @param is_nonlinear Boolean. Is the data generated non linear?
 #' @param has_uniform_margins Boolean. Are the variables rescaled uniformly

@@ -8,6 +8,7 @@
 #'
 #' @return Numeric vector. A vector with the selected elements
 #'
+#' @noRd
 pick_elements <- function(vec, prob){
   r <- stats::rbinom(n = length(vec), size = 1, prob = prob)
   vec[r == 1]
@@ -30,6 +31,7 @@ pick_elements <- function(vec, prob){
 #'
 #' @return Numeric --- between \code{-max} and \code{max}. The quantile
 #' associated to the probability \code{prob}.
+#' @noRd
 inverse_mirror_uniform <- function(prob, min, max){
 
   # check if max < min
@@ -78,6 +80,7 @@ inverse_mirror_uniform <- function(prob, min, max){
 #' \code{min} and \code{max} must be strictly greater than 0.
 #'
 #' @return Numeric vector. A vector with the sampled elements.
+#' @noRd
 sample_uniform <- function(n, min, max, mirror = FALSE){
 
   # check if max < min
@@ -111,6 +114,7 @@ sample_uniform <- function(n, min, max, mirror = FALSE){
 #' If the argument is not provided it is generated randomly.
 #'
 #' @return Square binary matrix. A matrix representing the random DAG.
+#' @noRd
 random_dag <- function(p, prob_connect,
                        caus_order = sample(p, p, replace = FALSE)){
 
@@ -157,6 +161,7 @@ random_dag <- function(p, prob_connect,
 #' positive.
 #' @return Square numeric matrix. The adjacency matrix of the underlying
 #' DAG \code{dag}.
+#' @noRd
 random_coeff <- function(dag, lb = 0.1, ub = 0.9, two_intervals = TRUE){
 
   # check if dag is a (non-weighted) adjacency matrix
@@ -189,6 +194,7 @@ random_coeff <- function(dag, lb = 0.1, ub = 0.9, two_intervals = TRUE){
 #' of confounders (rows and columns) in \code{dag_confounders}.
 #' }
 #'
+#' @noRd
 add_random_confounders <- function(dag, prob_confound){
 
   # check if dag is a (non-weighted) adjacency matrix
@@ -253,6 +259,7 @@ add_random_confounders <- function(dag, prob_confound){
 #' of freedom, of the noise.
 #' @return Numeric matrix. Dataset matrix with \code{n}
 #' rows (observations) and \code{p} columns (variables).
+#' @noRd
 simulate_noise <- function(n, p, distr = c("student_t", "gaussian",
                                           "log_normal"), tail_index){
 
@@ -291,6 +298,7 @@ simulate_noise <- function(n, p, distr = c("student_t", "gaussian",
 #' rows (observations) and \code{p} columns (variables).
 #' @return Numeric matrix. Dataset matrix with \code{n}
 #' rows (observations) and \code{p} columns (variables).
+#' @noRd
 nonlinear_scm <- function(adj_mat, noise){
 
   n <- NROW(noise)
@@ -323,6 +331,7 @@ nonlinear_scm <- function(adj_mat, noise){
 #' @param q_low Numeric, between 0 and 1.
 #' @param q_high Numeric, between 0 and 1.
 #' @return Numeric vector.
+#' @noRd
 broken_hockeystick <- function(v, q_low = 0.05, q_high = 0.95){
   n <- length(v)
   r <- rank(v, ties.method = "first")
@@ -339,6 +348,7 @@ broken_hockeystick <- function(v, q_low = 0.05, q_high = 0.95){
 #'
 #' @inheritParams broken_hockeystick
 #' @return Numeric vector.
+#' @noRd
 uniform_margin <- function(v){
   n <- length(v)
   rank(v) / n

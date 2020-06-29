@@ -123,7 +123,7 @@ causal_tail_matrix <- function(dat, k = floor(n ^ 0.4),
 #' @param tail_index Numeric. The tail-index of the noise distribution.
 #' @return Numeric --- between 0 and 1. The theoretical psi coefficient
 #' between node \code{i} and \code{j} in the DAG \code{adj_mat}.
-#' @export
+#' @noRd
 psi_coefficient <- function(adj_mat, i, j, tail_index){
 
   # compute DAG
@@ -164,7 +164,7 @@ psi_coefficient <- function(adj_mat, i, j, tail_index){
 #' @return Numeric matrix. The entry \eqn{(i, j)} contains the
 #' \eqn{\Psi} coefficient between node \eqn{i} and node \eqn{j}.
 #' The values on the main diagonal are set to \code{NA}.
-#' @export
+#' @noRd
 psi_matrix <- function(adj_mat, tail_index){
 
   # number of variables

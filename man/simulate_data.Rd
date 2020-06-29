@@ -42,6 +42,9 @@ of freedom, of the noise.}
 
 \item{has_uniform_margins}{Boolean. Are the variables rescaled uniformly
 between 0 and 1?}
+
+\item{caus_order}{Numeric vector. The causal order of the DAG.
+If the argument is not provided it is generated randomly.}
 }
 \value{
 List. The list is made of:

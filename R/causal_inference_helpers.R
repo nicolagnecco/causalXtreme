@@ -83,7 +83,7 @@ ease <- function(dat, k = floor(n ^ 0.4),
 #' Hyvarinen, A., \url{https://ieeexplore.ieee.org/abstract/document/761722/}.
 #' @return Square binary matrix (or \code{NA} in case of error).
 #' The DAG estimated from the data.
-#' @export
+#' @noRd
 lingam_search <- function(dat, contrast_fun = c("logcosh", "exp")){
   # !!! consider to remove it
   contrast_fun <- match.arg(contrast_fun)
