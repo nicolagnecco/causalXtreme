@@ -11,10 +11,11 @@ knitr::opts_chunk$set(echo = TRUE)
 This folder contains the files to replicate the simulations and real-world experiments
 of @gne2019 [https://arxiv.org/abs/1908.05097].
 
-A brief introduction to the `causalXtreme` package can be found at [https://nicolagnecco.github.io/causalXtreme].
+A brief introduction to the `causalXtreme` package can be found at https://nicolagnecco.github.io/causalXtreme.
 
-The required R packages are: `causalXtreme`, `tidyverse`, `doParallel`, `doRNG`,
-`rngtools`, `tictoc`, `latex2exp`, `tools`, `mthemer` (installable from [https://rdrr.io/github/cszang/mthemer/man/mthemer.html]), and `kableExtra`.
+The required R packages are: `causalXtreme`, `tidyverse`, `tidyquant`, `doParallel`, `doRNG`,
+`rngtools`, `tictoc`, `latex2exp`, `tools`, `kableExtra`, `cowplot`, `evd`, `evir`,
+`Hmisc`, `timetk`, `tsibble`, `reshape2`, `ismev`, and `pracma`.
 
 This folder contains the following files:
 
@@ -31,7 +32,7 @@ It also contains the following folders:
 * `data`, which contains the raw data for the financial and river data experiments
 * `original_output`, which contains the output of simulations of Section 5.1.
 These simulations can be reproduced using `main.R`, but they are computationally intensive
-* `output`, which is an empty folder that contains all the results produced by `main.R`
+* `output`, which is an empty folder for the results produced by `main.R`
 
 
 ### References

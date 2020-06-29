@@ -13,12 +13,11 @@ library(evd)
 library(evir)
 library(Hmisc)
 library(latex2exp)
-library(mthemer)
 library(tidyquant)
 library(timetk)
 library(tsibble)
 
-
+theme_set(theme_bw())
 
 ## Define constants ####
 OUTPUT_FILE <- "output/financial_results.txt"
@@ -70,7 +69,6 @@ plot_rolling_causal_coeff <- function(dataset, cause, effect,
                aes(x = date, y = psi, color = ticker),
                shape = 15,
                size = 3) +
-    mthemer() +
     scale_colour_manual(labels = list_labels,
                         values = tolPalette) +
     theme(legend.title=element_blank()) +
@@ -113,7 +111,6 @@ plot_robustness_k <- function(dataset, cause, effect, ylab){
               alpha = .9, size = 1) +
     geom_point(aes(x = root, y = psi_est, color = ticker),
                size = 3, shape = 21, fill = "white") +
-    mthemer() +
     theme(axis.text = element_text(size = 16),
           axis.title = element_text(size = 16),
           legend.text = element_text(size = 14),
@@ -193,7 +190,6 @@ dates <- cbind(event, startDate, endDate) %>%
 
 ## Plot EURCHF timeseries ####
 plt_eurchf <- ggplot() +
-  mthemer() +
   xlab("Year") +
   ylab("EURCHF return") +
   scale_x_date(date_breaks = "1 year",

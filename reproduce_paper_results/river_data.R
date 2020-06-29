@@ -9,7 +9,6 @@ library(doParallel)
 library(doRNG)
 library(Hmisc)
 library(latex2exp)
-library(mthemer)
 require(reshape2)
 library(tidyquant)
 library(timetk)
@@ -17,6 +16,7 @@ library(tsibble)
 library(ismev)
 library(pracma)
 
+theme_set(theme_bw())
 
 ## Define constants ####
 OUTPUT_FILE <- "output/river_results.txt"
@@ -601,7 +601,6 @@ g <- ggplot(res, aes(x = root, y = mean_sid)) +
   geom_ribbon(aes(ymin = lb, ymax = ub),
               alpha = 0.25) +
   geom_line(alpha = .9, size = 1,  color = tolPalette[2]) +
-  mthemer() +
   scale_color_manual(values = unname(tolPalette[5])) +
   xlab(TeX("Fractional exponent of $k_n$")) +
   ylab("Structural Intervention Distance") +

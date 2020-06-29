@@ -56,7 +56,6 @@ simulation_3(log_file = "output/sims_3.txt", result_file = file.name,
 # Plot results
 library(latex2exp)
 library(tools)
-library(mthemer)
 library(kableExtra)
 source("produce_charts.R")
 produce_charts(sim0_file = "original_output/k_robustness.rds",

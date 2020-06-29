@@ -5,6 +5,8 @@
 
 produce_charts <- function(sim0_file, sim1_file, sim2_file, sim3_file){
 
+  theme_set(theme_bw())
+
   ### CONSTANTS ####
   SIMULATION_K <- sim0_file
   SIMULATION <- sim1_file
@@ -163,7 +165,6 @@ produce_charts <- function(sim0_file, sim1_file, sim2_file, sim3_file){
       g <- ggplot(data = dat, aes_string(x = x, y = y, color = color)) +
         geom_line(size = 1, alpha = .5) +
         geom_point(size = 3) +
-        mthemer() +
         ylab(y_lab) +
         facet_grid(reformulate(facet_x, facet_y)) +
         scale_colour_manual(values = palette) +
@@ -176,7 +177,6 @@ produce_charts <- function(sim0_file, sim1_file, sim2_file, sim3_file){
       g <- ggplot(data = dat, aes_string(x = x, y = y, color = color)) +
         geom_line(size = 1, alpha = .5) +
         geom_point(size = 3) +
-        mthemer() +
         ylab(y_lab) +
         facet_grid(cols = vars(n_label)) +
         scale_colour_manual(values = palette) +
@@ -326,6 +326,14 @@ produce_charts <- function(sim0_file, sim1_file, sim2_file, sim3_file){
                      escape = F)
 
   sink(file = LINGAM_REMOVE_BULK)
+  cat("--------------------------------------------------------------------------",
+      "\n")
+  cat("Computing time in seconds when considering all data ('all')",
+      "\n",
+      "or only extreme observations ('tail'), for ICA-LiNGAM and Pairwise LiNGAM",
+      "\n")
+  cat("--------------------------------------------------------------------------",
+      "\n")
   print(dat)
   sink()
   closeAllConnections()
@@ -351,7 +359,6 @@ produce_charts <- function(sim0_file, sim1_file, sim2_file, sim3_file){
               alpha = .7, size = 1, position = pd) +
     geom_point(aes(x = root, y = mean_sid, color = tail_index),
                size = 3, shape = 21, fill = "white", position = pd) +
-    mthemer() +
     scale_color_manual(values = unname(tolPalette)) +
     scale_fill_manual(values = unname(tolPalette)) +
     xlab(TeX("Fractional exponent of $k_n$")) +
@@ -449,7 +456,6 @@ produce_charts <- function(sim0_file, sim1_file, sim2_file, sim3_file){
     ylim(0, 8) +
     xlab(TeX("$X_1$")) +
     ylab(TeX("$X_2$")) +
-    mthemer() +
     theme(axis.text = element_text(size = 14),
           axis.title = element_text(size = 18)
     )
@@ -463,7 +469,6 @@ produce_charts <- function(sim0_file, sim1_file, sim2_file, sim3_file){
     ylim(0, 8) +
     xlab(TeX("$X_1$")) +
     ylab(TeX("$X_2$")) +
-    mthemer() +
     theme(axis.text = element_text(size = 14),
           axis.title = element_text(size = 18)
     )
@@ -477,7 +482,6 @@ produce_charts <- function(sim0_file, sim1_file, sim2_file, sim3_file){
     ylim(0, 8) +
     xlab(TeX("$X_1$")) +
     ylab(TeX("$X_2$")) +
-    mthemer() +
     theme(axis.text = element_text(size = 14),
           axis.title = element_text(size = 18)
     )
