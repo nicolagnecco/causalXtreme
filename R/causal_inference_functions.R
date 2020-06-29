@@ -16,7 +16,6 @@
 #' @param method String. Is one of:
 #' \itemize{
 #' \item \code{"ease"} (the default choice), see \code{\link{ease}}.
-#' \item \code{"lingam"}, see \code{\link{lingam_search}}.
 #' \item \code{"ica_lingam"}, see \code{\link{ica_lingam_search}}.
 #' \item \code{"direct_lingam"}, see \code{\link{direct_lingam_search}}.
 #' \item \code{"pc"}, see \code{\link{pc_search}}.
@@ -39,7 +38,7 @@
 #' The estimated CPDAG.
 #' }
 #' @export
-causal_discovery <- function(dat, method = c("ease", "lingam", "ica_lingam",
+causal_discovery <- function(dat, method = c("ease", "ica_lingam",
                                         "direct_lingam","pc", "pc_rank",
                                         "random"), set_args = list()){
 
@@ -77,38 +76,6 @@ causal_discovery <- function(dat, method = c("ease", "lingam", "ica_lingam",
            # compute DAG/CPDAG and CPDAG
            out$est_g <- caus_order_to_dag(caus_order)
            out$est_cpdag <- dag_to_cpdag(out$est_g)
-
-         },
-         "lingam" = {
-
-           # check arguments
-           if (length(set_args) == 0){
-
-             dag <- lingam_search(dat)
-
-           } else if (length(set_args) <= 1){
-
-             if (all(names(set_args) %in% c("contrast_fun"))){
-
-               dag <- purrr::pmap(set_args, lingam_search, dat = dat)[[1]]
-
-             } else{
-
-               stop(paste("Arguments for", toupper(method),
-                          "must be 'contrast_fun'."))
-             }
-           } else{
-
-             stop(paste(toupper(method), "accepts at most 1 argument."))
-           }
-
-           # compute DAG/CPDAG and CPDAG
-           out$est_g <- dag
-           out$est_cpdag <- if (all(is.na(out$est_g))) {
-             NA
-           } else {
-             dag_to_cpdag(out$est_g)
-           }
 
          },
          "ica_lingam" = {
