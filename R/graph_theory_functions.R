@@ -6,6 +6,7 @@
 #'
 #' @param dag Square binary matrix. A matrix representing a DAG.
 #' @return Numeric vector. The causal order of the DAG \code{dag}.
+#' @noRd
 compute_caus_order <- function(dag) {
 
   # check if dag is a DAG (i.e., a binary matrix)
@@ -37,6 +38,7 @@ compute_caus_order <- function(dag) {
 #' Represents a causal order.
 #' @inheritParams compute_caus_order
 #' @return Boolean.
+#' @noRd
 check_caus_order <- function(caus_order, dag) {
 
   # check if dag is a DAG (i.e., a binary matrix)
@@ -74,6 +76,7 @@ check_caus_order <- function(caus_order, dag) {
 #'
 #' @inheritParams compute_caus_order
 #' @return Square binary matrix. The ancestral matrix of the DAG \code{dag}.
+#' @noRd
 get_ancestors <- function(dag){
 
   # check if dag is a DAG (i.e., a binary matrix)
@@ -104,6 +107,7 @@ get_ancestors <- function(dag){
 #' @inheritParams compute_caus_order
 #' @return Square binary matrix. The descendant matrix of
 #' the DAG \code{dag}.
+#' @noRd
 get_descendants <- function(dag){
 
   # check if dag is a DAG (i.e., a binary matrix)
@@ -125,6 +129,7 @@ get_descendants <- function(dag){
 #' @inheritParams compute_caus_order
 #' @return Square binary matrix. The parental matrix of
 #' the DAG \code{dag}, i.e., the DAG itself.
+#' @noRd
 get_parents <- function(dag){
 
   # check if dag is a DAG (i.e., a binary matrix)
@@ -145,6 +150,7 @@ get_parents <- function(dag){
 #' @inheritParams compute_caus_order
 #' @return Square binary matrix. The children matrix of
 #' the DAG \code{dag}.
+#' @noRd
 get_children <- function(dag){
 
   # check if dag is a DAG (i.e., a binary matrix)
@@ -166,6 +172,7 @@ get_children <- function(dag){
 #'
 #' @param adj_mat Square numeric matrix. The adjacency matrix of a DAG.
 #' @return Square numeric matrix. The path matrix associated to \code{adj_mat}.
+#' @noRd
 get_all_paths <- function(adj_mat){
 
   p <- NROW(adj_mat)
@@ -190,7 +197,7 @@ get_all_paths <- function(adj_mat){
 #' @inheritParams check_caus_order
 #' @return Square binary matrix. A fully connected DAG that agrees
 #' with the given order.
-#'
+#' @noRd
 caus_order_to_dag <- function(caus_order){
 
   # check if caus_order has some NA
@@ -213,7 +220,7 @@ caus_order_to_dag <- function(caus_order){
 #' @inheritParams compute_caus_order
 #' @return Square binary matrix. A CPDAG that agrees
 #' with the given DAG.
-#'
+#' @noRd
 dag_to_cpdag <- function(dag){
 
   # check if dag is a DAG (i.e., a binary matrix)
@@ -234,7 +241,7 @@ dag_to_cpdag <- function(dag){
 #' @inheritParams check_caus_order
 #' @return Square binary matrix. A CPDAG that agrees
 #' with the given DAG.
-#'
+#' @noRd
 caus_order_to_cpdag <- function(caus_order){
 
   # check if caus_order has some NA
@@ -259,6 +266,7 @@ caus_order_to_cpdag <- function(caus_order){
 #' @inheritParams check_caus_order
 #' @return Numeric --- between 0 and 1. The ancestral distance between the
 #' DAG \code{dag} and the causal order \code{caus_order}.
+#' @noRd
 compute_ancestral_distance <- function(dag, caus_order){
 
   # check if dag is a DAG (i.e., a binary matrix)
