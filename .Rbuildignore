@@ -16,3 +16,4 @@
 ^docs$
 ^pkgdown$
 ^LICENSE\.md$
+^reproduce_paper_results$

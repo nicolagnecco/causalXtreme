@@ -1,4 +1,4 @@
 .Rproj.user
 .Rhistory
-*.csv
+analysis/temp_csv
 inst/doc
