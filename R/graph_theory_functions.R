@@ -302,7 +302,7 @@ compute_ancestral_distance <- function(dag, caus_order){
 #' @param est_g Square binary matrix. The estimated DAG or CPDAG.
 #' @return  Numeric --- between 0 and 1. The structural intervention
 #' distance between the DAG \code{dag} and the DAG (or CPDAG) \code{est_g}.
-#' @noRd
+#' @keywords internal
 compute_str_int_distance <- function(dag, est_g){
 
   # check if dag is a DAG (i.e., a binary matrix)
@@ -334,7 +334,7 @@ compute_str_int_distance <- function(dag, est_g){
 #' @return Numeric --- between 0 and 1. The structural Hamming
 #' distance between a true CPDAG \code{cpdag} and the
 #' estimated CPDAG \code{est_cpdag}.
-#' @noRd
+#' @keywords internal
 compute_str_ham_distance <- function(cpdag, est_cpdag){
 
   # check if cpdag is a CPDAG (i.e., a binary matrix)

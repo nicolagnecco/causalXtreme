@@ -85,12 +85,6 @@ test_that("causal discovery works", {
   expect_length(causal_discovery(dat, "ease", list(k = 20)), 2)
   expect_length(causal_discovery(dat, "ease", list(both_tails = T)), 2)
   expect_length(causal_discovery(dat, "ease"), 2)
-  expect_error(causal_discovery(dat, "lingam", list(foobar = "exp")))
-  expect_error(causal_discovery(dat, "lingam",
-                                list(contrast_fun = "logcosh", foobar = "exp")))
-  expect_length(causal_discovery(dat, "lingam", list(contrast_fun = "exp")), 2)
-  expect_length(causal_discovery(dat, "lingam"), 2)
-  expect_length(causal_discovery(dat2, "lingam"), 2)
   expect_error(causal_discovery(dat, "ica_lingam", list(foobar = "exp")))
   expect_error(causal_discovery(dat, "ica_lingam",
                                 list(contrast_fun = "logcosh", foobar = "exp")))

@@ -114,7 +114,7 @@ sample_uniform <- function(n, min, max, mirror = FALSE){
 #' If the argument is not provided it is generated randomly.
 #'
 #' @return Square binary matrix. A matrix representing the random DAG.
-#' @noRd
+#' @keywords internal
 random_dag <- function(p, prob_connect,
                        caus_order = sample(p, p, replace = FALSE)){
 
@@ -259,7 +259,7 @@ add_random_confounders <- function(dag, prob_confound){
 #' of freedom, of the noise.
 #' @return Numeric matrix. Dataset matrix with \code{n}
 #' rows (observations) and \code{p} columns (variables).
-#' @noRd
+#' @keywords internal
 simulate_noise <- function(n, p, distr = c("student_t", "gaussian",
                                           "log_normal"), tail_index){
 

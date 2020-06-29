@@ -6,8 +6,7 @@
 \usage{
 causal_discovery(
   dat,
-  method = c("ease", "lingam", "ica_lingam", "direct_lingam", "pc", "pc_rank",
-    "random"),
+  method = c("ease", "ica_lingam", "direct_lingam", "pc", "pc_rank", "random"),
   set_args = list()
 )
 }
@@ -18,7 +17,6 @@ rows (observations) and \code{p} columns (variables).}
 \item{method}{String. Is one of:
 \itemize{
 \item \code{"ease"} (the default choice), see \code{\link{ease}}.
-\item \code{"lingam"}, see \code{\link{lingam_search}}.
 \item \code{"ica_lingam"}, see \code{\link{ica_lingam_search}}.
 \item \code{"direct_lingam"}, see \code{\link{direct_lingam_search}}.
 \item \code{"pc"}, see \code{\link{pc_search}}.
