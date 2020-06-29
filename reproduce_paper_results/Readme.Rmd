@@ -19,7 +19,7 @@ The required R packages are: `causalXtreme`, `tidyverse`, `tidyquant`, `doParall
 
 This folder contains the following files:
 
-* `main.R`, which runs all simulations found in the paper, and produces all the plots and results
+* `main.R`, which runs all the `R` files to produce the results and figures of Sections 5.1–5.3
 * `simulation_0.R`, ..., `simulation_3.R`, which reproduce results of Section 5.1
 * `simulation_functions.R`, which contains all the helper functions for results of Section 5.1
 * `produce_charts.R`, which reproduces all figures of Section 5.1
