@@ -1,5 +1,6 @@
 # Simulations ----
 rm(list = ls())
+# devtools::install_github("nicolagnecco/causalXtreme")
 library(causalXtreme)
 library(tidyverse)
 library(doParallel)
