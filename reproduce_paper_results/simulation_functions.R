@@ -28,7 +28,7 @@ method_settings <- function(){
   ## void -> tibble
   ## returns a tibble with all the used methods
   method_tbl <- tibble(method = c("ease", "ica_lingam",
-                                  "direct_lingam", "pc_rank", "random", "lingam"))
+                                  "direct_lingam", "pc_rank", "random"))
 
   return(method_tbl)
 }

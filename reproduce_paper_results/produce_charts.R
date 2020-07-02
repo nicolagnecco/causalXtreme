@@ -5,6 +5,12 @@
 
 produce_charts <- function(sim0_file, sim1_file, sim2_file, sim3_file){
 
+  # Check whether the sim1_file and sim3_file are both demo or not
+  if(dirname(sim1_file) != dirname(sim3_file)){
+    stop("Simulation 1 and simulation 3 must be both demo or non-demo.")
+  }
+
+  # Set plotting theme
   theme_set(theme_bw())
 
   ### CONSTANTS ####
