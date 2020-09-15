@@ -131,6 +131,20 @@ produce_charts <- function(sim0_file, sim1_file, sim2_file, sim3_file){
                           levels =
                             unique(n_label[order(res$n)])) # reoder levels
 
+    if (type == "pc_sig_level"){
+      alpha_label <- paste("sig =", res$alpha)
+      res$alpha_label <- factor(alpha_label,
+                                levels =
+                                  unique(alpha_label[order(res$alpha)])) # reorder levels
+
+      p_label <- paste("p =", res$p)
+      res$p_label <- factor(p_label,
+                      levels =
+                        unique(p_label[order(res$p)])) # reorder levels
+
+    }
+
+
     if (type == "multiple"){
       setting_label <- paste("Setting", res$settings)
       res$setting_label <- factor(setting_label,
@@ -357,36 +371,21 @@ produce_charts <- function(sim0_file, sim1_file, sim2_file, sim3_file){
     prepare_data(type = "pc_sig_lev") %>%
     mutate(alpha = factor(alpha))
 
-  y_lab <- "Structural Intervention Distance"
+  g <- ggplot(data = dat, aes_string(x = "alpha",
+                                     y = "structInterv_dist",
+                                     group = 1)) +
+    geom_point(color = tolPalette[4], size = 3)  +
+    stat_summary(fun=sum, geom="line",
+                 color = tolPalette[4], size = 1, alpha = .5) +
+    ylab("Structural Intervention Distance") +
+    xlab("Significance level") +
+    ylim(0, 1) +
+    facet_grid(rows = vars(p_label)) +
+    theme(legend.title=element_blank()); g
 
-  # Prepare axes
-  y <- "structInterv_dist"
-  x <-  "p"
-  color <-  "method"
-  facet_x <-  "n"
-  facet_y <-  "alpha"
-
-
-    g <- ggplot(data = dat, aes_string(x = x, y = y)) +
-      geom_line(size = 1, alpha = .5) +
-      geom_point(size = 3)  +
-      ylab(y_lab) +
-      facet_grid(reformulate(facet_x, facet_y)) +
-      scale_colour_manual(values = tolPalette) +
-      theme(legend.title=element_blank())
-
-    return(g)
+  ggsave(RANKPC_PLOTS, g, width = 8, height = 3, units = c("in"))
 
 
-  g <- plot_results(dat, "time", type = "single") +
-    ylab(TeX("log$_{10}$(Time)")) +
-    theme(strip.text = element_text(size = 16),
-          axis.text = element_text(size = 16),
-          axis.title = element_text(size = 16),
-          legend.text = element_text(size = 14)
-    )
-
-  ggsave(TIME_PLOTS, g, width = 8, height = 3, units = c("in"))
   ## Robustness of k across different settings wrt SID ----
   # Import data
   dat <- read_rds(SIMULATION_K) %>% unnest(cols = c(data)) %>%
