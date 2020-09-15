@@ -10,7 +10,7 @@ library(tictoc)
 
 # set is_demo = FALSE if you want to reproduce full simulations
 # (it can take up to 10 hours)
-is_demo <- FALSE
+is_demo <- TRUE
 
 # set is_parallel = TRUE if you want parallel implementation of Simulation 1
 # (faster for all algorithms except direct_lingam when n and p are high)

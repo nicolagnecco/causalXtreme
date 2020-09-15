@@ -3,7 +3,8 @@
 ## Authors: Nicola Gnecco, Nicolai Meinshausen, Jonas Peters, Sebastian Engelke
 
 
-produce_charts <- function(sim0_file, sim1_file, sim2_file, sim3_file){
+produce_charts <- function(sim0_file, sim1_file, sim2_file, sim3_file,
+                           sim4_file){
 
   # Check whether the sim1_file and sim3_file are both demo or not
   if(dirname(sim1_file) != dirname(sim3_file)){
@@ -25,7 +26,7 @@ produce_charts <- function(sim0_file, sim1_file, sim2_file, sim3_file){
   TIME_PLOTS <- "output/TIME.pdf"
   SHD_PLOTS <- "output/SHD.pdf"
   LINGAM_REMOVE_BULK <- "output/table_lingam.txt"
-  RANKPC_PLOTS <- "output/rankpc_sig.pdf"
+  RANKPC_PLOTS <- "output/RANKPC_SIG.pdf"
   SID_PLOTS_POSTER <- "output/SID_POSTER.pdf"
   SETTING1 <- "output/setting1.pdf"
   SETTING2 <- "output/setting2.pdf"
