@@ -50,12 +50,12 @@ simulation_4 <- function(log_file,
 
   # Loop through all simulations
   inds <- expand.grid(j = 1:k, i = 1:m)
-  sink(file = log_file)
+  # sink(file = log_file)
   cat("**** Simulation 4 **** \n")
   ll <- map2_dfr(inds$i, inds$j, wrapper_sim, sims_args, method_args,
                  trimdata = FALSE, pc_sig_lev = TRUE)
-  sink()
-  closeAllConnections()
+  # sink()
+  # closeAllConnections()
 
   # Collect results
   ll <- ll %>%
