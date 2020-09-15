@@ -142,13 +142,20 @@ causal_discovery_wrapper <- function(dat, method, set_args){
   return(ll)
 }
 
-wrapper_sim <- function(i, j, sims_args, method_args, trimdata = FALSE){
+wrapper_sim <- function(i, j, sims_args, method_args, trimdata = FALSE,
+                        pc_sig_lev = FALSE){
   m <- nrow(sims_args)
   k <- nrow(method_args)
   cat("Simulation", i, "out of", m, "--- Inner iteration", j, "out of", k, "\n")
 
   current_exp <- sims_args[i, ]
   args_simulate <- current_exp %>% select(-experiment, -id, -rng)
+
+  if (pc_sig_lev){
+    args_simulate <- args_simulate %>% select(-alpha)
+    alpha <- current_exp %>% select(alpha)
+  }
+
   rng_sims <- current_exp$rng[[1]]
   rngtools::setRNG(rng_sims)
   X <- do.call(simulate_data, args_simulate)
@@ -162,11 +169,18 @@ wrapper_sim <- function(i, j, sims_args, method_args, trimdata = FALSE){
 
   # Run method
   method <- method_args$method[j]
-  rng_method <- method_args$rng[[j]][[i]]
-  rngtools::setRNG(rng_method)
+  if(pc_sig_lev){
+    set_args <- list(alpha = alpha)
+  } else {
+    set_args <- get_method_args(method, n)
+    rng_method <- method_args$rng[[j]][[i]]
+    rngtools::setRNG(rng_method)
+  }
+
+
   out <- causal_discovery_wrapper(dat = X$dataset,
                                   method = method,
-                                  set_args = get_method_args(method, n))
+                                  set_args = set_args)
 
   # Evaluate algorithms
   algo_result <- causal_metrics(simulated_data = X,

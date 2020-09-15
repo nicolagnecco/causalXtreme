@@ -18,12 +18,14 @@ produce_charts <- function(sim0_file, sim1_file, sim2_file, sim3_file){
   SIMULATION <- sim1_file
   SIMULATION_TIME <- sim2_file
   SIMULATION_LINGAM <- sim3_file
+  SIMULATION_RANKPC <- sim4_file
   SID_PLOTS <- "output/SID.pdf"
   SID_PLOTS_LIGHT1 <- "output/SID_alpha_25.pdf"
   SID_PLOTS_LIGHT2 <- "output/SID_alpha_35.pdf"
   TIME_PLOTS <- "output/TIME.pdf"
   SHD_PLOTS <- "output/SHD.pdf"
   LINGAM_REMOVE_BULK <- "output/table_lingam.txt"
+  RANKPC_PLOTS <- "output/rankpc_sig.pdf"
   SID_PLOTS_POSTER <- "output/SID_POSTER.pdf"
   SETTING1 <- "output/setting1.pdf"
   SETTING2 <- "output/setting2.pdf"
@@ -70,7 +72,7 @@ produce_charts <- function(sim0_file, sim1_file, sim2_file, sim3_file){
 
   }
 
-  prepare_data <- function(dat, type = c("multiple", "single")){
+  prepare_data <- function(dat, type = c("multiple", "single", "pc_sig_level")){
     ## tibble character -> tibble
     ## reshape tibble to print it
 
@@ -106,9 +108,15 @@ produce_charts <- function(sim0_file, sim1_file, sim2_file, sim3_file){
         summarise(structHamming_dist = mean(shd, na.rm = T),
                   structInterv_dist = mean(sid, na.rm = T),
                   time = mean(time, na.rm = T))
-    } else {
+    } else if (type == "single") {
       res <- res %>%
         group_by(n, p, method) %>%
+        summarise(structHamming_dist = mean(shd, na.rm = T),
+                  structInterv_dist = mean(sid, na.rm = T),
+                  time = mean(time, na.rm = T))
+    } else {
+      res <- res %>%
+        group_by(n, p, method, alpha) %>%
         summarise(structHamming_dist = mean(shd, na.rm = T),
                   structInterv_dist = mean(sid, na.rm = T),
                   time = mean(time, na.rm = T))
@@ -344,6 +352,41 @@ produce_charts <- function(sim0_file, sim1_file, sim2_file, sim3_file){
   sink()
   closeAllConnections()
 
+  ## Plot Rank PC experiment----
+  dat <- read_rds(SIMULATION_RANKPC) %>%
+    prepare_data(type = "pc_sig_lev") %>%
+    mutate(alpha = factor(alpha))
+
+  y_lab <- "Structural Intervention Distance"
+
+  # Prepare axes
+  y <- "structInterv_dist"
+  x <-  "p"
+  color <-  "method"
+  facet_x <-  "n"
+  facet_y <-  "alpha"
+
+
+    g <- ggplot(data = dat, aes_string(x = x, y = y)) +
+      geom_line(size = 1, alpha = .5) +
+      geom_point(size = 3)  +
+      ylab(y_lab) +
+      facet_grid(reformulate(facet_x, facet_y)) +
+      scale_colour_manual(values = tolPalette) +
+      theme(legend.title=element_blank())
+
+    return(g)
+
+
+  g <- plot_results(dat, "time", type = "single") +
+    ylab(TeX("log$_{10}$(Time)")) +
+    theme(strip.text = element_text(size = 16),
+          axis.text = element_text(size = 16),
+          axis.title = element_text(size = 16),
+          legend.text = element_text(size = 14)
+    )
+
+  ggsave(TIME_PLOTS, g, width = 8, height = 3, units = c("in"))
   ## Robustness of k across different settings wrt SID ----
   # Import data
   dat <- read_rds(SIMULATION_K) %>% unnest(cols = c(data)) %>%

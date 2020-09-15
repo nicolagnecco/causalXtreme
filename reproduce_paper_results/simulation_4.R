@@ -1,9 +1,9 @@
 ## Project: Causal discovery in heavy-tailed models
-## Title: Simulation 3 --- ICA-LiNGAM and Pairwise LiNGAM performance on
-##        Setting 3, where we discard 50% of the data in the bulk.
+## Title: Simulation 4 --- Sensitivity analysis of Rank PC to
+##        significance level.
 ## Authors: Nicola Gnecco, Nicolai Meinshausen, Jonas Peters, Sebastian Engelke
 
-simulation_3 <- function(log_file,
+simulation_4 <- function(log_file,
                          result_file,
                          is_demo = TRUE){
 
@@ -12,28 +12,34 @@ simulation_3 <- function(log_file,
   ## BASIC SIMULATIONS ####
   # Simulation arguments
   exp_ids <- (simulation_settings() %>%
-                filter(is_nonlinear == TRUE,
-                       p %in% c(10, 20, 30, 50),
-                       n == 1e4))$id
+                filter(has_confounder == FALSE,
+                       is_nonlinear == FALSE,
+                       has_uniform_margins == FALSE,
+                       p %in% c(10, 30, 50),
+                       n == 1e3,
+                       tail_index == 3.5))$id
   settings <- set_simulations(seed = 1321, # Dante's Paradise
                               experiment_ids = exp_ids,
-                              method_nms = c("ica_lingam", "direct_lingam"))
+                              method_nms = c("pc_rank"))
 
   if (is_demo) {
     settings <- set_simulations(seed = 1321,
-                                method_nms = c("ica_lingam", "direct_lingam"))
+                                method_nms = c("pc_rank"))
     # Dante's Paradise
   }
 
   method_args <- settings$method_arguments
-  sims_args <- settings$simulation_arguments
+  sims_args <- settings$simulation_arguments %>%
+    mutate(id = 1) %>%
+    full_join(tibble(id = 1, alpha = 5 * 10 ^ seq(-4, -1)), by = "id") %>%
+    select(-id) %>%
+    rowid_to_column("id")
 
   if (is_demo){
     set.seed(42)
     sims_args <- sims_args %>%
       ungroup() %>%
-      filter(n %in% c(500, 100),
-             p %in% c(4, 10)) %>%
+      filter(p %in% c(4, 10)) %>%
       sample_n(20)
   }
 
@@ -45,8 +51,9 @@ simulation_3 <- function(log_file,
   # Loop through all simulations
   inds <- expand.grid(j = 1:k, i = 1:m)
   sink(file = log_file)
-  cat("**** Simulation 3 **** \n")
-  ll <- map2_dfr(inds$i, inds$j, wrapper_sim, sims_args, method_args, TRUE)
+  cat("**** Simulation 4 **** \n")
+  ll <- map2_dfr(inds$i, inds$j, wrapper_sim, sims_args, method_args,
+                 trimdata = FALSE, pc_sig_lev = TRUE)
   sink()
   closeAllConnections()
 

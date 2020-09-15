@@ -34,6 +34,8 @@ It also contains the following folders:
 These simulations can be reproduced using `main.R`, but they are computationally intensive
 * `output`, which is an empty folder for the results produced by `main.R`
 
+<span style="color: brown;">**Warning**</span>: in order to run `main.R` set the working directory to `/reproduce_paper_results`.
+
 
 ### References
 

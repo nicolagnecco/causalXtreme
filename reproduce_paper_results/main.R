@@ -10,7 +10,7 @@ library(tictoc)
 
 # set is_demo = FALSE if you want to reproduce full simulations
 # (it can take up to 10 hours)
-is_demo <- TRUE
+is_demo <- FALSE
 
 # set is_parallel = TRUE if you want parallel implementation of Simulation 1
 # (faster for all algorithms except direct_lingam when n and p are high)
@@ -28,7 +28,6 @@ simulation_0(log_file = "output/sims_0.txt", result_file = file.name,
 # Simulation 1 --- main simulations
 file.name <- paste("output/simulations", ".rds", sep = "")
 
-# if you want parallel implementation run this
 if (is_parallel){
   source("simulation_1_parallel.R")
   simulation_1_par(log_file = "output/sims_1.txt", result_file = file.name,
@@ -53,6 +52,12 @@ file.name <- paste("output/simulations_lingam",".rds", sep = "")
 simulation_3(log_file = "output/sims_3.txt", result_file = file.name,
              is_demo = is_demo)
 
+# Simulation 4 --- sensitivity analysis of Rank PC to significance level
+source("simulation_4.R")
+file.name <- paste("output/simulations_rankpc", ".rds", sep = "")
+simulation_4(log_file = "output/sims_4.txt", result_file = file.name,
+             is_demo = is_demo)
+
 
 # Plot results
 library(latex2exp)
@@ -62,7 +67,8 @@ source("produce_charts.R")
 produce_charts(sim0_file = "original_output/k_robustness.rds",
                sim1_file = "original_output/simulations.rds",
                sim2_file = "original_output/time.rds",
-               sim3_file = "original_output/simulations_lingam.rds")
+               sim3_file = "original_output/simulations_lingam.rds",
+               sim4_file = "original_output/simulations_rankpc.rds")
 
 
 # Financial application ----

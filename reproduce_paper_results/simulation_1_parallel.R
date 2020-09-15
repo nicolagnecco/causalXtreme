@@ -20,6 +20,7 @@ simulation_1_par <- function(log_file,
   if (is_demo){
     set.seed(42)
     sims_args <- sims_args %>%
+      ungroup() %>%
       filter(n %in% c(500, 100),
              p %in% c(4, 10)) %>%
       sample_n(20)
