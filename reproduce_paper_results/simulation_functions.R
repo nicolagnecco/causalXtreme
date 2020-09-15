@@ -18,7 +18,7 @@ simulation_settings <- function(){
     rowwise() %>%
     mutate(prob_connect = min(5/(p - 1), 1/2)) %>%
     filter(has_confounder + is_nonlinear + has_uniform_margins <= 1) %>%
-    mutate(id = group_indices()) %>%
+    rowid_to_column("id") %>%
     select(id, everything())
 
   return(my_args)
