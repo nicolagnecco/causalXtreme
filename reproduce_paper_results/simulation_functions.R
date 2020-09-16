@@ -143,18 +143,29 @@ causal_discovery_wrapper <- function(dat, method, set_args){
 }
 
 wrapper_sim <- function(i, j, sims_args, method_args, trimdata = FALSE,
-                        pc_sig_lev = FALSE){
+                        meth_args = FALSE){
+
+  # Checks
+  if (meth_args){
+    if (!("set_args" %in% names(method_args))){
+      stop("When meth_args = TRUE, the tibble `method_args` must contain the
+           column `set_args`.")
+    }
+  } else {
+    if ("set_args" %in% names(method_args)){
+      stop("When meth_args = FALSE, the tibble `method_args` must *not* contain the
+           column `set_args`.")
+    }
+  }
+
+  # Set up index variables
   m <- nrow(sims_args)
   k <- nrow(method_args)
   cat("Simulation", i, "out of", m, "--- Inner iteration", j, "out of", k, "\n")
 
+  # Simulate data
   current_exp <- sims_args[i, ]
   args_simulate <- current_exp %>% select(-experiment, -id, -rng)
-
-  if (pc_sig_lev){
-    args_simulate <- args_simulate %>% select(-alpha)
-    alpha <- current_exp %>% select(alpha)
-  }
 
   rng_sims <- current_exp$rng[[1]]
   rngtools::setRNG(rng_sims)
@@ -169,14 +180,15 @@ wrapper_sim <- function(i, j, sims_args, method_args, trimdata = FALSE,
 
   # Run method
   method <- method_args$method[j]
-  if(pc_sig_lev){
-    set_args <- list(alpha = alpha)
+
+  if (meth_args){
+    set_args <- method_args$set_args[[j]]
   } else {
     set_args <- get_method_args(method, n)
-    rng_method <- method_args$rng[[j]][[i]]
-    rngtools::setRNG(rng_method)
   }
 
+  rng_method <- method_args$rng[[j]][[i]]
+  rngtools::setRNG(rng_method)
 
   out <- causal_discovery_wrapper(dat = X$dataset,
                                   method = method,
@@ -192,6 +204,14 @@ wrapper_sim <- function(i, j, sims_args, method_args, trimdata = FALSE,
     bind_cols(tibble(sid = algo_result$sid,
                      shd = algo_result$shd,
                      time = out$time))
+
+  if (meth_args){
+    # create tibble with
+    # tibble(arg_name = "character", arg_value = "numeric")
+    # tibble(arg_name = "alpha", arg_value = 5e-4)
+    res <- res %>%
+      bind_cols(tibble(set_args = set_args))
+  }
 
   # return value
   return(res)
