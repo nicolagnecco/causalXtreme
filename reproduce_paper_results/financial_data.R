@@ -17,7 +17,9 @@ library(tidyquant)
 library(timetk)
 library(tsibble)
 
-theme_set(theme_bw())
+theme_set(theme_bw() +
+            theme(plot.background = element_blank(),
+                  legend.background = element_blank()))
 
 ## Define constants ####
 OUTPUT_FILE <- "output/financial_results.txt"

@@ -49,7 +49,7 @@ simulation_4 <- function(log_file,
 
   rm(settings)
 
-  m <- NROW(sims_args);
+  m <- NROW(sims_args)
   k <- NROW(method_args)
 
   # Loop through all simulations

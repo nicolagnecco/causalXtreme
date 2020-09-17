@@ -12,7 +12,9 @@ produce_charts <- function(sim0_file, sim1_file, sim2_file, sim3_file,
   }
 
   # Set plotting theme
-  theme_set(theme_bw())
+  theme_set(theme_bw() +
+              theme(plot.background = element_blank(),
+                    legend.background = element_blank()))
 
   ### CONSTANTS ####
   SIMULATION_K <- sim0_file

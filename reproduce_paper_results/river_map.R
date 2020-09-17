@@ -96,6 +96,10 @@ map_2_plot <- get_stamenmap(bbox = bbox,
                             )
 
 ## Plot map ####
+theme_set(theme_bw() +
+            theme(plot.background = element_blank(),
+                  legend.background = element_blank()))
+
 tolBlue <- "#4477AA"
 tolRed <-  "#EE6677"
 

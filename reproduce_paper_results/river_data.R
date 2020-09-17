@@ -16,7 +16,9 @@ library(tsibble)
 library(ismev)
 library(pracma)
 
-theme_set(theme_bw())
+theme_set(theme_bw() +
+            theme(plot.background = element_blank(),
+                  legend.background = element_blank()))
 
 ## Define constants ####
 OUTPUT_FILE <- "output/river_results.txt"
