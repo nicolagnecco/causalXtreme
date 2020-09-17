@@ -206,11 +206,16 @@ wrapper_sim <- function(i, j, sims_args, method_args, trimdata = FALSE,
                      time = out$time))
 
   if (meth_args){
-    # create tibble with
-    # tibble(arg_name = "character", arg_value = "numeric")
-    # tibble(arg_name = "alpha", arg_value = 5e-4)
+    # create tibble with argument name-value pair
+    if (!length(set_args)){
+      args_tbl <- tibble(arg_name = "", arg_value = NA)
+    } else {
+      args_tbl <- tibble(arg_name = names(set_args)[1],
+                         arg_value = set_args[[1]])
+    }
+
     res <- res %>%
-      bind_cols(tibble(set_args = set_args))
+      bind_cols(args_tbl)
   }
 
   # return value

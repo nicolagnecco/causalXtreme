@@ -32,7 +32,7 @@ simulation_4 <- function(log_file,
     mutate(set_args = list(list(list(alpha = 5e-4),
                                 list(alpha = 5e-3),
                                 list(alpha = 5e-2),
-                                list(alpha = 5e-2)),
+                                list(alpha = 5e-1)),
                                 list(list()))) %>%
     unnest(cols = set_args)
 
@@ -49,11 +49,11 @@ simulation_4 <- function(log_file,
 
   rm(settings)
 
-  m <- NROW(sims_args); m <- 1;
+  m <- NROW(sims_args);
   k <- NROW(method_args)
 
   # Loop through all simulations
-  inds <- expand.grid(j = 5, i = 120)
+  inds <- expand.grid(j = 1:k, i = 1:m)
   sink(file = log_file)
   cat("**** Simulation 4 **** \n")
   ll <- map2_dfr(inds$i, inds$j, wrapper_sim, sims_args, method_args,
