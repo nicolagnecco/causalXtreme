@@ -75,7 +75,7 @@ produce_charts <- function(sim0_file, sim1_file, sim2_file, sim3_file,
 
   }
 
-  prepare_data <- function(dat, type = c("multiple", "single", "pc_sig_level")){
+  prepare_data <- function(dat, type = c("multiple", "single")){
     ## tibble character -> tibble
     ## reshape tibble to print it
 
@@ -118,11 +118,7 @@ produce_charts <- function(sim0_file, sim1_file, sim2_file, sim3_file,
                   structInterv_dist = mean(sid, na.rm = T),
                   time = mean(time, na.rm = T))
     } else {
-      res <- res %>%
-        group_by(n, p, method, alpha) %>%
-        summarise(structHamming_dist = mean(shd, na.rm = T),
-                  structInterv_dist = mean(sid, na.rm = T),
-                  time = mean(time, na.rm = T))
+      stop("Please provide one of: single, multiple.")
     }
 
     # Change names of methods
@@ -133,20 +129,6 @@ produce_charts <- function(sim0_file, sim1_file, sim2_file, sim3_file,
     res$n_label <- factor(n_label,
                           levels =
                             unique(n_label[order(res$n)])) # reoder levels
-
-    if (type == "pc_sig_level"){
-      alpha_label <- paste("sig =", res$alpha)
-      res$alpha_label <- factor(alpha_label,
-                                levels =
-                                  unique(alpha_label[order(res$alpha)])) # reorder levels
-
-      p_label <- paste("p =", res$p)
-      res$p_label <- factor(p_label,
-                      levels =
-                        unique(p_label[order(res$p)])) # reorder levels
-
-    }
-
 
     if (type == "multiple"){
       setting_label <- paste("Setting", res$settings)
@@ -370,9 +352,8 @@ produce_charts <- function(sim0_file, sim1_file, sim2_file, sim3_file,
   closeAllConnections()
 
   ## Plot Rank PC experiment----
-  dat <- read_rds(SIMULATION_RANKPC) %>%
-    prepare_data(type = "pc_sig_lev") %>%
-    mutate(alpha = factor(alpha))
+  dat <- read_rds(SIMULATION_RANKPC)
+  # !!! continue from here
 
   g <- ggplot(data = dat, aes_string(x = "alpha",
                                      y = "structInterv_dist",
