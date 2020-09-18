@@ -36,7 +36,7 @@ simulation_0 <- function(log_file,
     rowwise() %>%
     mutate(prob_connect = min(5/(p - 1), 1/2)) %>%
     filter(has_confounder + is_nonlinear + has_uniform_margins <= 1) %>%
-    mutate(id = group_indices())
+    rowid_to_column("id")
 
   niter <- NROW(my_args)
 

@@ -60,7 +60,7 @@ simulation_1_par <- function(log_file,
     foreach(j = 1:k, .combine = bind_rows) %dopar%{
 
       cat("Simulation", i, "out of", m, "--- Inner iteration", j,
-          "out of", k, "\n") #, file = log_file, append = TRUE)
+          "out of", k, "\n", file = log_file, append = TRUE)
       wrapper_sim(i, j, sims_args, method_args)
 
     }
