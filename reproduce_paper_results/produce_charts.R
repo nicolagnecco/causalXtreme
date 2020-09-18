@@ -353,18 +353,36 @@ produce_charts <- function(sim0_file, sim1_file, sim2_file, sim3_file,
 
   ## Plot Rank PC experiment----
   dat <- read_rds(SIMULATION_RANKPC)
-  # !!! continue from here
+  dat2 <- dat %>% filter(method == "random") %>%
+    select(-arg_name, -arg_value) %>%
+    left_join(tibble(method = "random",
+                     arg_name = rep("alpha", 4),
+                     arg_value = c(5e-4, 5e-3, 5e-2, 5e-1)), by = 'method')
+  dat3 <- dat %>% filter(method != "random") %>%
+    select(-arg_name, -arg_value, arg_name, arg_value) %>%
+    bind_rows(dat2) %>%
+    rowwise() %>%
+    mutate(alpha = factor(arg_value),
+           method = if(method == "pc_rank"){
+             "Rank PC"
+           } else if(method == "random"){
+             "Random"},
+           method = factor(method),
+           p = factor(paste("p =", p))) %>%
+    group_by(method, p, alpha) %>%
+    summarise(structInterv_dist = mean(sid, na.rm = T))
 
-  g <- ggplot(data = dat, aes_string(x = "alpha",
-                                     y = "structInterv_dist",
-                                     group = 1)) +
-    geom_point(color = tolPalette[4], size = 3)  +
-    stat_summary(fun=sum, geom="line",
-                 color = tolPalette[4], size = 1, alpha = .5) +
+  g <- ggplot(data = dat3, aes(x = alpha,
+                              y = structInterv_dist,
+                              col = method,
+                              group = method)) +
+    geom_point(size = 3)  +
+    stat_summary(fun=sum, geom="line", size = 1, alpha = .5) +
     ylab("Structural Intervention Distance") +
     xlab("Significance level") +
     ylim(0, 1) +
-    facet_grid(rows = vars(p_label)) +
+    facet_grid(rows = vars(p), scales = "free_y") +
+    scale_color_manual(values = unname(tolPalette)[4:5]) +
     theme(legend.title=element_blank()); g
 
   ggsave(RANKPC_PLOTS, g, width = 8, height = 3, units = c("in"))
