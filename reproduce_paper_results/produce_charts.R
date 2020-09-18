@@ -385,7 +385,7 @@ produce_charts <- function(sim0_file, sim1_file, sim2_file, sim3_file,
     scale_color_manual(values = unname(tolPalette)[4:5]) +
     theme(legend.title=element_blank()); g
 
-  ggsave(RANKPC_PLOTS, g, width = 8, height = 3, units = c("in"))
+  ggsave(RANKPC_PLOTS, g, width = 8, height = 4, units = c("in"))
 
 
   ## Robustness of k across different settings wrt SID ----
