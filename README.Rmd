@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 [![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![Travis build
-status](https://api.travis-ci.org/nicolagnecco/causalXtreme.svg?branch=master)](https://travis-ci.org/nicolagnecco/causalXtreme)
+status](https://travis-ci.com/nicolagnecco/causalXtreme.svg?branch=master)](https://travis-ci.com/github/nicolagnecco/causalXtreme)
 [![codecov](https://codecov.io/gh/nicolagnecco/causalXtreme/branch/master/graph/badge.svg)](https://codecov.io/gh/nicolagnecco/causalXtreme)
 [![R build status](https://github.com/nicolagnecco/causalXtreme/workflows/R-CMD-check/badge.svg)](https://github.com/nicolagnecco/causalXtreme/actions)
 <!-- badges: end -->
