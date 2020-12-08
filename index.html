@@ -44,12 +44,6 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="reference/index.html">Reference</a>
 </li>
       </ul>
@@ -86,10 +80,9 @@
 <!-- install.packages("causalXtreme") -->
 <!-- ``` -->
 <p>You can install the development version from <a href="https://github.com/">GitHub</a> with:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="co"># install.packages("devtools")</span>
-<span class="kw">devtools</span>::<span class="fu">install_github</span>(<span class="st">"nicolagnecco/causalXtreme"</span>)
-</pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># install.packages("devtools")</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"nicolagnecco/causalXtreme"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="example" class="section level2">
 <h2 class="hasAnchor">
@@ -99,46 +92,41 @@
 <li>the simulated <code>dataset</code> represented as a matrix of size <span class="math inline"><em>n</em> × <em>p</em></span>. Here, <span class="math inline"><em>n</em> = 500</span> is the number of observations and <span class="math inline"><em>p</em> = 2</span> is the number of variables,</li>
 <li>the underlying directed acyclic graph (DAG) represented as an adjacency matrix <code>dag</code> of size <span class="math inline"><em>p</em> × <em>p</em></span>.</li>
 </ul>
-<!-- end list --><div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/nicolagnecco/causalXtreme">causalXtreme</a></span>)
+<!-- end list --><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/nicolagnecco/causalXtreme">causalXtreme</a></span><span class="op">)</span>
 
 <span class="co"># basic example code</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">1</span>)
-<span class="kw">sem</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/simulate_data.html">simulate_data</a></span>(n = <span class="fl">500</span>, p = <span class="fl">2</span>, prob_connect = <span class="fl">0.5</span>,
-                     distr = <span class="st">"student_t"</span>, tail_index = <span class="fl">1.5</span>)
-</pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
+<span class="va">sem</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/simulate_data.html">simulate_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">500</span>, p <span class="op">=</span> <span class="fl">2</span>, prob_connect <span class="op">=</span> <span class="fl">0.5</span>,
+                     distr <span class="op">=</span> <span class="st">"student_t"</span>, tail_index <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></code></pre></div>
 <p>At this point, we can look at the randomly simulated DAG.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="kw">sem</span><span class="op">$</span><span class="kw">dag</span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">sem</span><span class="op">$</span><span class="va">dag</span>
 <span class="co">#&gt;      [,1] [,2]</span>
 <span class="co">#&gt; [1,]    0    1</span>
-<span class="co">#&gt; [2,]    0    0</span>
-</pre></div>
+<span class="co">#&gt; [2,]    0    0</span></code></pre></div>
 <p>We interpret the adjacency matrix as follows. Loosely speaking, we say that variable <span class="math inline"><em>X</em><sub><em>i</em></sub></span> causes variable <span class="math inline"><em>X</em><sub><em>j</em></sub></span> if the entry <span class="math inline">(<em>i</em>, <em>j</em>)</span> of the adjacency matrix is equal to 1. We see that the first variable <span class="math inline"><em>X</em><sub>1</sub></span> causes the second variable <span class="math inline"><em>X</em><sub>2</sub></span>, since the entry <span class="math inline">(1, 2)</span> of the matrix <code>sem$dag</code> is equal to 1. We can plot the simulated dataset.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span>(<span class="kw">sem</span><span class="op">$</span><span class="kw">dataset</span>, pch = <span class="fl">20</span>,
-     xlab = <span class="st">"X1"</span>, ylab = <span class="st">"X2"</span>)
-</pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sem</span><span class="op">$</span><span class="va">dataset</span>, pch <span class="op">=</span> <span class="fl">20</span>,
+     xlab <span class="op">=</span> <span class="st">"X1"</span>, ylab <span class="op">=</span> <span class="st">"X2"</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-plotdata-1.png" width="100%"></p>
 <p>At this point, we can estimate the causal direction between <span class="math inline"><em>X</em><sub>1</sub></span> and <span class="math inline"><em>X</em><sub>2</sub></span> by computing the <em>causal tail coefficients</em> <span class="math inline"><em>Γ</em><sub>12</sub></span> and <span class="math inline"><em>Γ</em><sub>21</sub></span> (see Gnecco et al. 2019, Definition 1).</p>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="kw">X1</span> <span class="op">&lt;-</span> <span class="kw">sem</span><span class="op">$</span><span class="kw">dataset</span>[, <span class="fl">1</span>]
-<span class="kw">X2</span> <span class="op">&lt;-</span> <span class="kw">sem</span><span class="op">$</span><span class="kw">dataset</span>[, <span class="fl">2</span>]
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">X1</span> <span class="op">&lt;-</span> <span class="va">sem</span><span class="op">$</span><span class="va">dataset</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>
+<span class="va">X2</span> <span class="op">&lt;-</span> <span class="va">sem</span><span class="op">$</span><span class="va">dataset</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span>
 
 <span class="co"># gamma_12</span>
-<span class="fu"><a href="reference/causal_tail_coeff.html">causal_tail_coeff</a></span>(<span class="kw">X1</span>, <span class="kw">X2</span>)
+<span class="fu"><a href="reference/causal_tail_coeff.html">causal_tail_coeff</a></span><span class="op">(</span><span class="va">X1</span>, <span class="va">X2</span><span class="op">)</span>
 <span class="co">#&gt; [1] 0.9523333</span>
 
 <span class="co"># gamma_21</span>
-<span class="fu"><a href="reference/causal_tail_coeff.html">causal_tail_coeff</a></span>(<span class="kw">X2</span>, <span class="kw">X1</span>)
-<span class="co">#&gt; [1] 0.4816667</span>
-</pre></div>
+<span class="fu"><a href="reference/causal_tail_coeff.html">causal_tail_coeff</a></span><span class="op">(</span><span class="va">X2</span>, <span class="va">X1</span><span class="op">)</span>
+<span class="co">#&gt; [1] 0.4816667</span></code></pre></div>
 <p>We see that the coefficient <span class="math inline"><em>Γ</em><sub>12</sub> ≈ 1</span> (entry <span class="math inline">(1, 2)</span> of the matrix) and <span class="math inline"><em>Γ</em><sub>21</sub> &lt; 1</span> (entry <span class="math inline">(2, 1)</span> of the matrix). This is evidence for a causal relationship from <span class="math inline"><em>X</em><sub>1</sub></span> to <span class="math inline"><em>X</em><sub>2</sub></span>.</p>
 <p>We can also run the <em>extremal ancestral search</em> (EASE) algorithm, based on the causal tail coefficients (see Gnecco et al. 2019, Section 3.1). The algorithm estimates from the data a <em>causal order</em> of the DAG.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="fu"><a href="reference/ease.html">ease</a></span>(dat = <span class="kw">sem</span><span class="op">$</span><span class="kw">dataset</span>)
-<span class="co">#&gt; [1] 1 2</span>
-</pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="reference/ease.html">ease</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">sem</span><span class="op">$</span><span class="va">dataset</span><span class="op">)</span>
+<span class="co">#&gt; [1] 1 2</span></code></pre></div>
 <p>In this case, we can see that the estimated causal order is correct, since <span class="math inline"><em>X</em><sub>1</sub></span> (the cause) is placed before <span class="math inline"><em>X</em><sub>2</sub></span> (the effect).</p>
 </div>
 <div id="references" class="section level2">
