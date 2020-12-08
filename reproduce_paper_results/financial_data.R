@@ -369,6 +369,8 @@ plt_grid <- plot_grid(plt_nestle,
                       label_size = 20,
                       nrow = 3)
 
+ggsave("output/rolling_window_psi_coeff_novartis.pdf",
+       plt_novartis, width = 8, height = 3.5, units = c("in"))
 ggsave("output/rolling_window_psi_coeff.pdf",
        plt_grid, width = 8, height = 10, units = c("in"))
 
