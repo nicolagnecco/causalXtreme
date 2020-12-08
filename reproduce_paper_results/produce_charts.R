@@ -427,7 +427,9 @@ produce_charts <- function(sim0_file, sim1_file, sim2_file, sim3_file,
 
   ## Performance of methods
   # Import data
-  dat <- read_rds(SIMULATION) %>% unnest()
+  dat <- read_rds(SIMULATION) %>%
+    filter(tail_index == 1.5) %>%
+    unnest()
 
   # Transform data
   res <- prepare_data(dat)
@@ -540,7 +542,9 @@ produce_charts <- function(sim0_file, sim1_file, sim2_file, sim3_file,
 
   ### FIGURES FOR POSTER ####
   # Import data
-  dat <- read_rds(SIMULATION) %>% unnest()
+  dat <- read_rds(SIMULATION) %>%
+    filter(tail_index == 1.5) %>%
+    unnest()
 
   # Transform data
   res <- prepare_data(dat) %>%
