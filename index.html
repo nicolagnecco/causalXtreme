@@ -25,6 +25,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -37,7 +39,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">causalXtreme</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9000</span>
       </span>
     </div>
 
@@ -49,8 +51,8 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/nicolagnecco/causalXtreme/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+  <a href="https://github.com/nicolagnecco/causalXtreme/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -66,75 +68,75 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="causalxtreme" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#causalxtreme" class="anchor"></a>causalXtreme</h1></div>
+<div class="section level1">
+<div class="page-header"><h1 id="causalxtreme">causalXtreme<a class="anchor" aria-label="anchor" href="#causalxtreme"></a>
+</h1></div>
 <!-- badges: start -->
 
-<p>The goal of causalXtreme is to provide an interface to perform causal discovery in linear structural equation models (SEM) with heavy-tailed noise. For more details see Gnecco et al. (2019, <a href="https://arxiv.org/abs/1908.05097" class="uri">https://arxiv.org/abs/1908.05097</a>).</p>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
+<p>The goal of causalXtreme is to provide an interface to perform causal discovery in linear structural equation models (SEM) with heavy-tailed noise. For more details see Gnecco et al. (2019, <a href="https://arxiv.org/abs/1908.05097" class="external-link uri">https://arxiv.org/abs/1908.05097</a>).</p>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
 <!-- You can install the released version of causalXtreme from [CRAN](https://CRAN.R-project.org) with: -->
 <!-- ``` r -->
 <!-- install.packages("causalXtreme") -->
 <!-- ``` -->
-<p>You can install the development version from <a href="https://github.com/">GitHub</a> with:</p>
+<p>You can install the development version from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># install.packages("devtools")</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"nicolagnecco/causalXtreme"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"nicolagnecco/causalXtreme"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div id="example" class="section level2">
-<h2 class="hasAnchor">
-<a href="#example" class="anchor"></a>Example</h2>
+<div class="section level2">
+<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+</h2>
 <p>Let us generate 500 observations from a SEM of two Student-t variables, <span class="math inline"><em>X</em><sub>1</sub></span> and <span class="math inline"><em>X</em><sub>2</sub></span>, with 1.5 degrees of freedom (i.e., heavy-tailed). When the function <code>simulate_data</code> is called with the default values, it returns a list containing:</p>
 <ul>
 <li>the simulated <code>dataset</code> represented as a matrix of size <span class="math inline"><em>n</em> × <em>p</em></span>. Here, <span class="math inline"><em>n</em> = 500</span> is the number of observations and <span class="math inline"><em>p</em> = 2</span> is the number of variables,</li>
 <li>the underlying directed acyclic graph (DAG) represented as an adjacency matrix <code>dag</code> of size <span class="math inline"><em>p</em> × <em>p</em></span>.</li>
 </ul>
-<!-- end list --><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/nicolagnecco/causalXtreme">causalXtreme</a></span><span class="op">)</span>
-
-<span class="co"># basic example code</span>
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
-<span class="va">sem</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/simulate_data.html">simulate_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">500</span>, p <span class="op">=</span> <span class="fl">2</span>, prob_connect <span class="op">=</span> <span class="fl">0.5</span>,
-                     distr <span class="op">=</span> <span class="st">"student_t"</span>, tail_index <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/nicolagnecco/causalXtreme" class="external-link">causalXtreme</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># basic example code</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">sem</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/simulate_data.html">simulate_data</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">500</span>, p <span class="op">=</span> <span class="fl">2</span>, prob_connect <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>                     distr <span class="op">=</span> <span class="st">"student_t"</span>, tail_index <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span></code></pre></div>
 <p>At this point, we can look at the randomly simulated DAG.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sem</span><span class="op">$</span><span class="va">dag</span>
-<span class="co">#&gt;      [,1] [,2]</span>
-<span class="co">#&gt; [1,]    0    1</span>
-<span class="co">#&gt; [2,]    0    0</span></code></pre></div>
-<p>We interpret the adjacency matrix as follows. Loosely speaking, we say that variable <span class="math inline"><em>X</em><sub><em>i</em></sub></span> causes variable <span class="math inline"><em>X</em><sub><em>j</em></sub></span> if the entry <span class="math inline">(<em>i</em>, <em>j</em>)</span> of the adjacency matrix is equal to 1. We see that the first variable <span class="math inline"><em>X</em><sub>1</sub></span> causes the second variable <span class="math inline"><em>X</em><sub>2</sub></span>, since the entry <span class="math inline">(1, 2)</span> of the matrix <code>sem$dag</code> is equal to 1. We can plot the simulated dataset.</p>
+<code class="sourceCode R"><span><span class="va">sem</span><span class="op">$</span><span class="va">dag</span></span>
+<span><span class="co">#&gt;      [,1] [,2]</span></span>
+<span><span class="co">#&gt; [1,]    0    1</span></span>
+<span><span class="co">#&gt; [2,]    0    0</span></span></code></pre></div>
+<p>We interpret the adjacency matrix as follows. Loosely speaking, we say that variable <span class="math inline"><em>X</em><sub><em>i</em></sub></span> causes variable <span class="math inline"><em>X</em><sub><em>j</em></sub></span> if the entry <span class="math inline">(<em>i</em>,<em>j</em>)</span> of the adjacency matrix is equal to 1. We see that the first variable <span class="math inline"><em>X</em><sub>1</sub></span> causes the second variable <span class="math inline"><em>X</em><sub>2</sub></span>, since the entry <span class="math inline">(1,2)</span> of the matrix <code>sem$dag</code> is equal to 1. We can plot the simulated dataset.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sem</span><span class="op">$</span><span class="va">dataset</span>, pch <span class="op">=</span> <span class="fl">20</span>,
-     xlab <span class="op">=</span> <span class="st">"X1"</span>, ylab <span class="op">=</span> <span class="st">"X2"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sem</span><span class="op">$</span><span class="va">dataset</span>, pch <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>     xlab <span class="op">=</span> <span class="st">"X1"</span>, ylab <span class="op">=</span> <span class="st">"X2"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-plotdata-1.png" width="100%"></p>
 <p>At this point, we can estimate the causal direction between <span class="math inline"><em>X</em><sub>1</sub></span> and <span class="math inline"><em>X</em><sub>2</sub></span> by computing the <em>causal tail coefficients</em> <span class="math inline"><em>Γ</em><sub>12</sub></span> and <span class="math inline"><em>Γ</em><sub>21</sub></span> (see Gnecco et al. 2019, Definition 1).</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">X1</span> <span class="op">&lt;-</span> <span class="va">sem</span><span class="op">$</span><span class="va">dataset</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>
-<span class="va">X2</span> <span class="op">&lt;-</span> <span class="va">sem</span><span class="op">$</span><span class="va">dataset</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span>
-
-<span class="co"># gamma_12</span>
-<span class="fu"><a href="reference/causal_tail_coeff.html">causal_tail_coeff</a></span><span class="op">(</span><span class="va">X1</span>, <span class="va">X2</span><span class="op">)</span>
-<span class="co">#&gt; [1] 0.9523333</span>
-
-<span class="co"># gamma_21</span>
-<span class="fu"><a href="reference/causal_tail_coeff.html">causal_tail_coeff</a></span><span class="op">(</span><span class="va">X2</span>, <span class="va">X1</span><span class="op">)</span>
-<span class="co">#&gt; [1] 0.4816667</span></code></pre></div>
-<p>We see that the coefficient <span class="math inline"><em>Γ</em><sub>12</sub> ≈ 1</span> (entry <span class="math inline">(1, 2)</span> of the matrix) and <span class="math inline"><em>Γ</em><sub>21</sub> &lt; 1</span> (entry <span class="math inline">(2, 1)</span> of the matrix). This is evidence for a causal relationship from <span class="math inline"><em>X</em><sub>1</sub></span> to <span class="math inline"><em>X</em><sub>2</sub></span>.</p>
-<p>We can also run the <em>extremal ancestral search</em> (EASE) algorithm, based on the causal tail coefficients (see Gnecco et al. 2019, Section 3.1). The algorithm estimates from the data a <em>causal order</em> of the DAG.</p>
+<code class="sourceCode R"><span><span class="va">X1</span> <span class="op">&lt;-</span> <span class="va">sem</span><span class="op">$</span><span class="va">dataset</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span></span>
+<span><span class="va">X2</span> <span class="op">&lt;-</span> <span class="va">sem</span><span class="op">$</span><span class="va">dataset</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span></span>
+<span></span>
+<span><span class="co"># gamma_12</span></span>
+<span><span class="fu"><a href="reference/causal_tail_coeff.html">causal_tail_coeff</a></span><span class="op">(</span><span class="va">X1</span>, <span class="va">X2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.9523333</span></span>
+<span></span>
+<span><span class="co"># gamma_21</span></span>
+<span><span class="fu"><a href="reference/causal_tail_coeff.html">causal_tail_coeff</a></span><span class="op">(</span><span class="va">X2</span>, <span class="va">X1</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.4816667</span></span></code></pre></div>
+<p>We see that the coefficient <span class="math inline"><em>Γ</em><sub>12</sub> ≈ 1</span> (entry <span class="math inline">(1,2)</span> of the matrix) and <span class="math inline"><em>Γ</em><sub>21</sub> &lt; 1</span> (entry <span class="math inline">(2,1)</span> of the matrix). This is evidence for a causal relationship from <span class="math inline"><em>X</em><sub>1</sub></span> to <span class="math inline"><em>X</em><sub>2</sub></span>.</p>
+<p>We can also run the <em>extremal ancestral search</em> (EASE) algorithm, based on the causal tail coefficients (see Gnecco et al. 2019, sec. 3.1). The algorithm estimates from the data a <em>causal order</em> of the DAG.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/ease.html">ease</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">sem</span><span class="op">$</span><span class="va">dataset</span><span class="op">)</span>
-<span class="co">#&gt; [1] 1 2</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/ease.html">ease</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">sem</span><span class="op">$</span><span class="va">dataset</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 1 2</span></span></code></pre></div>
 <p>In this case, we can see that the estimated causal order is correct, since <span class="math inline"><em>X</em><sub>1</sub></span> (the cause) is placed before <span class="math inline"><em>X</em><sub>2</sub></span> (the effect).</p>
 </div>
-<div id="references" class="section level2">
-<h2 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h2>
-<div id="refs" class="references">
-<div id="ref-gne2019">
-<p>Gnecco, Nicola, Nicolai Meinshausen, Jonas Peters, and Sebastian Engelke. 2019. “Causal Discovery in Heavy-Tailed Models.” <em>arXiv Preprint arXiv:1908.05097</em>.</p>
+<div class="section level2">
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-gne2019" class="csl-entry">
+Gnecco, Nicola, Nicolai Meinshausen, Jonas Peters, and Sebastian Engelke. 2019. “Causal Discovery in Heavy-Tailed Models.” <em>arXiv Preprint arXiv:1908.05097</em>.
 </div>
 </div>
 </div>
@@ -143,23 +145,31 @@
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/nicolagnecco/causalXtreme/">https://​github.com/​nicolagnecco/​causalXtreme/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/nicolagnecco/causalXtreme/issues">https://​github.com/​nicolagnecco/​causalXtreme/​issues</a>
-</li>
+<li><a href="https://github.com/nicolagnecco/causalXtreme/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/nicolagnecco/causalXtreme/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
-<li><small><a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a></small></li>
+<li><small><a href="https://www.r-project.org/Licenses/GPL-3" class="external-link">GPL-3</a></small></li>
 </ul>
 </div>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing causalXtreme</a></li>
+</ul>
+</div>
+
 <div class="developers">
-<h2>Developers</h2>
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Nicola Gnecco <br><small class="roles"> Author, maintainer </small>  </li>
 <li>Nicolai Meinshausen <br><small class="roles"> Author </small>  </li>
@@ -168,25 +178,28 @@
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://www.tidyverse.org/lifecycle/#maturing"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg" alt="lifecycle"></a></li>
-<li><a href="https://travis-ci.com/github/nicolagnecco/causalXtreme"><img src="https://travis-ci.com/nicolagnecco/causalXtreme.svg?branch=master" alt="Travis build status"></a></li>
-<li><a href="https://codecov.io/gh/nicolagnecco/causalXtreme"><img src="https://codecov.io/gh/nicolagnecco/causalXtreme/branch/master/graph/badge.svg" alt="codecov"></a></li>
-<li><a href="https://github.com/nicolagnecco/causalXtreme/actions"><img src="https://github.com/nicolagnecco/causalXtreme/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+<li><a href="https://www.tidyverse.org/lifecycle/#maturing" class="external-link"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg" alt="lifecycle"></a></li>
+<li><a href="https://travis-ci.com/github/nicolagnecco/causalXtreme" class="external-link"><img src="https://travis-ci.com/nicolagnecco/causalXtreme.svg?branch=master" alt="Travis build status"></a></li>
+<li><a href="https://codecov.io/gh/nicolagnecco/causalXtreme" class="external-link"><img src="https://codecov.io/gh/nicolagnecco/causalXtreme/branch/master/graph/badge.svg" alt="codecov"></a></li>
+<li><a href="https://github.com/nicolagnecco/causalXtreme/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/nicolagnecco/causalXtreme/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 </ul>
 </div>
-</div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Nicola Gnecco, Nicolai Meinshausen, Jonas Peters, Sebastian Engelke.</p>
+  <p></p>
+<p>Developed by Nicola Gnecco, Nicolai Meinshausen, Jonas Peters, Sebastian Engelke.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
@@ -194,6 +207,8 @@
 
   
 
+
+  
 
   </body>
 </html>
