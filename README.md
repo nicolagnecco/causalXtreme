@@ -9,8 +9,7 @@
 [![Travis build
 status](https://travis-ci.com/nicolagnecco/causalXtreme.svg?branch=master)](https://travis-ci.com/github/nicolagnecco/causalXtreme)
 [![codecov](https://codecov.io/gh/nicolagnecco/causalXtreme/branch/master/graph/badge.svg)](https://codecov.io/gh/nicolagnecco/causalXtreme)
-[![R build
-status](https://github.com/nicolagnecco/causalXtreme/workflows/R-CMD-check/badge.svg)](https://github.com/nicolagnecco/causalXtreme/actions)
+[![R-CMD-check](https://github.com/nicolagnecco/causalXtreme/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/nicolagnecco/causalXtreme/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of causalXtreme is to provide an interface to perform causal
@@ -21,11 +20,8 @@ https://arxiv.org/abs/1908.05097).
 ## Installation
 
 <!-- You can install the released version of causalXtreme from [CRAN](https://CRAN.R-project.org) with: -->
-
 <!-- ``` r -->
-
 <!-- install.packages("causalXtreme") -->
-
 <!-- ``` -->
 
 You can install the development version from
@@ -39,17 +35,15 @@ devtools::install_github("nicolagnecco/causalXtreme")
 ## Example
 
 Let us generate 500 observations from a SEM of two Student-t variables,
-\(X_1\) and \(X_2\), with 1.5 degrees of freedom (i.e., heavy-tailed).
-When the function `simulate_data` is called with the default values, it
+$X_1$ and $X_2$, with 1.5 degrees of freedom (i.e., heavy-tailed). When
+the function `simulate_data` is called with the default values, it
 returns a list containing:
 
-  - the simulated `dataset` represented as a matrix of size
-    \(n \times p\). Here, \(n = 500\) is the number of observations and
-    \(p = 2\) is the number of variables,
-  - the underlying directed acyclic graph (DAG) represented as an
-    adjacency matrix `dag` of size \(p\times p\).
-
-<!-- end list -->
+- the simulated `dataset` represented as a matrix of size $n \times p$.
+  Here, $n = 500$ is the number of observations and $p = 2$ is the
+  number of variables,
+- the underlying directed acyclic graph (DAG) represented as an
+  adjacency matrix `dag` of size $p\times p$.
 
 ``` r
 library(causalXtreme)
@@ -70,11 +64,10 @@ sem$dag
 ```
 
 We interpret the adjacency matrix as follows. Loosely speaking, we say
-that variable \(X_i\) causes variable \(X_j\) if the entry \((i, j)\) of
-the adjacency matrix is equal to 1. We see that the first variable
-\(X_1\) causes the second variable \(X_2\), since the entry \((1, 2)\)
-of the matrix `sem$dag` is equal to 1. We can plot the simulated
-dataset.
+that variable $X_i$ causes variable $X_j$ if the entry $(i, j)$ of the
+adjacency matrix is equal to 1. We see that the first variable $X_1$
+causes the second variable $X_2$, since the entry $(1, 2)$ of the matrix
+`sem$dag` is equal to 1. We can plot the simulated dataset.
 
 ``` r
 plot(sem$dataset, pch = 20,
@@ -83,9 +76,9 @@ plot(sem$dataset, pch = 20,
 
 <img src="man/figures/README-plotdata-1.png" width="100%" />
 
-At this point, we can estimate the causal direction between \(X_1\) and
-\(X_2\) by computing the *causal tail coefficients* \(\Gamma_{12}\) and
-\(\Gamma_{21}\) (see Gnecco et al. 2019, Definition 1).
+At this point, we can estimate the causal direction between $X_1$ and
+$X_2$ by computing the *causal tail coefficients* $\Gamma_{12}$ and
+$\Gamma_{21}$ (see Gnecco et al. 2019, Definition 1).
 
 ``` r
 X1 <- sem$dataset[, 1]
@@ -100,13 +93,13 @@ causal_tail_coeff(X2, X1)
 #> [1] 0.4816667
 ```
 
-We see that the coefficient \(\Gamma_{12} \approx 1\) (entry \((1, 2)\)
-of the matrix) and \(\Gamma_{21} < 1\) (entry \((2, 1)\) of the matrix).
-This is evidence for a causal relationship from \(X_1\) to \(X_2\).
+We see that the coefficient $\Gamma_{12} \approx 1$ (entry $(1, 2)$ of
+the matrix) and $\Gamma_{21} < 1$ (entry $(2, 1)$ of the matrix). This
+is evidence for a causal relationship from $X_1$ to $X_2$.
 
 We can also run the *extremal ancestral search* (EASE) algorithm, based
-on the causal tail coefficients (see Gnecco et al. 2019, Section 3.1).
-The algorithm estimates from the data a *causal order* of the DAG.
+on the causal tail coefficients (see Gnecco et al. 2019, sec. 3.1). The
+algorithm estimates from the data a *causal order* of the DAG.
 
 ``` r
 ease(dat = sem$dataset)
@@ -114,13 +107,13 @@ ease(dat = sem$dataset)
 ```
 
 In this case, we can see that the estimated causal order is correct,
-since \(X_1\) (the cause) is placed before \(X_2\) (the effect).
+since $X_1$ (the cause) is placed before $X_2$ (the effect).
 
 ## References
 
-<div id="refs" class="references">
+<div id="refs" class="references csl-bib-body hanging-indent">
 
-<div id="ref-gne2019">
+<div id="ref-gne2019" class="csl-entry">
 
 Gnecco, Nicola, Nicolai Meinshausen, Jonas Peters, and Sebastian
 Engelke. 2019. “Causal Discovery in Heavy-Tailed Models.” *arXiv
