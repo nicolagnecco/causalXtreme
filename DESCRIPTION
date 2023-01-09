@@ -39,3 +39,5 @@ LinkingTo:
 URL: https://github.com/nicolagnecco/causalXtreme
 BugReports: https://github.com/nicolagnecco/causalXtreme/issues
 VignetteBuilder: knitr
+Remotes:  
+    https://github.com/cran/SID
