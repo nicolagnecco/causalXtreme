@@ -9,8 +9,7 @@
 [![Travis build
 status](https://travis-ci.com/nicolagnecco/causalXtreme.svg?branch=master)](https://travis-ci.com/github/nicolagnecco/causalXtreme)
 [![codecov](https://codecov.io/gh/nicolagnecco/causalXtreme/branch/master/graph/badge.svg)](https://codecov.io/gh/nicolagnecco/causalXtreme)
-[![R build
-status](https://github.com/nicolagnecco/causalXtreme/workflows/R-CMD-check/badge.svg)](https://github.com/nicolagnecco/causalXtreme/actions)
+[![R-CMD-check](https://github.com/nicolagnecco/causalXtreme/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/nicolagnecco/causalXtreme/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of causalXtreme is to provide an interface to perform causal
