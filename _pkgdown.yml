@@ -3,5 +3,3 @@ destination: docs
 template:
   params:
     bootswatch: yeti
-
-url: https://ngnecco.com/software/
