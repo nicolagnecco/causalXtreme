@@ -1,0 +1,9 @@
+pandoc: 3.1.11
+pkgdown: 2.0.8
+pkgdown_sha: ~
+articles: {}
+last_built: 2024-04-16T11:08Z
+urls:
+  reference: https://ngnecco.com/software/reference
+  article: https://ngnecco.com/software/articles
+
