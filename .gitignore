@@ -7,3 +7,4 @@ reproduce_paper_results/output
 .DS_Store
 
 docs
+/inst/.auctex-auto/
