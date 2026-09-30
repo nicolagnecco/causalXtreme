@@ -187,7 +187,7 @@ test_that("ancestral distance is correct", {
   expect_equal(compute_ancestral_distance(dag2, c(4, 3, 2, 1)), 1 / (4 * 3 / 2))
   expect_equal(compute_ancestral_distance(dag2, c(4, 2, 3, 1)), 1 / (4 * 3 / 2))
   expect_equal(compute_ancestral_distance(dag2, c(3, 4, 2, 1)), 0 / (4 * 3 / 2))
-  expect_error(compute_ancestral_distance(adj_mat3, c(4, 3, 2, 1)),
+  expect_equal(compute_ancestral_distance(abs(adj_mat3) > 0, c(4, 3, 2, 1)),
                6 / (4 * 3 / 2))
 })
 
