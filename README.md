@@ -1,27 +1,28 @@
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- README.md is generated from README.Rmd. Please edit that file-->
 
 # causalXtreme
 
 <!-- badges: start -->
 
-[![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
-[![Travis build
-status](https://travis-ci.com/nicolagnecco/causalXtreme.svg?branch=master)](https://travis-ci.com/github/nicolagnecco/causalXtreme)
+[![lifecycle](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 [![codecov](https://codecov.io/gh/nicolagnecco/causalXtreme/branch/master/graph/badge.svg)](https://codecov.io/gh/nicolagnecco/causalXtreme)
 [![R-CMD-check](https://github.com/nicolagnecco/causalXtreme/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/nicolagnecco/causalXtreme/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of causalXtreme is to provide an interface to perform causal
 discovery in linear structural equation models (SEM) with heavy-tailed
-noise. For more details see Gnecco et al. (2019,
+noise. For more details see Gnecco et al. (2021,
 https://arxiv.org/abs/1908.05097).
 
 ## Installation
 
 <!-- You can install the released version of causalXtreme from [CRAN](https://CRAN.R-project.org) with: -->
+
 <!-- ``` r -->
+
 <!-- install.packages("causalXtreme") -->
+
 <!-- ``` -->
 
 You can install the development version from
@@ -74,11 +75,11 @@ plot(sem$dataset, pch = 20,
      xlab = "X1", ylab = "X2")
 ```
 
-<img src="man/figures/README-plotdata-1.png" width="100%" />
+<img src="man/figures/README-plotdata-1.png" alt="" width="100%" />
 
 At this point, we can estimate the causal direction between $X_1$ and
 $X_2$ by computing the *causal tail coefficients* $\Gamma_{12}$ and
-$\Gamma_{21}$ (see Gnecco et al. 2019, Definition 1).
+$\Gamma_{21}$ (see Gnecco et al. 2021, Definition 1).
 
 ``` r
 X1 <- sem$dataset[, 1]
@@ -98,7 +99,7 @@ the matrix) and $\Gamma_{21} < 1$ (entry $(2, 1)$ of the matrix). This
 is evidence for a causal relationship from $X_1$ to $X_2$.
 
 We can also run the *extremal ancestral search* (EASE) algorithm, based
-on the causal tail coefficients (see Gnecco et al. 2019, sec. 3.1). The
+on the causal tail coefficients (see Gnecco et al. 2021, sec. 3.1). The
 algorithm estimates from the data a *causal order* of the DAG.
 
 ``` r
@@ -116,8 +117,8 @@ since $X_1$ (the cause) is placed before $X_2$ (the effect).
 <div id="ref-gne2019" class="csl-entry">
 
 Gnecco, Nicola, Nicolai Meinshausen, Jonas Peters, and Sebastian
-Engelke. 2019. “Causal Discovery in Heavy-Tailed Models.” *arXiv
-Preprint arXiv:1908.05097*.
+Engelke. 2021. “Causal Discovery in Heavy-Tailed Models.” *The Annals of
+Statistics* 49 (3): 1755–78.
 
 </div>
 
