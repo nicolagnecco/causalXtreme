@@ -4,7 +4,7 @@ causal_discovery."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/aja
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]--></head><body data-spy="scroll" data-target="#toc">
-    
+
 
     <div class="container template-reference-topic">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -29,20 +29,20 @@ causal_discovery."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/aja
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="https://github.com/nicolagnecco/causalXtreme/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Causal evaluation metrics</h1>
-    <small class="dont-index">Source: <a href="https://github.com/nicolagnecco/causalXtreme/blob/HEAD/R/causal_inference_functions.R" class="external-link"><code>R/causal_inference_functions.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/nicolagnecco/causalXtreme/blob/master/R/causal_inference_functions.R" class="external-link"><code>R/causal_inference_functions.R</code></a></small>
     <div class="hidden name"><code>causal_metrics.Rd</code></div>
     </div>
 
@@ -57,29 +57,31 @@ causal_discovery."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/aja
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>simulated_data</dt>
+
+
+<dl><dt id="arg-simulated-data">simulated_data<a class="anchor" aria-label="anchor" href="#arg-simulated-data"></a></dt>
 <dd><p>List returned by <code><a href="simulate_data.html">simulate_data</a></code>.
-The list is made of:</p><ul><li><p><code>dataset</code> --- Numeric matrix. Dataset of simulated data with
+The list is made of:</p><ul><li><p><code>dataset</code> — Numeric matrix. Dataset of simulated data with
 <code>n</code> rows and <code>p</code> columns (note that the hidden variables are not
 included in this matrix).</p></li>
-<li><p><code>dag</code> --- Square binary matrix. The generated DAG, including
+<li><p><code>dag</code> — Square binary matrix. The generated DAG, including
 both the observed variables and the confounders,
 if the argument <code>has_confounder = TRUE</code> when calling
 <code><a href="simulate_data.html">simulate_data</a></code>.</p></li>
-<li><p><code>pos_confounders</code> --- Integer vector. Represents the position
+<li><p><code>pos_confounders</code> — Integer vector. Represents the position
 of confounders (rows and columns) in <code>dag</code>.
 If the argument <code>has_confounder = FALSE</code> when calling
 <code><a href="simulate_data.html">simulate_data</a></code>, then <code>pos_confounders = integer(0)</code>.</p></li>
 </ul></dd>
 
 
-<dt>estimated_graphs</dt>
+<dt id="arg-estimated-graphs">estimated_graphs<a class="anchor" aria-label="anchor" href="#arg-estimated-graphs"></a></dt>
 <dd><p>List returned by <code><a href="causal_discovery.html">causal_discovery</a></code>.
-The list is made of:</p><ul><li><p><code>est_g</code> --- Square binary matrix
+The list is made of:</p><ul><li><p><code>est_g</code> — Square binary matrix
 (or <code>NA</code> in case of error).
 The estimated DAG (or CPDAG when the method is <code>pc</code> or
 <code>pc_rank</code>).</p></li>
-<li><p><code>est_cpdag</code> --- Square binary matrix
+<li><p><code>est_cpdag</code> — Square binary matrix
 (or <code>NA</code> in case of error).
 The estimated CPDAG.</p></li>
 </ul></dd>
@@ -87,13 +89,11 @@ The estimated CPDAG.</p></li>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    
-
-<p>List. The list is made of:</p><ul><li><p><code>sid</code> Numeric --- between 0 and 1 --- (or <code>NA</code> if
+    <p>List. The list is made of:</p><ul><li><p><code>sid</code> Numeric — between 0 and 1 — (or <code>NA</code> if
 <code>est_g</code> is <code>NA</code>). The structural intervention distance between
 the true DAG <code>dag</code> and the estimated DAG (or CPDAG) <code>est_g</code>.
 See also <code><a href="compute_str_int_distance.html">compute_str_int_distance</a></code>.</p></li>
-<li><p><code>shd</code> Numeric --- between 0 and 1 --- (or <code>NA</code> if
+<li><p><code>shd</code> Numeric — between 0 and 1 — (or <code>NA</code> if
 <code>est_cpdag</code> is <code>NA</code>). The structural Hamming distance
 between the true CPDAG (<code>dag_to_cpdag(dag)</code>)
 and the estimated CPDAG <code>est_cpdag</code>.
@@ -120,15 +120,15 @@ structural Hamming distance (see <code><a href="compute_str_ham_distance.html">c
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
       </footer></div>
 
-  
 
 
-  
+
+
 
   </body></html>
 

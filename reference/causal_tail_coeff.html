@@ -4,7 +4,7 @@ v1 and v2, given the threshold k."><!-- mathjax --><script src="https://cdnjs.cl
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]--></head><body data-spy="scroll" data-target="#toc">
-    
+
 
     <div class="container template-reference-topic">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -29,20 +29,20 @@ v1 and v2, given the threshold k."><!-- mathjax --><script src="https://cdnjs.cl
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="https://github.com/nicolagnecco/causalXtreme/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Estimate causal tail coefficient</h1>
-    <small class="dont-index">Source: <a href="https://github.com/nicolagnecco/causalXtreme/blob/HEAD/R/causal_extreme_functions.R" class="external-link"><code>R/causal_extreme_functions.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/nicolagnecco/causalXtreme/blob/master/R/causal_extreme_functions.R" class="external-link"><code>R/causal_extreme_functions.R</code></a></small>
     <div class="hidden name"><code>causal_tail_coeff.Rd</code></div>
     </div>
 
@@ -57,24 +57,26 @@ v1 and v2, given the threshold k."><!-- mathjax --><script src="https://cdnjs.cl
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>v1, v2</dt>
+
+
+<dl><dt id="arg-v-v-">v1, v2<a class="anchor" aria-label="anchor" href="#arg-v-v-"></a></dt>
 <dd><p>Numeric vectors. Two vectors with <code>n</code> observations.</p></dd>
 
 
-<dt>k</dt>
+<dt id="arg-k">k<a class="anchor" aria-label="anchor" href="#arg-k"></a></dt>
 <dd><p>Positive integer. The number of extreme observations used to
 compute the causal tail coefficient. Set by default to
 <code>k = floor(n^0.4)</code>. It must be greater than 1 and smaller
 than <code>n</code>.</p></dd>
 
 
-<dt>to_rank</dt>
+<dt id="arg-to-rank">to_rank<a class="anchor" aria-label="anchor" href="#arg-to-rank"></a></dt>
 <dd><p>Boolean. Are the vectors <code>v1</code> and <code>v2</code>
 already sorted?
 Set by default to <code>TRUE</code>.</p></dd>
 
 
-<dt>both_tails</dt>
+<dt id="arg-both-tails">both_tails<a class="anchor" aria-label="anchor" href="#arg-both-tails"></a></dt>
 <dd><p>Boolean. Do you consider both tails when computing the
 causal tail coefficient? If <code>both_tails = TRUE</code>, then you use the
 \(\Psi\) formulation. If <code>both_tails = FALSE</code>,
@@ -84,9 +86,7 @@ Set by default to <code>TRUE</code>.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    
-
-<p>Numeric --- between 0 and 1.
+    <p>Numeric — between 0 and 1.
 The causal tail coefficient between <code>v1</code> and <code>v2</code>.</p>
     </div>
     <div id="details">
@@ -115,15 +115,15 @@ To use this formulation set <code>both_tails = FALSE</code>.</p></li>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
       </footer></div>
 
-  
 
 
-  
+
+
 
   </body></html>
 

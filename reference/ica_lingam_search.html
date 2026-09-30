@@ -4,7 +4,7 @@ estimated from the data using the LiNGAM-ICA algorithm."><!-- mathjax --><script
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]--></head><body data-spy="scroll" data-target="#toc">
-    
+
 
     <div class="container template-reference-topic">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -29,20 +29,20 @@ estimated from the data using the LiNGAM-ICA algorithm."><!-- mathjax --><script
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="https://github.com/nicolagnecco/causalXtreme/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
-     
+
   </a>
 </li>
       </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Lingam ICA search</h1>
-    <small class="dont-index">Source: <a href="https://github.com/nicolagnecco/causalXtreme/blob/HEAD/R/causal_inference_helpers.R" class="external-link"><code>R/causal_inference_helpers.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/nicolagnecco/causalXtreme/blob/master/R/causal_inference_helpers.R" class="external-link"><code>R/causal_inference_helpers.R</code></a></small>
     <div class="hidden name"><code>ica_lingam_search.Rd</code></div>
     </div>
 
@@ -57,12 +57,14 @@ estimated from the data using the LiNGAM-ICA algorithm.</p>
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>dat</dt>
+
+
+<dl><dt id="arg-dat">dat<a class="anchor" aria-label="anchor" href="#arg-dat"></a></dt>
 <dd><p>Numeric matrix. Dataset matrix with <code>n</code>
 rows (observations) and <code>p</code> columns (variables).</p></dd>
 
 
-<dt>contrast_fun</dt>
+<dt id="arg-contrast-fun">contrast_fun<a class="anchor" aria-label="anchor" href="#arg-contrast-fun"></a></dt>
 <dd><p>Character. The functional form of the contrast
 function used in the Fast-ICA step. It is one of <code>"logcosh"</code>
 (the default choice) and <code>"exp"</code>.
@@ -72,9 +74,7 @@ Hyvarinen, A., <a href="https://ieeexplore.ieee.org/abstract/document/761722/" c
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    
-
-<p>Numeric vector (or <code>NA</code> in case of error).
+    <p>Numeric vector (or <code>NA</code> in case of error).
 The causal order estimated from the data.</p>
     </div>
     <div id="details">
@@ -104,15 +104,15 @@ Daniel Stekhoven, Manuel Schuerch, Marco Eigenmann.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.8.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
       </footer></div>
 
-  
 
 
-  
+
+
 
   </body></html>
 
